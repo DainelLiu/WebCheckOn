@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<!-- 开启使用开发模式，详细错误提示 -->  
+    <constant name="struts.devMode" value="false" />  
+    <!-- 将对象交给spring管理 -->  
+    <constant name="struts.objectFactory" value="spring" />  
+    <!-- 指定每次请求到达，重新加载资源文件 -->  
+    <constant name="struts.i18n.reload" value="false" />  
+    <constant name="struts.action.extension" value="action,do" /> 
+	<!-- 配置主题为simple --> 
+	<constant name="struts.ui.theme" value="simple" /> 
+	<!-- 配置字符编码为UTF-8 --> 
+	<constant name="struts.i18n.encoding" value="UTF-8" /> 
+	<!-- 设置浏览器是否缓存静态内容,默认值为true(生产环境下使用),开发阶段最好关闭 --> 
+	<constant name="struts.serve.static.browserCache" value="false" /> 
+	<!-- 当struts的配置文件修改后,系统是否自动重新加载该文件,默认值为false(生产环境下使用),开发阶段最好打开 -->  
+	<constant name="struts.configuration.xml.reload" value="true" /> 
+	<!-- 指定允许上传的文件最大字节数,默认值是2097152(2M),使用struts常量扩大默认上传文件大小 -->  
+    <constant name="struts.multipart.maxSize" value="104857600"></constant>
+</struts>  
+  
