@@ -1,0 +1,198 @@
+<div class="easyui-layout" data-options="fit:true">
+    <img src="images/index-bg.png" width="100%" height="100%">
+</div>
+<!-- End of easyui-dialog -->
+<script type="text/javascript">
+	/**
+	* Name 载入菜单树
+	*/
+	$('#wu-category-tree').tree({
+		url:'temp/menu.php',
+		onClick:function(node){
+			alert(node.text);
+		}
+	});
+
+	/**
+	* Name 添加记录
+	*/
+	function add(){
+		$('#wu-form').form('submit', {
+			url:'',
+			success:function(data){
+				if(data){
+					$.messager.alert('信息提示','提交成功！','info');
+					$('#wu-dialog').dialog('close');
+				}
+				else
+				{
+					$.messager.alert('信息提示','提交失败！','info');
+				}
+			}
+		});
+	}
+	
+	/**
+	* Name 修改记录
+	*/
+	function edit(){
+		$('#wu-form').form('submit', {
+			url:'',
+			success:function(data){
+				if(data){
+					$.messager.alert('信息提示','提交成功！','info');
+					$('#wu-dialog').dialog('close');
+				}
+				else
+				{
+					$.messager.alert('信息提示','提交失败！','info');
+				}
+			}
+		});
+	}
+	
+	/**
+	* Name 删除记录
+	*/
+	function remove(){
+		$.messager.confirm('信息提示','确定要删除该记录？', function(result){
+			if(result){
+				var items = $('#wu-datagrid').datagrid('getSelections');
+				var ids = [];
+				$(items).each(function(){
+					ids.push(this.productid);	
+				});
+				//alert(ids);return;
+				$.ajax({
+					url:'',
+					data:'',
+					success:function(data){
+						if(data){
+							$.messager.alert('信息提示','删除成功！','info');		
+						}
+						else
+						{
+							$.messager.alert('信息提示','删除失败！','info');		
+						}
+					}	
+				});
+			}	
+		});
+	}
+	
+	/**
+	* Name 打开添加窗口
+	*/
+	function openAdd(){
+		$('#wu-form').form('clear');
+		$('#wu-dialog').dialog({
+			closed: false,
+			modal:true,
+            title: "添加信息",
+            buttons: [{
+                text: '确定',
+                iconCls: 'icon-ok',
+                handler: add
+            }, {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $('#wu-dialog').dialog('close');                    
+                }
+            }]
+        });
+	}
+	
+	/**
+	* Name 打开修改窗口
+	*/
+	function openEdit(){
+		$('#wu-form').form('clear');
+		var item = $('#wu-datagrid').datagrid('getSelected');
+		//alert(item.productid);return;
+		$.ajax({
+			url:'',
+			data:'',
+			success:function(data){
+				if(data){
+					$('#wu-dialog').dialog('close');	
+				}
+				else{
+					//绑定值
+					$('#wu-form').form('load', data)
+				}
+			}	
+		});
+		$('#wu-dialog').dialog({
+			closed: false,
+			modal:true,
+            title: "修改信息",
+            buttons: [{
+                text: '确定',
+                iconCls: 'icon-ok',
+                handler: edit
+            }, {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $('#wu-dialog').dialog('close');                    
+                }
+            }]
+        });
+	}	
+	
+	/**
+	* Name 分页过滤器
+	*/
+	function pagerFilter(data){            
+		if (typeof data.length == 'number' && typeof data.splice == 'function'){// is array                
+			data = {                   
+				total: data.length,                   
+				rows: data               
+			}            
+		}        
+		var dg = $(this);         
+		var opts = dg.datagrid('options');          
+		var pager = dg.datagrid('getPager');          
+		pager.pagination({                
+			onSelectPage:function(pageNum, pageSize){                 
+				opts.pageNumber = pageNum;                   
+				opts.pageSize = pageSize;                
+				pager.pagination('refresh',{pageNumber:pageNum,pageSize:pageSize});                  
+				dg.datagrid('loadData',data);                
+			}          
+		});           
+		if (!data.originalRows){               
+			data.originalRows = (data.rows);       
+		}         
+		var start = (opts.pageNumber-1)*parseInt(opts.pageSize);          
+		var end = start + parseInt(opts.pageSize);        
+		data.rows = (data.originalRows.slice(start, end));         
+		return data;       
+	}
+	
+	/**
+	* Name 载入数据
+	*/
+	$('#wu-datagrid').datagrid({
+		url:'temp/datagrid.php',
+		loadFilter:pagerFilter,		
+		rownumbers:true,
+		singleSelect:false,
+		pageSize:20,           
+		pagination:true,
+		multiSort:true,
+		fitColumns:true,
+		fit:true,
+		columns:[[
+			{ checkbox:true},
+			{ field:'productid',title:'productid',width:100,sortable:true},
+			{ field:'productname',title:'productname',width:180,sortable:true},
+			{ field:'unitcost',title:'unitcost',width:100},
+			{ field:'listprice',title:'listprice',width:100},
+			{ field:'attr1',title:'attr1',width:100},
+			{ field:'itemid',title:'itemid',width:100},
+			{ field:'status',title:'status',width:100}
+		]]
+	});
+</script>
