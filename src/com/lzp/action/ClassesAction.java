@@ -13,6 +13,7 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.springframework.context.annotation.Scope;
 
 import com.lzp.dao.IClassesDao;
+import com.lzp.dao.ICollegeDao;
 import com.lzp.model.Classes;
 import com.lzp.util.JsonUtil;
 import com.lzp.util.PageBean;
@@ -26,6 +27,17 @@ import net.sf.json.JSONObject;
 public class ClassesAction {
 	
 	private IClassesDao classesDao;
+
+
+	private ICollegeDao collegeDao;
+	
+	public ICollegeDao getCollegeDao() {
+		return collegeDao;
+	}
+	@Resource(name="CollegeDao")
+	public void setCollegeDao(ICollegeDao collegeDao) {
+		this.collegeDao = collegeDao;
+	}
 	
 	public IClassesDao getClassesDao() {
 		return classesDao;
@@ -173,12 +185,23 @@ public class ClassesAction {
 	public String listAll() throws IOException{
 		
 		List<Object> classesTypelist = classesDao.list();//获取所有类型数据，不带分页
+		List<Object> collegelist = collegeDao.list();//获取所有类型数据，不带分页
 		JSONObject jobj = new JSONObject();
+		List<String> list = new ArrayList<String>();
+		for(int i = 0 ; i <classesTypelist.size();i++ ){
+			for(int j = 0 ; i <collegelist.size();j++ ){
+				
+			}
+		}
+		
+		
+		
 		if(classesTypelist.size() > 0){
 			//save success
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
 			jobj.put("data", JsonUtil.toJsonByListObj(classesTypelist));
+			jobj.put("college", JsonUtil.toJsonByListObj(collegelist));
 		}else{
 			//save failed
 			jobj.put("mes", "获取失败!");

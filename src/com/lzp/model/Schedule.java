@@ -64,9 +64,4 @@ public class Schedule implements Serializable{
 		this.schSemester = schSemester;
 	}
 	
-	
-	
-	
-	
-	
 }

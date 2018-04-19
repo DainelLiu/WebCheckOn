@@ -53,8 +53,7 @@
          * Name 载入数据
          */
         $('#wu-datagrid-2').datagrid({
-            url:'temp/datagrid.json',
-            loadFilter:pagerFilter,
+        	loadFilter:pagerFilter,
             rownumbers:true,
             singleSelect:false,
             pageSize:20,
@@ -64,13 +63,9 @@
             fit:true,
             columns:[[
                 { checkbox:true},
-                { field:'productid',title:'productid',width:100,sortable:true},
-                { field:'productname',title:'productname',width:180,sortable:true},
-                { field:'unitcost',title:'unitcost',width:100},
-                { field:'listprice',title:'listprice',width:100},
-                { field:'attr1',title:'attr1',width:100},
-                { field:'itemid',title:'itemid',width:100},
-                { field:'status',title:'status',width:100}
+                { field:'claId',title:'claId',width:100,sortable:true},
+                { field:'claName',title:'claName',width:180,sortable:true},
+                { field:'claCollId',title:'claCollId',width:180,sortable:true},
             ]]
         });
     })
@@ -201,6 +196,27 @@
             }]
         });
 	}	
+	function getData(){
+    	//获取用户列表
+        $.ajax({
+    		type:"get",
+    		async:true,
+    		url:"./classes/listAll.action",
+    		dataType:"json",
+    		data:{},
+    		success:function(data){
+    			console.log(data);
+    			if(data.status == 'success'){
+   					var rows = [];
+       				rows = data.data;
+       				$('#wu-datagrid-2').datagrid('loadData', rows);
+    			}else{
+    				//没有数据或服务器错误
+    			}
+    		}
+    	});
+    }
+	getData();
 	
 	/**
 	* Name 分页过滤器
