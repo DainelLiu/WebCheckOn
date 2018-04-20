@@ -35,11 +35,11 @@
             loadFilter:pagerFilter,
             rownumbers:true,
             singleSelect:false,
-            pageSize:20,
+            pageSize:10,
             pagination:true,
             multiSort:true,
             fitColumns:true,
-            fit:true,
+            height:485,
             columns:[[
                 { checkbox:true},
                 { field:'collId',title:'院系编号',width:100,sortable:true},
@@ -58,6 +58,7 @@
 				if(data){
 					$.messager.alert('信息提示','提交成功！','info');
 					$('#depart-dialog-2').dialog('close');
+					getData();
 				}
 				else
 				{
@@ -77,6 +78,7 @@
 				if(data){
 					$.messager.alert('信息提示','提交成功！','info');
 					$('#depart-dialog-2').dialog('close');
+					getData();
 				}
 				else
 				{
@@ -104,6 +106,7 @@
 					success:function(data){
 						if(data){
 							$.messager.alert('信息提示','删除成功！','info');
+							getData();
 						}
 						else
 						{
@@ -201,7 +204,8 @@
 	/**
 	* Name 分页过滤器
 	*/
-	function pagerFilter(data){            
+	function pagerFilter(data){
+		debugger;
 		if (typeof data.length == 'number' && typeof data.splice == 'function'){// is array                
 			data = {                   
 				total: data.length,                   
