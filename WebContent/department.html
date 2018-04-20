@@ -78,9 +78,11 @@
 		$('#wu-form-2').form('submit', {
 			url:'',
 			success:function(data){
-				if(data){
+                data = JSON.parse(data);
+				if(data.status == 'success'){
 					$.messager.alert('信息提示','提交成功！','info');
 					$('#wu-dialog-2').dialog('close');
+                    getData();
 				}
 				else
 				{
@@ -106,7 +108,8 @@
 					url:'',
 					data:'',
 					success:function(data){
-						if(data){
+                        data = JSON.parse(data);
+						if(data.status == 'success'){
 							$.messager.alert('信息提示','删除成功！','info');		
 						}
 						else
