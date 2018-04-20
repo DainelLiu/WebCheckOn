@@ -44,6 +44,8 @@ public class CollegeAction {
 	@Action(value="save")
 	public String save() throws IOException{
 		College college = new College();
+		String collName = ServletActionContext.getRequest().getParameter("collName");
+		college.setcollName(collName);
 		JSONObject jobj = new JSONObject();
 		if(collegeDao.save(college)) {
 			jobj.put("mes", "保存成功!");

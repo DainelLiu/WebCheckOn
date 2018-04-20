@@ -14,23 +14,11 @@
 </div>
 <!-- Begin of easyui-dialog -->
 <div id="wu-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
-	<form id="wu-form-2" method="post">
+	<form id="wu-form-2" method="post" action="college/save.action">
         <table>
             <tr>
-                <td width="60" align="right">姓 名:</td>
-                <td><input type="text" name="name" class="wu-text" /></td>
-            </tr>
-            <tr>
-                <td align="right">邮 箱:</td>
-                <td><input type="text" name="email" class="wu-text" /></td>
-            </tr>
-            <tr>
-                <td align="right">主 题:</td>
-                <td><input type="text" name="subject" class="wu-text" /></td>
-            </tr>
-            <tr>
-                <td valign="top" align="right">内 容:</td>
-                <td><textarea name="content" rows="6" class="wu-textarea" style="width:260px"></textarea></td>
+                <td width="60" align="right">院系名称:</td>
+                <td><input type="text" name="collName" class="wu-text" /></td>
             </tr>
         </table>
     </form>
@@ -42,7 +30,6 @@
          * Name 载入数据
          */
         $('#wu-datagrid-2').datagrid({
-            url:'temp/datagrid.json',
             loadFilter:pagerFilter,
             rownumbers:true,
             singleSelect:false,
@@ -53,13 +40,8 @@
             fit:true,
             columns:[[
                 { checkbox:true},
-                { field:'productid',title:'productid',width:100,sortable:true},
-                { field:'productname',title:'productname',width:180,sortable:true},
-                { field:'unitcost',title:'unitcost',width:100},
-                { field:'listprice',title:'listprice',width:100},
-                { field:'attr1',title:'attr1',width:100},
-                { field:'itemid',title:'itemid',width:100},
-                { field:'status',title:'status',width:100}
+                { field:'collId',title:'collId',width:100,sortable:true},
+                { field:'collName',title:'collName',width:180,sortable:true},
             ]]
         });
     })
@@ -190,7 +172,29 @@
                 }
             }]
         });
-	}	
+	}
+	
+	function getData(){
+    	//获取用户列表
+        $.ajax({
+    		type:"get",
+    		async:true,
+    		url:"./college/listAll.action",
+    		dataType:"json",
+    		data:{},
+    		success:function(data){
+    			console.log(data);
+    			if(data.status == 'success'){
+   					var rows = [];
+       				rows = data.data;
+       				$('#wu-datagrid-2').datagrid('loadData', rows);
+    			}else{
+    				//没有数据或服务器错误
+    			}
+    		}
+    	});
+    }
+	getData();
 	
 	/**
 	* Name 分页过滤器
