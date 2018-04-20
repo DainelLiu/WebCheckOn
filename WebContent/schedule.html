@@ -51,7 +51,7 @@
          * Name 载入数据
          */
         $('#wu-datagrid-2').datagrid({
-            url:'temp/datagrid.json',
+            url:'temp/datagrid.php',
             loadFilter:pagerFilter,
             rownumbers:true,
             singleSelect:false,
@@ -61,14 +61,14 @@
             fitColumns:true,
             fit:true,
             columns:[[
-                { checkbox:true},
-                { field:'productid',title:'productid',width:100,sortable:true},
-                { field:'productname',title:'productname',width:180,sortable:true},
-                { field:'unitcost',title:'unitcost',width:100},
-                { field:'listprice',title:'listprice',width:100},
-                { field:'attr1',title:'attr1',width:100},
-                { field:'itemid',title:'itemid',width:100},
-                { field:'status',title:'status',width:100}
+                { field: 'blank',title:'',width:50},
+                { field:'day-one',title:'星期一',width:100},
+                { field:'day-two',title:'星期二',width:100},
+                { field:'day-three',title:'星期三',width:100},
+                { field:'day-four',title:'星期四',width:100},
+                { field:'day-five',title:'星期五',width:100},
+                { field:'day-six',title:'星期六',width:100},
+                { field:'day-seven',title:'星期日',width:100}
             ]]
         });
     })
