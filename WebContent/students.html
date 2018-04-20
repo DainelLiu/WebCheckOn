@@ -1,6 +1,6 @@
 <div class="easyui-layout" data-options="fit:true">
     <!-- Begin of toolbar -->
-    <div id="wu-toolbar-2">
+    <div id="stu-toolbar-2">
         <div class="wu-toolbar-button">
             <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openAdd()" plain="true">添加</a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openEdit()" plain="true">修改</a>
@@ -9,16 +9,16 @@
             <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="reload()" plain="true">保存</a>
         </div>
     </div>
-    <div class="wu-toolbar-search">
+    <div class="stu-toolbar-search">
         <label>所属院系：</label>
-        <select class="easyui-combobox" panelHeight="auto" id="yuanxi">
+        <select panelHeight="auto" id="yuanxi">
             <option value="0">计算机与信息工程</option>
             <option value="1">生命科学</option>
             <option value="2">资源与环境科学</option>
             <option value="3">化学工程与工艺</option>
         </select>
         <label>所属班级：</label>
-        <select class="easyui-combobox" panelHeight="auto" id="banji">
+        <select panelHeight="auto" id="banji">
             <option value="0">计科一班</option>
             <option value="1">计科二班</option>
         </select>
@@ -26,27 +26,50 @@
         <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
-    <table id="wu-datagrid-2" class="easyui-datagrid" toolbar="#wu-toolbar-2"></table>
+    <table id="stu-datagrid-2" class="easyui-datagrid" toolbar="#stu-toolbar-2"></table>
 </div>
 <!-- Begin of easyui-dialog -->
-<div id="wu-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
-	<form id="wu-form-2" method="post">
+<div id="stu-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+	<form id="stu-form-2" method="post" action="student/save.action">
         <table>
             <tr>
-                <td width="60" align="right">姓 名:</td>
-                <td><input type="text" name="name" class="wu-text" /></td>
+                <td width="60" align="right">学 号:</td>
+                <td><input type="text" name="sNumber" class="wu-text" /></td>
             </tr>
             <tr>
-                <td align="right">邮 箱:</td>
-                <td><input type="text" name="email" class="wu-text" /></td>
+                <td width="60" align="right">密 码:</td>
+                <td><input type="text" name="sPassword" class="wu-text" /></td>
             </tr>
             <tr>
-                <td align="right">主 题:</td>
+                <td align="right">姓 名:</td>
+                <td><input type="text" name="sRealName" class="wu-text" /></td>
+            </tr>
+            <tr>
+                <td align="right">性 别:</td>
+                <td>
+                    <input type="radio" name="sSex" value="0" />男
+                    <input type="radio" name="sSex" value="1" />女
+                </td>
+            </tr>
+            <tr>
+                <td align="right">联系电话:</td>
                 <td><input type="text" name="subject" class="wu-text" /></td>
             </tr>
             <tr>
-                <td valign="top" align="right">内 容:</td>
-                <td><textarea name="content" rows="6" class="wu-textarea" style="width:260px"></textarea></td>
+                <td valign="top" align="right">所属院系:</td>
+                <td>
+                    <select name="attr" id="yuanxi-add" style="width:268px;">
+
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top" align="right">选择班级:</td>
+                <td>
+                    <select name="sClaId" id="banji-add" style="width:268px;">
+
+                    </select>
+                </td>
             </tr>
         </table>
     </form>
@@ -57,8 +80,7 @@
         /**
          * Name 载入数据
          */
-        $('#wu-datagrid-2').datagrid({
-            url:'temp/datagrid.json',
+        $('#stu-datagrid-2').datagrid({
             loadFilter:pagerFilter,
             rownumbers:true,
             singleSelect:false,
@@ -69,26 +91,34 @@
             fit:true,
             columns:[[
                 { checkbox:true},
-                { field:'productid',title:'productid',width:100,sortable:true},
-                { field:'productname',title:'productname',width:180,sortable:true},
-                { field:'unitcost',title:'unitcost',width:100},
-                { field:'listprice',title:'listprice',width:100},
-                { field:'attr1',title:'attr1',width:100},
-                { field:'itemid',title:'itemid',width:100},
-                { field:'status',title:'status',width:100}
+                { field:'sId',title:'学生编号',width:100,sortable:true},
+                { field:'sNumber',title:'学号',width:180,sortable:true},
+                { field:'sPassword',title:'密码',width:100},
+                { field:'sRealName',title:'姓名',width:100},
+                { field:'sSex',title:'性别',width:100},
+                { field:'sPhone',title:'联系电话',width:100},
+                { field:'sClaId',title:'所属班级',width:100}
             ]]
+        });
+
+        $(document).on('change','#yuanxi',function(){
+            getClasses($(this).val(),'#banji');
+        });
+        $(document).on('change','#yuanxi-add',function(){
+            getClasses($(this).val(),'#banji-add');
         });
     })
 	/**
 	* Name 添加记录
 	*/
 	function add(){
-		$('#wu-form-2').form('submit', {
+		$('#stu-form-2').form('submit', {
 			url:'',
 			success:function(data){
 				if(data){
 					$.messager.alert('信息提示','提交成功！','info');
-					$('#wu-dialog-2').dialog('close');
+					$('#stu-dialog-2').dialog('close');
+					getData();
 				}
 				else
 				{
@@ -102,12 +132,12 @@
 	* Name 修改记录
 	*/
 	function edit(){
-		$('#wu-form-2').form('submit', {
+		$('#stu-form-2').form('submit', {
 			url:'',
 			success:function(data){
 				if(data){
 					$.messager.alert('信息提示','提交成功！','info');
-					$('#wu-dialog-2').dialog('close');
+					$('#stu-dialog-2').dialog('close');
 				}
 				else
 				{
@@ -123,7 +153,7 @@
 	function remove(){
 		$.messager.confirm('信息提示','确定要删除该记录？', function(result){
 			if(result){
-				var items = $('#wu-datagrid-2').datagrid('getSelections');
+				var items = $('#stu-datagrid-2').datagrid('getSelections');
 				var ids = [];
 				$(items).each(function(){
 					ids.push(this.productid);	
@@ -150,8 +180,8 @@
 	* Name 打开添加窗口
 	*/
 	function openAdd(){
-		$('#wu-form-2').form('clear');
-		$('#wu-dialog-2').dialog({
+		$('#stu-form-2').form('clear');
+		$('#stu-dialog-2').dialog({
 			closed: false,
 			modal:true,
             title: "添加信息",
@@ -163,7 +193,7 @@
                 text: '取消',
                 iconCls: 'icon-cancel',
                 handler: function () {
-                    $('#wu-dialog-2').dialog('close');                    
+                    $('#stu-dialog-2').dialog('close');                    
                 }
             }]
         });
@@ -173,23 +203,23 @@
 	* Name 打开修改窗口
 	*/
 	function openEdit(){
-		$('#wu-form-2').form('clear');
-		var item = $('#wu-datagrid-2').datagrid('getSelected');
+		$('#stu-form-2').form('clear');
+		var item = $('#stu-datagrid-2').datagrid('getSelected');
 		//alert(item.productid);return;
 		$.ajax({
 			url:'',
 			data:'',
 			success:function(data){
 				if(data){
-					$('#wu-dialog-2').dialog('close');	
+					$('#stu-dialog-2').dialog('close');	
 				}
 				else{
 					//绑定值
-					$('#wu-form-2').form('load', data)
+					$('#stu-form-2').form('load', data)
 				}
 			}	
 		});
-		$('#wu-dialog-2').dialog({
+		$('#stu-dialog-2').dialog({
 			closed: false,
 			modal:true,
             title: "修改信息",
@@ -201,7 +231,7 @@
                 text: '取消',
                 iconCls: 'icon-cancel',
                 handler: function () {
-                    $('#wu-dialog-2').dialog('close');                    
+                    $('#stu-dialog-2').dialog('close');                    
                 }
             }]
         });
@@ -236,5 +266,93 @@
 		data.rows = (data.originalRows.slice(start, end));         
 		return data;       
 	}
-	
+
+    function getData(){
+        //获取学生列表
+        $.ajax({
+            type:"get",
+            async:true,
+            url:"./student/listAll.action",
+            dataType:"json",
+            data:{},
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.data;
+                    for(var i=0;i<rows.length;i++){
+                        rows[i].sClaId = rows[i].sClaId.claName;
+                        if(rows[i].sSex == '0'){
+                            rows[i].sSex = '男';
+                        } else{
+                            rows[i].sSex = '女';
+                        }
+                    }
+                    $('#stu-datagrid-2').datagrid('loadData', rows);
+                }else{
+                    //没有数据或服务器错误
+                }
+                getDepart();//获取院系
+                // getClasses();//获取班级
+            }
+        });
+    }
+    getData();
+    function getDepart(){
+        $.ajax({
+            type:"get",
+            async:false,
+            url:"./college/listAll.action",
+            dataType:"json",
+            data:{},
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.data;
+                    var html = '';
+                    for(var i = 0 ; i < rows.length; i++){
+                        if(i == 0){
+                            html += '<option value="'+rows[i].collId+' selected">'+rows[i].collName+'</option>';
+                        }else{
+                            html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
+                        }
+                    }
+                    $('#yuanxi').empty().append(html);
+                    $('#yanxi-add').empty().append(html);
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
+    }
+
+    function getClasses(yxid,selector){
+        $.ajax({
+            type:"get",
+            async:false,
+            url:"./classes/listAll.action",
+            dataType:"json",
+            data:{},
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.data;
+                    var html = '';
+                    for(var i = 0 ; i < rows.length; i++){
+                        if(i == 0){
+                            html += '<option value="'+rows[i].collId+' selected">'+rows[i].collName+'</option>';
+                        }else{
+                            html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
+                        }
+                    }
+                    $(selector).empty().append(html);
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
+    }
+
 </script>
