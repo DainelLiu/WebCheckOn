@@ -1,45 +1,39 @@
 <div class="easyui-layout" data-options="fit:true">
     <!-- Begin of toolbar -->
-    <div id="wu-toolbar-2">
+    <div id="classes-toolbar-2">
         <div class="wu-toolbar-button">
-            <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openAdd()" plain="true">添加</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openEdit()" plain="true">修改</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="remove()" plain="true">删除</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel()" plain="true">取消</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="reload()" plain="true">保存</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openAdd4()" plain="true">添加</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openEdit4()" plain="true">修改</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="remove4()" plain="true">删除</a>
         </div>
     </div>
     <div class="wu-toolbar-search">
         <label>授课教师：</label>
-        <select class="easyui-combobox" panelHeight="auto">
-            <option value="0">张三</option>
-            <option value="1">李四</option>
+        <select class="" panelHeight="auto" id="cla-classes">
+            <!--<option value="0">张三</option>
+            <option value="1">李四</option>-->
         </select>
         <label>关键词：</label><input class="wu-text" style="width:100px">
         <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
-    <table id="wu-datagrid-2" class="easyui-datagrid" toolbar="#wu-toolbar-2"></table>
+    <table id="wu-datagrid-2" class="easyui-datagrid" toolbar="#classes-toolbar-2"></table>
 </div>
 <!-- Begin of easyui-dialog -->
-<div id="wu-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
-	<form id="wu-form-2" method="post">
+<div id="classes-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+	<form id="classes-form-2" method="post" action="curriculum/save.action">
         <table>
             <tr>
-                <td width="60" align="right">姓 名:</td>
-                <td><input type="text" name="name" class="wu-text" /></td>
+                <td width="60" align="right">课程名称:</td>
+                <td><input type="text" name="currName" class="wu-text" /></td>
             </tr>
             <tr>
-                <td align="right">邮 箱:</td>
-                <td><input type="text" name="email" class="wu-text" /></td>
-            </tr>
-            <tr>
-                <td align="right">主 题:</td>
-                <td><input type="text" name="subject" class="wu-text" /></td>
-            </tr>
-            <tr>
-                <td valign="top" align="right">内 容:</td>
-                <td><textarea name="content" rows="6" class="wu-textarea" style="width:260px"></textarea></td>
+                <td align="right">授课教师:</td>
+                <td>
+                    <select name="currTId" id="classes-choose" style="width:268px;">
+
+                    </select>
+                </td>
             </tr>
         </table>
     </form>
@@ -51,7 +45,6 @@
          * Name 载入数据
          */
         $('#wu-datagrid-2').datagrid({
-            url:'temp/datagrid.json',
             loadFilter:pagerFilter,
             rownumbers:true,
             singleSelect:false,
@@ -62,13 +55,9 @@
             fit:true,
             columns:[[
                 { checkbox:true},
-                { field:'productid',title:'productid',width:100,sortable:true},
-                { field:'productname',title:'productname',width:180,sortable:true},
-                { field:'unitcost',title:'unitcost',width:100},
-                { field:'listprice',title:'listprice',width:100},
-                { field:'attr1',title:'attr1',width:100},
-                { field:'itemid',title:'itemid',width:100},
-                { field:'status',title:'status',width:100}
+                { field:'claId',title:'课程编号',width:'10%',sortable:true},
+                { field:'claName',title:'课程名称',width:'45%',sortable:true},
+                { field:'claCollId',title:'授课教师',width:'45%'},
             ]]
         });
     })
@@ -76,12 +65,13 @@
 	* Name 添加记录
 	*/
 	function add(){
-		$('#wu-form-2').form('submit', {
+		$('#classes-form-2').form('submit', {
 			url:'',
 			success:function(data){
 				if(data){
 					$.messager.alert('信息提示','提交成功！','info');
-					$('#wu-dialog-2').dialog('close');
+					$('#classes-dialog-2').dialog('close');
+					getData();
 				}
 				else
 				{
@@ -95,12 +85,12 @@
 	* Name 修改记录
 	*/
 	function edit(){
-		$('#wu-form-2').form('submit', {
+		$('#classes-form-2').form('submit', {
 			url:'',
 			success:function(data){
 				if(data){
 					$.messager.alert('信息提示','提交成功！','info');
-					$('#wu-dialog-2').dialog('close');
+					$('#classes-dialog-2').dialog('close');
 				}
 				else
 				{
@@ -113,7 +103,7 @@
 	/**
 	* Name 删除记录
 	*/
-	function remove(){
+	function remove4(){
 		$.messager.confirm('信息提示','确定要删除该记录？', function(result){
 			if(result){
 				var items = $('#wu-datagrid-2').datagrid('getSelections');
@@ -142,9 +132,9 @@
 	/**
 	* Name 打开添加窗口
 	*/
-	function openAdd(){
-		$('#wu-form-2').form('clear');
-		$('#wu-dialog-2').dialog({
+	function openAdd4(){
+		$('#classes-form-2').form('clear');
+		$('#classes-dialog-2').dialog({
 			closed: false,
 			modal:true,
             title: "添加信息",
@@ -156,7 +146,7 @@
                 text: '取消',
                 iconCls: 'icon-cancel',
                 handler: function () {
-                    $('#wu-dialog-2').dialog('close');                    
+                    $('#classes-dialog-2').dialog('close');                    
                 }
             }]
         });
@@ -165,8 +155,8 @@
 	/**
 	* Name 打开修改窗口
 	*/
-	function openEdit(){
-		$('#wu-form-2').form('clear');
+	function openEdit4(){
+		$('#classes-form-2').form('clear');
 		var item = $('#wu-datagrid-2').datagrid('getSelected');
 		//alert(item.productid);return;
 		$.ajax({
@@ -174,15 +164,15 @@
 			data:'',
 			success:function(data){
 				if(data){
-					$('#wu-dialog-2').dialog('close');	
+					$('#classes-dialog-2').dialog('close');	
 				}
 				else{
 					//绑定值
-					$('#wu-form-2').form('load', data)
+					$('#classes-form-2').form('load', data)
 				}
 			}	
 		});
-		$('#wu-dialog-2').dialog({
+		$('#classes-dialog-2').dialog({
 			closed: false,
 			modal:true,
             title: "修改信息",
@@ -194,7 +184,7 @@
                 text: '取消',
                 iconCls: 'icon-cancel',
                 handler: function () {
-                    $('#wu-dialog-2').dialog('close');                    
+                    $('#classes-dialog-2').dialog('close');                    
                 }
             }]
         });
@@ -229,5 +219,64 @@
 		data.rows = (data.originalRows.slice(start, end));         
 		return data;       
 	}
-	
+
+    function getData(){
+        //获取教师列表
+        $.ajax({
+            type:"get",
+            async:true,
+            url:"./curriculum/listAll.action",
+            dataType:"json",
+            data:{},
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.data;
+                    for(var i=0;i<rows.length;i++){
+                        rows[i].tCollId = rows[i].tCollId.collName;
+                        if(rows[i].tSex == '0'){
+                            rows[i].tSex = '男';
+                        } else{
+                            rows[i].tSex = '女';
+                        }
+                    }
+                    $('#wu-datagrid-2').datagrid('loadData', rows);
+                    getTeacher();
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
+    }
+    getData();
+	function getTeacher(){
+        $.ajax({
+            type:"get",
+            async:false,
+            url:"./classes/listAll.action",
+            dataType:"json",
+            data:{},
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.data;
+                    var html = '';
+                    for(var i = 0 ; i < rows.length; i++){
+                        if(i == 0){
+                            html += '<option value="'+rows[i].collId+' selected">'+rows[i].collName+'</option>';
+                        }else{
+                            html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
+                        }
+                    }
+                    $('#cla-classes').empty().append(html);
+                    $('#classes-choose').empty().append(html);
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
+    }
+
 </script>
