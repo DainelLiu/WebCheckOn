@@ -11,7 +11,7 @@
     </div>
     <div class="wu-toolbar-search">
         <label>所属院系：</label>
-        <select class="easyui-combobox" panelHeight="auto">
+        <select class="easyui-combobox" panelHeight="auto" id="search-box-choose">
             <option value="0">计算机与信息工程</option>
             <option value="1">生命科学</option>
             <option value="2">资源与环境科学</option>
@@ -64,6 +64,7 @@
                 { field:'collegeName',title:'collegeName',width:180,sortable:true},
             ]]
         });
+        getDepart();
     })
 	/**
 	* Name 添加记录
@@ -266,6 +267,7 @@
                         }
                     }
                     $('#depart-choose').empty().append(html);
+                    $('#search-box-choose').empty().append(html);
                 }else{
                     //没有数据或服务器错误
                 }
