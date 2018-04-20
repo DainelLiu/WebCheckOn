@@ -13,10 +13,12 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.springframework.context.annotation.Scope;
 
 import com.lzp.dao.ITeacherDao;
+import com.lzp.model.Classes;
 import com.lzp.model.Teacher;
 import com.lzp.util.JsonUtil;
 import com.lzp.util.PageBean;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Scope("prototype")
@@ -172,18 +174,32 @@ public class TeacherAction {
 	@Action(value="listAll")
 	public String listAll() throws IOException{
 
-		List<Object> teacherTypelist = teacherDao.list();//获取所有类型数据，不带分页
+		List<Object> teacherTypelist = teacherDao.list();// 获取所有类型数据，不带分页
 		JSONObject jobj = new JSONObject();
-		if(teacherTypelist.size() > 0){
-			//save success
+		JSONArray list = new JSONArray();
+		if (teacherTypelist.size() > 0) {
+//			for (int i = 0; i < teacherTypelist.size(); i++) {
+//				JSONObject tempJson = new JSONObject();
+//				Teacher teacher = (Teacher) teacherTypelist.get(i);
+//				String collegeName = teacher.gettCollId().getcollName();
+//				tempJson.put("tCollId", collegeName);
+//				list.add(jobj);
+//			}
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
 			jobj.put("data", JsonUtil.toJsonByListObj(teacherTypelist));
-		}else{
-			//save failed
+		} else {
 			jobj.put("mes", "获取失败!");
 			jobj.put("status", "error");
 		}
+
+		/*
+		 * if(teacherTypelist.size() > 0){ //save success jobj.put("mes",
+		 * "获取成功!"); jobj.put("status", "success"); jobj.put("data",
+		 * JsonUtil.toJsonByListObj(teacherTypelist)); jobj.put("college",
+		 * JsonUtil.toJsonByListObj(collegelist)); }else{ //save failed
+		 * jobj.put("mes", "获取失败!"); jobj.put("status", "error"); }
+		 */
 		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
 		ServletActionContext.getResponse().getWriter().write(jobj.toString());
 		return null;
