@@ -266,9 +266,9 @@
                     var html = '';
                     for(var i = 0 ; i < rows.length; i++){
                         if(i == 0){
-                            html += '<option value="'+rows[i].collId+'" selected>'+rows[i].collName+'</option>';
+                            html += '<option value="'+rows[i].tId+'" selected>'+rows[i].tRealName+'</option>';
                         }else{
-                            html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
+                            html += '<option value="'+rows[i].tId+'">'+rows[i].tRealName+'</option>';
                         }
                     }
                     $('#cla-classes').empty().append(html);
