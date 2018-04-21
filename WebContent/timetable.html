@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Creating a School Timetable - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="easyui/1.3.4/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="css/icon.css" />
+	<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="easyui/1.3.4/jquery.easyui.min.js"></script>
+	<style type="text/css">
+		.left{
+			width:150px;
+			float:left;
+		}
+		.left table{
+			background:#E0ECFF;
+		}
+		.left td{
+			background:#eee;
+		}
+		.right{
+			float:right;
+			width:570px;
+		}
+		.right table{
+			background:#E0ECFF;
+			width:100%;
+		}
+		.right td{
+			background:#fafafa;
+			color:#444;
+			text-align:center;
+			padding:2px;
+		}
+		.right td{
+			background:#E0ECFF;
+		}
+		.right td.drop{
+			background:#fafafa;
+			width:100px;
+		}
+		.right td.over{
+			background:#FBEC88;
+		}
+		.item{
+			text-align:center;
+			border:1px solid #499B33;
+			background:#fafafa;
+			color:#444;
+			width:100px;
+		}
+		.assigned{
+			border:1px solid #BC2A4D;
+		}
+		.trash{
+			background-color:red;
+		}
+		
+	</style>
+</head>
+<body>
+	<h3>创建课表</h3>
+	<div class="demo-info" style="margin-bottom:10px">
+		<div>请拖动左侧课程移入课表</div>
+	</div>
+
+	<div style="width:750px;">
+		<div class="left">
+			<label>所属院系:</label>
+			<select id="table-depart-choose" style="width:90%;">
+				<!-- <option value="1" selected>teacher1</option>
+				<option value="2">teacher2</option> -->
+			</select>
+			<label>授课教师:</label>
+			<select id="table-teacher-choose" style="width:90%;">
+				<option value="1" selected>teacher1</option>
+				<option value="2">teacher2</option>
+			</select>
+			<label>可选课程:</label>
+			<table id="table-classes-choose">
+				<!-- <tr>
+					<td><div class="item">English</div></td>
+				</tr>
+				<tr>
+					<td><div class="item">Science</div></td>
+				</tr>
+				<tr>
+					<td><div class="item">Music</div></td>
+				</tr>
+				<tr>
+					<td><div class="item">History</div></td>
+				</tr>
+				<tr>
+					<td><div class="item">Computer</div></td>
+				</tr>
+				<tr>
+					<td><div class="item">Mathematics</div></td>
+				</tr>
+				<tr>
+					<td><div class="item">Arts</div></td>
+				</tr>
+				<tr>
+					<td><div class="item">Ethics</div></td>
+				</tr> -->
+			</table>
+		</div>
+		<div class="right">
+			<table id="table-content-classes">
+				<tr>
+					<td class="blank"></td>
+					<td class="title">星期一</td>
+					<td class="title">星期二</td>
+					<td class="title">星期三</td>
+					<td class="title">星期四</td>
+					<td class="title">星期五</td>
+					<td class="title">星期六</td>
+					<td class="title">星期日</td>
+				</tr>
+				<tr>
+					<td class="time">08:00</td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+				</tr>
+				<tr>
+					<td class="time">09:00</td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+				</tr>
+				<tr>
+					<td class="time">10:00</td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+					<td class="drop"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	
+	<script>
+		$(function(){
+			$('.left .item').draggable({
+				revert:true,
+				proxy:'clone'
+			});
+			$('.right td.drop').droppable({
+				onDragEnter:function(){
+					$(this).addClass('over');
+				},
+				onDragLeave:function(){
+					$(this).removeClass('over');
+				},
+				onDrop:function(e,source){
+					$(this).removeClass('over');
+					if ($(source).hasClass('assigned')){
+						$(this).append(source);
+					} else {
+						var c = $(source).clone().addClass('assigned');
+						$(this).empty().append(c);
+						c.draggable({
+							revert:true
+						});
+					}
+				}
+			});
+			$('.left').droppable({
+				accept:'.assigned',
+				onDragEnter:function(e,source){
+					$(source).addClass('trash');
+				},
+				onDragLeave:function(e,source){
+					$(source).removeClass('trash');
+				},
+				onDrop:function(e,source){
+					$(source).remove();
+				}
+			});
+			getDeparts();
+			$(document).on('change','#table-depart-choose',function(){
+				getTeacher($(this).find("option:selected").val());
+			});
+			$(document).on('change','#table-teacher-choose',function(){
+				getClasses($(this).find("option:selected").val());
+			});
+		});
+		//获取院系
+		function getDeparts(){
+			$.ajax({
+	    		type:"get",
+	    		async:true,
+	    		url:"./college/listAll.action",
+	    		dataType:"json",
+	    		data:{},
+	    		success:function(data){
+	    			console.log(data);
+	    			if(data.status == 'success'){
+	   					var rows = [];
+	       				rows = data.data;
+	       				var html = '';
+	                    for(var i = 0 ; i < rows.length; i++){
+	                        if(i == 0){
+	                            html += '<option value="'+rows[i].collId+'" selected>'+rows[i].collName+'</option>';
+	                            getTeacher(rows[i].collId);
+	                        }else{
+	                            html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
+	                        }
+	                    }
+	                    $('#table-depart-choose').empty().append(html);
+	    			}else{
+	    				//没有数据或服务器错误
+	    			}
+	    		}
+	    	});
+		}
+		//获取老师
+		function getTeacher(yxid){
+			$.ajax({
+	            type:"get",
+	            async:false,
+	            url:"./teacher/listAll.action",
+	            dataType:"json",
+	            data:{
+	            	tCollId:yxid
+	            },
+	            success:function(data){
+	                console.log(data);
+	                if(data.status == 'success'){
+	                    var rows = [];
+	                    rows = data.data;
+	                    var html = '';
+	                    for(var i = 0 ; i < rows.length; i++){
+	                        if(i == 0){
+	                            html += '<option value="'+rows[i].tId+'" selected>'+rows[i].tRealName+'</option>';
+	                            getClasses(rows[i].tId);
+	                        }else{
+	                            html += '<option value="'+rows[i].tId+'">'+rows[i].tRealName+'</option>';
+	                        }
+	                    }
+	                    $('#table-teacher-choose').empty().append(html);
+	                }else{
+	                    //没有数据或服务器错误
+	                }
+	            }
+	        });
+		}
+		function getClasses(tid){
+			$.ajax({
+	            type:"get",
+	            async:false,
+	            url:"./curriculum/listAll.action",
+	            dataType:"json",
+	            data:{
+	            	currTId:tid
+	            },
+	            success:function(data){
+	                console.log(data);
+	                if(data.status == 'success'){
+	                    var rows = [];
+	                    rows = data.data;
+	                    var html = '';
+	                    for(var i = 0 ; i < rows.length; i++){
+	                    	html += '<tr>';
+	                    	html += '<td><div class="item">English</div></td>';
+	                    	html += '</tr>';
+	                    }
+	                    $('#table-classes-choose').empty().append(html);
+	                }else{
+	                    //没有数据或服务器错误
+	                }
+	            }
+	        });
+		}
+	</script>
+</body>
+</html>

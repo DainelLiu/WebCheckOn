@@ -17,7 +17,22 @@
         <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
-    <table id="wu-datagrid-2" class="easyui-datagrid" toolbar="#classes-toolbar-2"></table>
+    <div region="west" split="true" style="width:120px;">
+		<ul class="easyui-tree">
+			<li>
+				<span>Library</span>
+				<ul>
+					<li><span>easyui</span></li>
+					<li><span>Music</span></li>
+					<li><span>Picture</span></li>
+					<li><span>Database</span></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<div region="center" border="false" border="false">
+    	<table id="classes-datagrid-2" class="easyui-datagrid" toolbar="#classes-toolbar-2"></table>
+    </div>
 </div>
 <!-- Begin of easyui-dialog -->
 <div id="classes-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
@@ -44,7 +59,7 @@
         /**
          * Name 载入数据
          */
-        $('#wu-datagrid-2').datagrid({
+        $('#classes-datagrid-2').datagrid({
             loadFilter:pagerFilter,
             rownumbers:true,
             singleSelect:false,
@@ -106,7 +121,7 @@
 	function remove4(){
 		$.messager.confirm('信息提示','确定要删除该记录？', function(result){
 			if(result){
-				var items = $('#wu-datagrid-2').datagrid('getSelections');
+				var items = $('#classes-datagrid-2').datagrid('getSelections');
 				var ids = [];
 				$(items).each(function(){
 					ids.push(this.productid);	
@@ -157,7 +172,7 @@
 	*/
 	function openEdit4(){
 		$('#classes-form-2').form('clear');
-		var item = $('#wu-datagrid-2').datagrid('getSelected');
+		var item = $('#classes-datagrid-2').datagrid('getSelected');
 		//alert(item.productid);return;
 		$.ajax({
 			url:'',
@@ -236,7 +251,7 @@
                     for(var i=0;i<rows.length;i++){
                         rows[i].currTId = rows[i].currTId.tRealName;
                     }
-                    $('#wu-datagrid-2').datagrid('loadData', rows);
+                    $('#classes-datagrid-2').datagrid('loadData', rows);
                     
                 }else{
                     //没有数据或服务器错误
