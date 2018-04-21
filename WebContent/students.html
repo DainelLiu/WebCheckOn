@@ -183,7 +183,7 @@
 		$('input[name="sNumber"]').val('');
 		$('input[name="sPassword"]').val('');
 		$('input[name="sRealName"]').val('');
-		$('input[name="sSex"]')[0].attr('checked');
+		$($('input[name="sSex"]')[0]).attr('checked');
 		$('input[name="sPhone"]').val('');
 		$('#stu-dialog-2').dialog({
 			closed: false,
@@ -319,6 +319,7 @@
                         if(i == 0){
                             html += '<option value="'+rows[i].collId+'" selected>'+rows[i].collName+'</option>';
                             getClasses(rows[i].collId,'#banji');
+                            getClasses(rows[i].collId,'#banji-add');
                         }else{
                             html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
                         }
