@@ -102,10 +102,10 @@
         });
 
         $(document).on('change','#yuanxi',function(){
-            getClasses($(this).val(),'#banji');
+            getClasses($(this).find("option:selected").val(),'#banji');
         });
         $(document).on('change','#yuanxi-add',function(){
-            getClasses($(this).val(),'#banji-add');
+            getClasses($(this).find("option:selected").val(),'#banji-add');
         });
     })
 	/**
