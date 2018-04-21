@@ -9,7 +9,7 @@
 	<script type="text/javascript" src="easyui/1.3.4/jquery.easyui.min.js"></script>
 	<style type="text/css">
 		.left{
-			width:150px;
+			width:25%;
 			float:left;
 		}
 		.left table{
@@ -20,7 +20,7 @@
 		}
 		.right{
 			float:right;
-			width:570px;
+			width:70%;
 		}
 		.right table{
 			background:#E0ECFF;
@@ -64,7 +64,7 @@
 		<div>请拖动左侧课程移入课表</div>
 	</div>
 
-	<div style="width:750px;">
+	<div>
 		<div class="left">
 			<label>所属院系:</label>
 			<select id="table-depart-choose" style="width:90%;">
@@ -79,7 +79,7 @@
 			<label>可选课程:</label>
 			<table id="table-classes-choose">
 				<!-- <tr>
-					<td><div class="item">English</div></td>
+					<td><div class="item" id="classid">English</div></td>
 				</tr>
 				<tr>
 					<td><div class="item">Science</div></td>
@@ -117,37 +117,131 @@
 					<td class="title">星期日</td>
 				</tr>
 				<tr>
-					<td class="time">08:00</td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
+					<td class="time">1</td>
+					<td class="drop" id="mon1"></td>
+					<td class="drop" id="tus1"></td>
+					<td class="drop" id="wes1"></td>
+					<td class="drop" id="thr1"></td>
+					<td class="drop" id="fri1"></td>
+					<td class="drop" id="sta1"></td>
+					<td class="drop" id="sun1"></td>
 				</tr>
 				<tr>
-					<td class="time">09:00</td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
+					<td class="time">2</td>
+					<td class="drop" id="mon2"></td>
+					<td class="drop" id="tus2"></td>
+					<td class="drop" id="wes2"></td>
+					<td class="drop" id="thr2"></td>
+					<td class="drop" id="fri2"></td>
+					<td class="drop" id="sta2"></td>
+					<td class="drop" id="sun2"></td>
 				</tr>
 				<tr>
-					<td class="time">10:00</td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
-					<td class="drop"></td>
+					<td class="time">3</td>
+					<td class="drop" id="mon3"></td>
+					<td class="drop" id="tus3"></td>
+					<td class="drop" id="wes3"></td>
+					<td class="drop" id="thr3"></td>
+					<td class="drop" id="fri3"></td>
+					<td class="drop" id="sta3"></td>
+					<td class="drop" id="sun3"></td>
+				</tr>
+				<tr>
+					<td class="time">4</td>
+					<td class="drop" id="mon4"></td>
+					<td class="drop" id="tus4"></td>
+					<td class="drop" id="wes4"></td>
+					<td class="drop" id="thr4"></td>
+					<td class="drop" id="fri4"></td>
+					<td class="drop" id="sta4"></td>
+					<td class="drop" id="sun4"></td>
+				</tr>
+				<tr>
+					<td class="time">5</td>
+					<td class="drop" id="mon5"></td>
+					<td class="drop" id="tus5"></td>
+					<td class="drop" id="wes5"></td>
+					<td class="drop" id="thr5"></td>
+					<td class="drop" id="fri5"></td>
+					<td class="drop" id="sta5"></td>
+					<td class="drop" id="sun5"></td>
+				</tr>
+				<tr>
+					<td class="time">6</td>
+					<td class="drop" id="mon6"></td>
+					<td class="drop" id="tus6"></td>
+					<td class="drop" id="wes6"></td>
+					<td class="drop" id="thr6"></td>
+					<td class="drop" id="fri6"></td>
+					<td class="drop" id="sta6"></td>
+					<td class="drop" id="sun6"></td>
+				</tr>
+				<tr>
+					<td class="time">7</td>
+					<td class="drop" id="mon7"></td>
+					<td class="drop" id="tus7"></td>
+					<td class="drop" id="wes7"></td>
+					<td class="drop" id="thr7"></td>
+					<td class="drop" id="fri7"></td>
+					<td class="drop" id="sta7"></td>
+					<td class="drop" id="sun7"></td>
+				</tr>
+				<tr>
+					<td class="time">8</td>
+					<td class="drop" id="mon8"></td>
+					<td class="drop" id="tus8"></td>
+					<td class="drop" id="wes8"></td>
+					<td class="drop" id="thr8"></td>
+					<td class="drop" id="fri8"></td>
+					<td class="drop" id="sta8"></td>
+					<td class="drop" id="sun8"></td>
+				</tr>
+				<tr>
+					<td class="time">9</td>
+					<td class="drop" id="mon9"></td>
+					<td class="drop" id="tus9"></td>
+					<td class="drop" id="wes9"></td>
+					<td class="drop" id="thr9"></td>
+					<td class="drop" id="fri9"></td>
+					<td class="drop" id="sta9"></td>
+					<td class="drop" id="sun9"></td>
+				</tr>
+				<tr>
+					<td class="time">10</td>
+					<td class="drop" id="mon10"></td>
+					<td class="drop" id="tus10"></td>
+					<td class="drop" id="wes10"></td>
+					<td class="drop" id="thr10"></td>
+					<td class="drop" id="fri10"></td>
+					<td class="drop" id="sta10"></td>
+					<td class="drop" id="sun10"></td>
 				</tr>
 			</table>
 		</div>
+	</div>
+	<div style="margin-top:35%;text-align: center;">
+		<div>
+			<label>所属院系:</label>
+			<select id="table1-depart-choose" style="width:40%;">
+				<!-- <option value="1" selected>teacher1</option>
+				<option value="2">teacher2</option> -->
+			</select>
+		</div>
+		<div>
+			<label>所属班级:</label>
+			<select id="table-grade-choose" style="width:40%;">
+				<option value="1" selected>teacher1</option>
+				<option value="2">teacher2</option>
+			</select>
+		</div>
+		<div>
+			<label>所属学期:</label><!-- 系统参数学期获取 -->
+			<select id="table1-teacher-choose" style="width:40%;">
+				<option value="1" selected>teacher1</option>
+				<option value="2">teacher2</option>
+			</select>
+		</div>
+		
 	</div>
 	
 	<script>
@@ -192,6 +286,9 @@
 			$(document).on('change','#table-depart-choose',function(){
 				getTeacher($(this).find("option:selected").val());
 			});
+			$(document).on('change','#table1-depart-choose',function(){
+				getGrade($(this).find("option:selected").val());
+			});
 			$(document).on('change','#table-teacher-choose',function(){
 				getClasses($(this).find("option:selected").val());
 			});
@@ -214,11 +311,13 @@
 	                        if(i == 0){
 	                            html += '<option value="'+rows[i].collId+'" selected>'+rows[i].collName+'</option>';
 	                            getTeacher(rows[i].collId);
+	                            getGrade(rows[i].collId);
 	                        }else{
 	                            html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
 	                        }
 	                    }
 	                    $('#table-depart-choose').empty().append(html);
+	                    $('#table1-depart-choose').empty().append(html);
 	    			}else{
 	    				//没有数据或服务器错误
 	    			}
@@ -283,6 +382,35 @@
 	            }
 	        });
 		}
+		function getGrade(yxid){
+	        $.ajax({
+	            type:"get",
+	            async:false,
+	            url:"./classes/getByClaCollId.action",
+	            dataType:"json",
+	            data:{
+	            	claCollId:yxid
+	            },
+	            success:function(data){
+	                console.log(data);
+	                if(data.status == 'success'){
+	                    var rows = [];
+	                    rows = data.studentListByCollId;
+	                    var html = '';
+	                    for(var i = 0 ; i < rows.length; i++){
+	                        if(i == 0){
+	                            html += '<option value="'+rows[i].claId+'" selected>'+rows[i].claName+'</option>';
+	                        }else{
+	                            html += '<option value="'+rows[i].claId+'">'+rows[i].claName+'</option>';
+	                        }
+	                    }
+	                    $('#table-grade-choose').empty().append(html);
+	                }else{
+	                    //没有数据或服务器错误
+	                }
+	            }
+	        });
+	    }
 	</script>
 </body>
 </html>

@@ -43,20 +43,46 @@
 	* Name 添加记录
 	*/
 	function add(){
-		$('#wu-form-2').form('submit', {
-			url:'',
-			success:function(data){
-				if(data){
-					$.messager.alert('信息提示','提交成功！','info');
-					$('#schedule-dialog-2').dialog('close');
-					getData();
-				}
-				else
-				{
-					$.messager.alert('信息提示','提交失败！','info');
-				}
+		//console.log($("#table-iframe").contents().find("#table-grade-choose").find("option:selected").val());
+		var _my = $("#table-iframe").contents();
+		var banjiid = _my.find("#table-grade-choose").find("option:selected").val();
+		var mydata = {
+			info:{schClaId:banjiid,schSemester:'2017-2018学 年, 第一学期'},//获取一个系统参数
+			details:[]
+		}
+		for(var c = 1 ; c <= 7 ; c++){
+			var tempObj = {dTime:''+c,dCurrId:'',dInId:''};
+			var tempTime = '';
+			if(c == 1){ tempObj.dTime = '星期一'; tempTime = '#mon'; }
+			if(c == 2){ tempObj.dTime = '星期二'; tempTime = '#tus'; }
+			if(c == 3){ tempObj.dTime = '星期三'; tempTime = '#wes'; }
+			if(c == 4){ tempObj.dTime = '星期四'; tempTime = '#thr'; }
+			if(c == 5){ tempObj.dTime = '星期五'; tempTime = '#fri'; }
+			if(c == 6){ tempObj.dTime = '星期六'; tempTime = '#sta'; }
+			if(c == 7){ tempObj.dTime = '星期日'; tempTime = '#sun'; }
+			for(var j = 1 ; j <= 10 ; j++){
+				tempObj.dCurrId = _my.find(tempTime+j+' .item').attr(id);
+				tempObj.dInId = j;
 			}
-		});
+			mydata.details.push(tempObj);
+		}
+		$.ajax({
+            type:"get",
+            async:false,
+            url:"./schedule/save.action",
+            dataType:"json",
+            data:{
+            	tableConds:JSON.stringify(mydata);
+            },
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                	getData();
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
 	}
 	
 	/**
@@ -116,9 +142,9 @@
 			closed: false,
 			modal:true,
             title: "添加信息",
-            width:800,
-            height:500,
-            content:"<iframe scrolling='auto' frameborder='0' src='timetable.html' style='width:100%; height:100%; display:block;'></iframe>",
+            width:1000,
+            height:600,
+            content:"<iframe id='table-iframe' scrolling='auto' frameborder='0' src='timetable.html' style='width:100%; height:100%; display:block;'></iframe>",
             buttons: [{
                 text: '确定',
                 iconCls: 'icon-ok',
