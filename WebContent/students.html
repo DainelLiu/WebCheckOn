@@ -12,15 +12,15 @@
     <div class="stu-toolbar-search">
         <label>所属院系：</label>
         <select panelHeight="auto" id="yuanxi">
-            <option value="0">计算机与信息工程</option>
+            <!-- <option value="0">计算机与信息工程</option>
             <option value="1">生命科学</option>
             <option value="2">资源与环境科学</option>
-            <option value="3">化学工程与工艺</option>
+            <option value="3">化学工程与工艺</option> -->
         </select>
         <label>所属班级：</label>
         <select panelHeight="auto" id="banji">
-            <option value="0">计科一班</option>
-            <option value="1">计科二班</option>
+            <!-- <option value="0">计科一班</option>
+            <option value="1">计科二班</option> -->
         </select>
         <label>关键词：</label><input class="wu-text" style="width:100px">
         <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
@@ -344,9 +344,9 @@
                     var html = '';
                     for(var i = 0 ; i < rows.length; i++){
                         if(i == 0){
-                            html += '<option value="'+rows[i].collId+' selected">'+rows[i].collName+'</option>';
+                            html += '<option value="'+rows[i].claCollId.collId+' selected">'+rows[i].claCollId.collName+'</option>';
                         }else{
-                            html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
+                            html += '<option value="'+rows[i].claCollId.collId+'">'+rows[i].claCollId.collName+'</option>';
                         }
                     }
                     $(selector).empty().append(html);
