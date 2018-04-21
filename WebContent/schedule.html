@@ -63,8 +63,8 @@
 			for(var j = 1 ; j <= 10 ; j++){
 				tempObj.dCurrId = _my.find(tempTime+j+' .item').attr('id');
 				tempObj.dInId = j;
+				mydata.details.push(tempObj);
 			}
-			mydata.details.push(tempObj);
 		}
 		$.ajax({
             type:"post",
