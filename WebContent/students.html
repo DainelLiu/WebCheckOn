@@ -47,7 +47,7 @@
             <tr>
                 <td align="right">性 别:</td>
                 <td>
-                    <input type="radio" name="sSex" value="0" />男
+                    <input type="radio" name="sSex" value="0" checked/>男
                     <input type="radio" name="sSex" value="1" />女
                 </td>
             </tr>
@@ -180,7 +180,11 @@
 	* Name 打开添加窗口
 	*/
 	function openAdd(){
-		$('#stu-form-2').form('clear');
+		$('input[name="sNumber"]').val('');
+		$('input[name="sPassword"]').val('');
+		$('input[name="sRealName"]').val('');
+		$('input[name="sSex"]')[0].attr('checked');
+		$('input[name="sPhone"]').val('');
 		$('#stu-dialog-2').dialog({
 			closed: false,
 			modal:true,
@@ -314,6 +318,7 @@
                     for(var i = 0 ; i < rows.length; i++){
                         if(i == 0){
                             html += '<option value="'+rows[i].collId+'" selected>'+rows[i].collName+'</option>';
+                            getClasses(rows[i].collId,'#banji');
                         }else{
                             html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
                         }
