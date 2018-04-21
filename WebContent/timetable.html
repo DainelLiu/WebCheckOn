@@ -236,42 +236,6 @@
 	
 	<script>
 		$(function(){
-			$(document).on('draggable','.left .item',function(){
-				revert:true,
-				proxy:'clone'
-			});
-			$(document).on('droppable','.right td.drop',function(){
-				onDragEnter:function(){
-					$(this).addClass('over');
-				},
-				onDragLeave:function(){
-					$(this).removeClass('over');
-				},
-				onDrop:function(e,source){
-					$(this).removeClass('over');
-					if ($(source).hasClass('assigned')){
-						$(this).append(source);
-					} else {
-						var c = $(source).clone().addClass('assigned');
-						$(this).empty().append(c);
-						c.draggable({
-							revert:true
-						});
-					}
-				}
-			});
-			$(document).on('droppable','.left',function(){
-				accept:'.assigned',
-				onDragEnter:function(e,source){
-					$(source).addClass('trash');
-				},
-				onDragLeave:function(e,source){
-					$(source).removeClass('trash');
-				},
-				onDrop:function(e,source){
-					$(source).remove();
-				}
-			});
 			getDeparts();
 			$(document).on('change','#table-depart-choose',function(){
 				getTeacher($(this).find("option:selected").val());
@@ -369,6 +333,42 @@
 	                }else{
 	                    //没有数据或服务器错误
 	                }
+	                $('.left .item').draggable({
+	    				revert:true,
+	    				proxy:'clone'
+	    			});
+	    			$('.right td.drop').droppable({
+	    				onDragEnter:function(){
+	    					$(this).addClass('over');
+	    				},
+	    				onDragLeave:function(){
+	    					$(this).removeClass('over');
+	    				},
+	    				onDrop:function(e,source){
+	    					$(this).removeClass('over');
+	    					if ($(source).hasClass('assigned')){
+	    						$(this).append(source);
+	    					} else {
+	    						var c = $(source).clone().addClass('assigned');
+	    						$(this).empty().append(c);
+	    						c.draggable({
+	    							revert:true
+	    						});
+	    					}
+	    				}
+	    			});
+	    			$('.left').droppable({
+	    				accept:'.assigned',
+	    				onDragEnter:function(e,source){
+	    					$(source).addClass('trash');
+	    				},
+	    				onDragLeave:function(e,source){
+	    					$(source).removeClass('trash');
+	    				},
+	    				onDrop:function(e,source){
+	    					$(source).remove();
+	    				}
+	    			});
 	            }
 	        });
 		}
