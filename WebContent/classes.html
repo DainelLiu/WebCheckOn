@@ -133,7 +133,7 @@
 	* Name 打开添加窗口
 	*/
 	function openAdd4(){
-		$('#classes-form-2').form('clear');
+		$('input[name="currName"]').val('');
 		$('#classes-dialog-2').dialog({
 			closed: false,
 			modal:true,
@@ -265,7 +265,7 @@
                     var html = '';
                     for(var i = 0 ; i < rows.length; i++){
                         if(i == 0){
-                            html += '<option value="'+rows[i].collId+' selected">'+rows[i].collName+'</option>';
+                            html += '<option value="'+rows[i].collId+'" selected>'+rows[i].collName+'</option>';
                         }else{
                             html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
                         }
