@@ -236,11 +236,11 @@
 	
 	<script>
 		$(function(){
-			$('.left .item').draggable({
+			$(document).on('draggable','.left .item',function(){
 				revert:true,
 				proxy:'clone'
 			});
-			$('.right td.drop').droppable({
+			$(document).on('droppable','.right td.drop',function(){
 				onDragEnter:function(){
 					$(this).addClass('over');
 				},
@@ -260,7 +260,7 @@
 					}
 				}
 			});
-			$('.left').droppable({
+			$(document).on('droppable','.left',function(){
 				accept:'.assigned',
 				onDragEnter:function(e,source){
 					$(source).addClass('trash');
