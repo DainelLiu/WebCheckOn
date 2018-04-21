@@ -362,7 +362,7 @@
 	                    var html = '';
 	                    for(var i = 0 ; i < rows.length; i++){
 	                    	html += '<tr>';
-	                    	html += '<td><div class="item">English</div></td>';
+	                    	html += '<td><div class="item" id="'+rows[i].currId+'">'+rows[i].currName+'</div></td>';
 	                    	html += '</tr>';
 	                    }
 	                    $('#table-classes-choose').empty().append(html);
