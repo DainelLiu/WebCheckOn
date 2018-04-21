@@ -47,7 +47,7 @@
 		var _my = $("#table-iframe").contents();
 		var banjiid = _my.find("#table-grade-choose").find("option:selected").val();
 		var mydata = {
-			info:{schClaId:banjiid,schSemester:'2017-2018学 年, 第一学期'},//获取一个系统参数
+			info:{schClaId:banjiid,schSemester:_my.find('#xueqi-choose').find("option:selected").val()+','+_my.find('#xueqi-time-choose').find("option:selected").val()},//获取一个系统参数
 			details:[]
 		}
 		for(var c = 1 ; c <= 7 ; c++){
@@ -249,6 +249,5 @@
     		}
     	});
 	}
-	//获取授课教师
 	
 </script>
