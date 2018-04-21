@@ -319,16 +319,16 @@
 			$.ajax({
 	            type:"get",
 	            async:false,
-	            url:"./teacher/listAll.action",
+	            url:"./teacher/listAllByCollId.action",
 	            dataType:"json",
 	            data:{
-	            	tCollId:yxid
+	            	claCollId:yxid
 	            },
 	            success:function(data){
 	                console.log(data);
 	                if(data.status == 'success'){
 	                    var rows = [];
-	                    rows = data.data;
+	                    rows = data.tescherListByCollId;
 	                    var html = '';
 	                    for(var i = 0 ; i < rows.length; i++){
 	                        if(i == 0){
@@ -349,7 +349,7 @@
 			$.ajax({
 	            type:"get",
 	            async:false,
-	            url:"./curriculum/listAll.action",
+	            url:"./curriculum/listAllByTId.action",
 	            dataType:"json",
 	            data:{
 	            	currTId:tid
@@ -358,7 +358,7 @@
 	                console.log(data);
 	                if(data.status == 'success'){
 	                    var rows = [];
-	                    rows = data.data;
+	                    rows = data.currListByTId;
 	                    var html = '';
 	                    for(var i = 0 ; i < rows.length; i++){
 	                    	html += '<tr>';
