@@ -12,7 +12,13 @@ import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.springframework.context.annotation.Scope;
 
+import com.lzp.dao.IParameterDao;
+import com.lzp.dao.IStudentDao;
+import com.lzp.dao.ITeacherDao;
 import com.lzp.dao.IUsersDao;
+import com.lzp.model.Parameter;
+import com.lzp.model.Student;
+import com.lzp.model.Teacher;
 import com.lzp.model.Users;
 import com.lzp.util.JsonUtil;
 import com.lzp.util.PageBean;
@@ -26,6 +32,9 @@ import net.sf.json.JSONObject;
 public class UsersAction {
 	
 	private IUsersDao usersDao;
+	private IStudentDao studentDao;
+	private ITeacherDao teacherDao;
+	private IParameterDao parameterDao;
 	
 	public IUsersDao getUsersDao() {
 		return usersDao;
@@ -33,6 +42,28 @@ public class UsersAction {
 	@Resource(name="UsersDao")
 	public void setUsersDao(IUsersDao usersDao) {
 		this.usersDao = usersDao;
+	}
+	
+	public IStudentDao getStudentDao() {
+		return studentDao;
+	}
+	@Resource(name="StudentDao")
+	public void setStudentDao(IStudentDao studentDao) {
+		this.studentDao = studentDao;
+	}
+	public ITeacherDao getTeacherDao() {
+		return teacherDao;
+	}
+	@Resource(name="TeacherDao")
+	public void setTeacherDao(ITeacherDao teacherDao) {
+		this.teacherDao = teacherDao;
+	}
+	public IParameterDao getParameterDao() {
+		return parameterDao;
+	}
+	@Resource(name="ParameterDao")
+	public void setParameterDao(IParameterDao parameterDao) {
+		this.parameterDao = parameterDao;
 	}
 	
 
@@ -199,13 +230,50 @@ public class UsersAction {
 		String username = ServletActionContext.getRequest().getParameter("username");
 		String password = ServletActionContext.getRequest().getParameter("password");
 		String role = ServletActionContext.getRequest().getParameter("role");
-		String hql = "from Users where uName='"+username+"' and uPassword"
-		Users users = usersDao.getById(uId);
+		String hql = "";
+		Student student = new Student();
+		Teacher teacher = new Teacher();
+		Users users = new Users();
+		if("0".equals(role)){
+			//学生登录
+			hql = "from Student where sNumber='"+username+"' and sPassword='"+password+"'";
+			List<Object> studentList = studentDao.getAllByConds(hql);
+			student= (Student) studentList.get(0);
+		}else if("1".equals(role)){
+			//教师登录
+			hql = "from Teacher where tNumber='"+username+"' and tPassword='"+password+"'";
+			List<Object>  teacherList= teacherDao.getAllByConds(hql);
+			teacher = (Teacher) teacherList.get(0);
+		}else{
+			//管理员登录
+			hql = "from Users where uName='"+username+"' and uPassword='"+password+"'";
+			List<Object> usersList = usersDao.getAllByConds(hql);
+			users = (Users) usersList.get(0);
+		}
+		
+		String term = ((Parameter) parameterDao.list().get(0)).getpNewTerm();
 		JSONObject jobj = new JSONObject();
 		if(users != null){
 			//save success
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
+			jobj.put("data", users);
+			jobj.put("role", role);
+			jobj.put("term", term);
+		}else if(student != null){
+			//save success
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("data", student);
+			jobj.put("role", role);
+			jobj.put("term", term);
+		}else if(teacher != null){
+			//save success
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("data", teacher);
+			jobj.put("role", role);
+			jobj.put("term", term);
 		}else{
 			//save failed
 			jobj.put("mes", "获取失败!");
@@ -214,6 +282,6 @@ public class UsersAction {
 		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
 		ServletActionContext.getResponse().getWriter().write(jobj.toString());
 		return null;
-	}
+		}
 
 }

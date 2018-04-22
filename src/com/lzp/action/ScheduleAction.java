@@ -267,19 +267,49 @@ public class ScheduleAction {
 
 	@Action(value = "listAll")
 	public String listAll() throws IOException {
-
-		List<Object> scheduleTypelist = scheduleDao.list();// 获取所有类型数据，不带分页
 		JSONObject jobj = new JSONObject();
-		if (scheduleTypelist.size() > 0) {
-			// save success
+		String sClaId = ServletActionContext.getRequest().getParameter("sClaId");
+		String schSemester = ServletActionContext.getRequest().getParameter("schSemester");
+		JSONArray list = new JSONArray();
+		String hql;
+		String hqlToDetial;
+		if (sClaId.equals("null")) {
+			hql = "from Schedule where 1 = 1 and schSemester='"+schSemester+"'";
+			List<Object> schedulelist = scheduleDao.getAllByConds(hql);
+			for (int i = 0; i < schedulelist.size(); i++) {
+				Schedule schedule = (Schedule) schedulelist.get(i);
+				String scheduleId = schedule.getschId();
+				hqlToDetial =  "from ScheduleDetails where 1 = 1 and dSchId ='"+scheduleId+"'";
+				List<Object> scheduleDetailslist =  scheduleDao.getAllByConds(hqlToDetial);
+				list.add(scheduleDetailslist);
+			}
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
-			jobj.put("data", JsonUtil.toJsonByListObj(scheduleTypelist));
-		} else {
-			// save failed
+			jobj.put("info",JsonUtil.toJsonByListObj(schedulelist));
+			jobj.put("details", JsonUtil.toJsonByListObj(list));
+		}else if(!sClaId.equals("null")){
+			
+
+			hql = "from Schedule where 1 = 1 and schSemester='"+schSemester+" ' and schClaId= '" + sClaId + "'";
+			List<Object> schedulelist = scheduleDao.getAllByConds(hql);
+			for (int i = 0; i < schedulelist.size(); i++) {
+				Schedule schedule = (Schedule) schedulelist.get(i);
+				String scheduleId = schedule.getschId();
+				hqlToDetial =  "from ScheduleDetails where 1 = 1 and dSchId ='"+scheduleId+"'";
+				List<Object> scheduleDetailslist =  scheduleDao.getAllByConds(hqlToDetial);
+				list.add(scheduleDetailslist);
+			}
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("info",JsonUtil.toJsonByListObj(schedulelist));
+			jobj.put("details", JsonUtil.toJsonByListObj(list));
+		
+		
+		}else{
 			jobj.put("mes", "获取失败!");
 			jobj.put("status", "error");
 		}
+		
 		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
 		ServletActionContext.getResponse().getWriter().write(jobj.toString());
 		return null;
