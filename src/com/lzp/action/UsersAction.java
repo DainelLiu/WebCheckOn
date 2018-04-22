@@ -231,9 +231,9 @@ public class UsersAction {
 		String password = ServletActionContext.getRequest().getParameter("password");
 		String role = ServletActionContext.getRequest().getParameter("role");
 		String hql = "";
-		Student student = new Student();
-		Teacher teacher = new Teacher();
-		Users users = new Users();
+		Student student = null;
+		Teacher teacher = null;
+		Users users = null;
 		if("0".equals(role)){
 			//学生登录
 			hql = "from Student where sNumber='"+username+"' and sPassword='"+password+"'";

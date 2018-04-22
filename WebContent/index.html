@@ -19,7 +19,7 @@
         	<h1>基于Web的学生考勤管理系统</h1>
         </div>
         <div class="wu-header-right">
-        	<p><strong class="easyui-tooltip" id="username"></strong>，欢迎您！&nbsp;&nbsp;<span id="term"></span>&nbsp;&nbsp;<a href="#">安全退出</a></p>
+        	<p><strong class="easyui-tooltip" id="username"></strong>，欢迎您！&nbsp;&nbsp;<span id="term"></span>&nbsp;&nbsp;<a href="javascript:exit();">安全退出</a></p>
         </div>
     </div>
     <!-- end of header -->
@@ -91,9 +91,9 @@
 			var loginUser = JSON.parse(Util.getLocalStorage("loginUser"));
 			var role = Util.getLocalStorage("role");
 			if(role == '0'){
-				$('#username').text(loginUser.sNumber);
+				$('#username').text(loginUser.sRealName);
 			}else if(role == '1'){
-				$('#username').text(loginUser.tNumber);
+				$('#username').text(loginUser.tRealName);
 			}else{
 				$('#username').text(loginUser.uName);
 			}
@@ -184,6 +184,11 @@
 				var index = tabPanel.tabs('getTabIndex', tab);
 				tabPanel.tabs('close', index);
 			}
+		}
+		
+		function exit(){
+			Util.clearLocalStorage();
+			window.location.href = 'login.html';
 		}
 	</script>
 </body>

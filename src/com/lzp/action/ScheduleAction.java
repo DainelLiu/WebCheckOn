@@ -1,6 +1,7 @@
 package com.lzp.action;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -269,12 +270,12 @@ public class ScheduleAction {
 	public String listAll() throws IOException {
 		JSONObject jobj = new JSONObject();
 		String sClaId = ServletActionContext.getRequest().getParameter("sClaId");
-		String schSemester = ServletActionContext.getRequest().getParameter("schSemester");
+		String schSemester = URLDecoder.decode(ServletActionContext.getRequest().getParameter("schSemester"), "utf-8");
 		JSONArray list = new JSONArray();
 		List<Object> scheduleDetailslist = new ArrayList<Object>();
 		String hql;
 		String hqlToDetial;
-		if (sClaId.equals("null")) {
+		if (sClaId == null) {
 			hql = "from Schedule where 1 = 1 and schSemester='"+schSemester+"'";
 			List<Object> schedulelist = scheduleDao.getAllByConds(hql);
 			for (int i = 0; i < schedulelist.size(); i++) {

@@ -52,7 +52,10 @@
                         $("#showMsg").html(request);  //登录错误提示信息
                     },
                     success: function (data) {
+                    	data = JSON.parse(data);
+                    	console.log(data);
                     	var json = data.data;
+                    	console.log(json);
                     	Util.setLocalStorage('loginUser',JSON.stringify(json));
                     	Util.setLocalStorage('role',data.role);
                     	Util.setLocalStorage('term',data.term);
@@ -71,11 +74,11 @@
                 <form id="loginForm" method="post">
                     <div style="padding:5px 0;">
                         <label for="login">帐号:</label>
-                        <input type="text" name="username" style="width:260px;" />
+                        <input type="text" name="username" style="width:230px;" />
                     </div>
                     <div style="padding:5px 0;">
                         <label for="password">密码:</label>
-                        <input type="password" name="password" style="width:260px;" />
+                        <input type="password" name="password" style="width:230px;" />
                     </div>
 					<div style="padding:5px 0;">
                         <label for="role">角色:</label>

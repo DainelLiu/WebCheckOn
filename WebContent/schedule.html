@@ -21,22 +21,25 @@
         $('#schedule-datagrid-2').datagrid({
             loadFilter:pagerFilter,
             rownumbers:true,
-            singleSelect:false,
+            singleSelect:true,
             pageSize:20,
-            pagination:true,
-            multiSort:true,
+            pagination:false,
+            multiSort:false,
             fitColumns:true,
             fit:true,
-            height:480,
+            height:485,
             columns:[[
-                { field:'dayone',title:'星期一',width:100},
-                { field:'daytwo',title:'星期二',width:100},
-                { field:'daythree',title:'星期三',width:100},
-                { field:'dayfour',title:'星期四',width:100},
-                { field:'dayfive',title:'星期五',width:100},
-                { field:'daysix',title:'星期六',width:100},
-                { field:'dayseven',title:'星期日',width:100}
-            ]]
+                { field:'dayone',title:'星期一',width:155},
+                { field:'daytwo',title:'星期二',width:160},
+                { field:'daythree',title:'星期三',width:165},
+                { field:'dayfour',title:'星期四',width:165},
+                { field:'dayfive',title:'星期五',width:165},
+                { field:'daysix',title:'星期六',width:165},
+                { field:'dayseven',title:'星期日',width:170}
+            ]],
+            onClickCell:function(rowIndex, field, value){
+           	  alert(rowIndex +','+field+','+value);
+            }
         });
     });
 	/**
@@ -47,7 +50,7 @@
 		var _my = $("#table-iframe").contents();
 		var banjiid = _my.find("#table-grade-choose").find("option:selected").val();
 		var mydata = {
-			info:{schClaId:banjiid,schSemester:_my.find('#xueqi-choose').find("option:selected").val()+','+_my.find('#xueqi-time-choose').find("option:selected").val()},//获取一个系统参数
+			info:{schClaId:banjiid,schSemester:_my.find('#xueqi-choose').find("option:selected").val()+_my.find('#xueqi-time-choose').find("option:selected").val()},//获取一个系统参数
 			details:[]
 		}
 		for(var c = 1 ; c <= 7 ; c++){
@@ -242,22 +245,30 @@
 	}
 	//获取课表
 	function getData(){
+		var param = {};
+		if(Util.getLocalStorage("role") == '0'){
+			param['sClaId'] = JSON.parse(Util.getLocalStorage("loginUser")).sClaId.claId;
+			param['schSemester'] = encodeURI(Util.getLocalStorage("term"));
+		}else if(Util.getLocalStorage("role") == '1'){
+			param['schSemester'] = encodeURI(Util.getLocalStorage("term"));
+		}else{
+			//管理员登录，界面变化
+		}
 		$.ajax({
     		type:"get",
     		async:false,
     		url:"./schedule/listAll.action",
     		dataType:"json",
-    		data:{},
+    		data:param,
     		success:function(data){
     			console.log(data);
     			if(data.status == 'success'){
-    				var info = data.info;
+    				var info = data.info;//得到课表
    					var rows = [];
    					var trueRow = [];
-       				rows = data.details;
-       				for(var i = 1 ; i <= 10 ; i++){//循环10行
-       					for(var j = 1 ; j <= rows.length ; j++){
-       						var ditem = rows[i];
+       				rows = data.details[0];//得到课表详情
+       				if(rows.length > 0){
+       					for(var i = 0 ; i < 10 ; i++){//循环10行
        						var temp = {
        	       						dayone:'',
        	       						daytwo:'',
@@ -267,24 +278,28 @@
        	       						daysix:'',
        	       						dayseven:'',
        	       					}
-       						if(ditem.dInId.inId == (i+'')){
-       							if(ditem.dTime == '星期一'){ temp.dayone = ditem.dCurrId.currName; }
-       							if(ditem.dTime == '星期二'){ temp.daytwo = ditem.dCurrId.currName; }
-       							if(ditem.dTime == '星期三'){ temp.daythree = ditem.dCurrId.currName; }
-       							if(ditem.dTime == '星期四'){ temp.dayfour = ditem.dCurrId.currName; }
-       							if(ditem.dTime == '星期五'){ temp.dayfive = ditem.dCurrId.currName; }
-       							if(ditem.dTime == '星期六'){ temp.daysix = ditem.dCurrId.currName; }
-       							if(ditem.dTime == '星期日'){ temp.dayseven = ditem.dCurrId.currName; }
-           						trueRow.push(temp);
-           					}
-       					}
+       						for(var h = 0 ; h < rows.length ; h++){
+       							var tempItem = rows[h];
+       							if(tempItem.dInId.inContent == (i+1+'')){
+           							if(tempItem.dTime == '星期一'){ temp.dayone = tempItem.dCurrId.currName;}
+           							if(tempItem.dTime == '星期二'){ temp.daytwo = tempItem.dCurrId.currName;}
+           							if(tempItem.dTime == '星期三'){ temp.daythree = tempItem.dCurrId.currName;}
+           							if(tempItem.dTime == '星期四'){ temp.dayfour = tempItem.dCurrId.currName;}
+           							if(tempItem.dTime == '星期五'){ temp.dayfive = tempItem.dCurrId.currName;}
+           							if(tempItem.dTime == '星期六'){ temp.daysix = tempItem.dCurrId.currName;}
+           							if(tempItem.dTime == '星期日'){ temp.dayseven = tempItem.dCurrId.currName;	}
+               					}
+       						}
+           					trueRow.push(temp);
+           				}
+           				$('#schedule-datagrid-2').datagrid('loadData', trueRow);
        				}
-       				$('#schedule-datagrid-2').datagrid('loadData', trueRow);
     			}else{
     				//没有数据或服务器错误
     			}
     		}
     	});
 	}
+	getData();
 	
 </script>
