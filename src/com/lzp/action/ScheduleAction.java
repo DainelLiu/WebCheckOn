@@ -271,6 +271,7 @@ public class ScheduleAction {
 		String sClaId = ServletActionContext.getRequest().getParameter("sClaId");
 		String schSemester = ServletActionContext.getRequest().getParameter("schSemester");
 		JSONArray list = new JSONArray();
+		List<Object> scheduleDetailslist = new ArrayList<Object>();
 		String hql;
 		String hqlToDetial;
 		if (sClaId.equals("null")) {
@@ -280,7 +281,7 @@ public class ScheduleAction {
 				Schedule schedule = (Schedule) schedulelist.get(i);
 				String scheduleId = schedule.getschId();
 				hqlToDetial =  "from ScheduleDetails where 1 = 1 and dSchId ='"+scheduleId+"'";
-				List<Object> scheduleDetailslist =  scheduleDao.getAllByConds(hqlToDetial);
+				scheduleDetailslist =  scheduleDao.getAllByConds(hqlToDetial);
 				list.add(scheduleDetailslist);
 			}
 			jobj.put("mes", "获取成功!");
@@ -296,7 +297,7 @@ public class ScheduleAction {
 				Schedule schedule = (Schedule) schedulelist.get(i);
 				String scheduleId = schedule.getschId();
 				hqlToDetial =  "from ScheduleDetails where 1 = 1 and dSchId ='"+scheduleId+"'";
-				List<Object> scheduleDetailslist =  scheduleDao.getAllByConds(hqlToDetial);
+				scheduleDetailslist =  scheduleDao.getAllByConds(hqlToDetial);
 				list.add(scheduleDetailslist);
 			}
 			jobj.put("mes", "获取成功!");
