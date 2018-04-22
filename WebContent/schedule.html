@@ -29,13 +29,13 @@
             fit:true,
             height:480,
             columns:[[
-                { field:'day-one',title:'星期一',width:100},
-                { field:'day-two',title:'星期二',width:100},
-                { field:'day-three',title:'星期三',width:100},
-                { field:'day-four',title:'星期四',width:100},
-                { field:'day-five',title:'星期五',width:100},
-                { field:'day-six',title:'星期六',width:100},
-                { field:'day-seven',title:'星期日',width:100}
+                { field:'dayone',title:'星期一',width:100},
+                { field:'daytwo',title:'星期二',width:100},
+                { field:'daythree',title:'星期三',width:100},
+                { field:'dayfour',title:'星期四',width:100},
+                { field:'dayfive',title:'星期五',width:100},
+                { field:'daysix',title:'星期六',width:100},
+                { field:'dayseven',title:'星期日',width:100}
             ]]
         });
     });
@@ -64,9 +64,18 @@
 				if(_my.find(tempTime+j+' .item').length > 0){
 					tempObj.dCurrId = _my.find(tempTime+j+' .item').attr('id');
 				}else{
-					tempObj.dCurrId = "null";
+					tempObj.dCurrId = '0';
 				}
-				tempObj.dInId = j;
+				if(j == 1){ tempObj.dInId = '14e0416870a54ae3899ae233e12851c9'; }
+				if(j == 2){ tempObj.dInId = 'd6bcc62d8b3149f48fe34e69ca4da744'; }
+				if(j == 3){ tempObj.dInId = '5256b73edcd54dc3b1dd0d7e37fe4007'; }
+				if(j == 4){ tempObj.dInId = '26f6fd041a2d4bd381ffa0cac19588a5'; }
+				if(j == 5){ tempObj.dInId = 'bbfabc2079cb4fc8b1954d625f824303'; }
+				if(j == 6){ tempObj.dInId = '2a3819a0521341b3abd7bbf4d9ceb661'; }
+				if(j == 7){ tempObj.dInId = 'f1e6e38a90e04457aa6ee8f73f276b03'; }
+				if(j == 8){ tempObj.dInId = '2127065e05ad4b7da9b63f56681965b9'; }
+				if(j == 9){ tempObj.dInId = '89b1dc829d6b49b1beb3549e10446207'; }
+				if(j == 10){ tempObj.dInId = 'bc8f6b86daef40219b87290359704899'; }
 				mydata.details.push(tempObj);
 			}
 		}
@@ -250,22 +259,22 @@
        					for(var j = 1 ; j <= rows.length ; j++){
        						var ditem = rows[i];
        						var temp = {
-       	       						day-one:'',
-       	       						day-two:'',
-       	       						day-three:'',
-       	       						day-four:'',
-       	       						day-five:'',
-       	       						day-six:'',
-       	       						day-seven:'',
+       	       						dayone:'',
+       	       						daytwo:'',
+       	       						daythree:'',
+       	       						dayfour:'',
+       	       						dayfive:'',
+       	       						daysix:'',
+       	       						dayseven:'',
        	       					}
        						if(ditem.dInId.inId == (i+'')){
-       							if(ditem.dTime == '星期一'){ temp.day-one = ditem.dCurrId.currName; }
-       							if(ditem.dTime == '星期二'){ temp.day-one = ditem.dCurrId.currName; }
-       							if(ditem.dTime == '星期三'){ temp.day-one = ditem.dCurrId.currName; }
-       							if(ditem.dTime == '星期四'){ temp.day-one = ditem.dCurrId.currName; }
-       							if(ditem.dTime == '星期五'){ temp.day-one = ditem.dCurrId.currName; }
-       							if(ditem.dTime == '星期六'){ temp.day-one = ditem.dCurrId.currName; }
-       							if(ditem.dTime == '星期日'){ temp.day-one = ditem.dCurrId.currName; }
+       							if(ditem.dTime == '星期一'){ temp.dayone = ditem.dCurrId.currName; }
+       							if(ditem.dTime == '星期二'){ temp.daytwo = ditem.dCurrId.currName; }
+       							if(ditem.dTime == '星期三'){ temp.daythree = ditem.dCurrId.currName; }
+       							if(ditem.dTime == '星期四'){ temp.dayfour = ditem.dCurrId.currName; }
+       							if(ditem.dTime == '星期五'){ temp.dayfive = ditem.dCurrId.currName; }
+       							if(ditem.dTime == '星期六'){ temp.daysix = ditem.dCurrId.currName; }
+       							if(ditem.dTime == '星期日'){ temp.dayseven = ditem.dCurrId.currName; }
            						trueRow.push(temp);
            					}
        					}

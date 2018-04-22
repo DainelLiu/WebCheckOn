@@ -10,12 +10,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Component;
 
-import com.lzp.dao.IIntervalDao;
-import com.lzp.model.Interval;
+import com.lzp.dao.IIntervalsDao;
+import com.lzp.model.Intervals;
 import com.lzp.util.PageBean;
 
-@Component(value="IntervalDao")
-public class IntervalDaoImpl implements IIntervalDao {
+@Component(value="IntervalsDao")
+public class IntervalsDaoImpl implements IIntervalsDao {
 	
 	private SessionFactory sessionFactory;
 	
@@ -25,7 +25,7 @@ public class IntervalDaoImpl implements IIntervalDao {
 	}
 
 	@Override
-	public boolean save(Interval interval) {
+	public boolean save(Intervals interval) {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		String returnId = (String) session.save(interval);
@@ -39,7 +39,7 @@ public class IntervalDaoImpl implements IIntervalDao {
 	}
 
 	@Override
-	public boolean delete(Interval interval) {
+	public boolean delete(Intervals interval) {
 		boolean result = false;
 		try{
 			if(interval != null){
@@ -57,7 +57,7 @@ public class IntervalDaoImpl implements IIntervalDao {
 	}
 
 	@Override
-	public boolean update(Interval interval) {
+	public boolean update(Intervals interval) {
 		boolean result = false;
 		try{
 			if(interval != null){
@@ -77,7 +77,7 @@ public class IntervalDaoImpl implements IIntervalDao {
 	@Override
 	public List<Object> list() {
 		Session session = sessionFactory.openSession();
-		Query query = session.createQuery("from Interval");
+		Query query = session.createQuery("from Intervals");
 		List<Object> list = query.list();
 		session.close();
 		return list;
@@ -86,7 +86,7 @@ public class IntervalDaoImpl implements IIntervalDao {
 	@Override
 	public List<Object> listAll(PageBean page) {
 		Session session = sessionFactory.openSession();
-		Query query = session.createQuery("from Interval");
+		Query query = session.createQuery("from Intervals");
 		query.setFirstResult(page.getRowStart());
 		query.setMaxResults(page.getPageSize());
 		List<Object> list = query.list();
@@ -95,9 +95,9 @@ public class IntervalDaoImpl implements IIntervalDao {
 	}
 
 	@Override
-	public Interval getById(String id) {
+	public Intervals getById(String id) {
 		Session session = sessionFactory.openSession();
-		Interval dto = (Interval)session.get(Interval.class, id);
+		Intervals dto = (Intervals)session.get(Intervals.class, id);
 		session.close();
 		return dto;
 	}

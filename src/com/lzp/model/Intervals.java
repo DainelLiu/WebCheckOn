@@ -11,7 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table
-public class Interval implements Serializable{
+public class Intervals implements Serializable{
 
 	/**
 	 * 时间段实体类
@@ -21,18 +21,18 @@ public class Interval implements Serializable{
 	private String inId;
 	//时间段描述
 	private String inContent;
-	public Interval() {
+	public Intervals() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Interval(String inId, String inContent) {
+	public Intervals(String inId, String inContent) {
 		super();
 		this.inId = inId;
 		this.inContent = inContent;
 	}
 	@Override
 	public String toString() {
-		return "Interval [inId=" + inId + ", inContent=" + inContent + "]";
+		return "Intervals [inId=" + inId + ", inContent=" + inContent + "]";
 	}
 	@Id
 	@GenericGenerator(name="systemUUID",strategy="uuid")  

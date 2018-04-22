@@ -2,30 +2,30 @@ package com.lzp.dao;
 
 import java.util.List;
 
-import com.lzp.model.Interval;
+import com.lzp.model.Intervals;
 import com.lzp.util.PageBean;
 
-public interface IIntervalDao {
+public interface IIntervalsDao {
 	/**
 	 * 新增缺勤数据
-	 * @param Interval
+	 * @param Intervals
 	 * @return
 	 */
-	public boolean save(Interval interval);
+	public boolean save(Intervals interval);
 	
 	/**
 	 * 删除缺勤数据
-	 * @param Interval
+	 * @param Intervals
 	 * @return
 	 */
-	public boolean delete(Interval interval);
+	public boolean delete(Intervals interval);
 	
 	/**
 	 * 更新缺勤数据
-	 * @param Interval
+	 * @param Intervals
 	 * @return
 	 */
-	public boolean update(Interval interval);
+	public boolean update(Intervals interval);
 	
 	/**
 	 * 查询所有缺勤数据
@@ -44,7 +44,7 @@ public interface IIntervalDao {
 	 * @param id
 	 * @return
 	 */
-	public Interval getById(String id);
+	public Intervals getById(String id);
 	
 	/**
 	 * 根据其他条件查询缺勤数据带分页

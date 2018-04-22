@@ -30,12 +30,12 @@ public class ScheduleDetails implements Serializable{
 	//课程编号
 	private Curriculum dCurrId;
 	//上课时段编号
-	private Interval dInId;
+	private Intervals dInId;
 	public ScheduleDetails() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public ScheduleDetails(String dId, Schedule dSchId, String dTime, Curriculum dCurrId, Interval dInId) {
+	public ScheduleDetails(String dId, Schedule dSchId, String dTime, Curriculum dCurrId, Intervals dInId) {
 		super();
 		this.dId = dId;
 		this.dSchId = dSchId;
@@ -81,10 +81,10 @@ public class ScheduleDetails implements Serializable{
 	}
 	@OneToOne(cascade={CascadeType.MERGE})
 	@JoinColumn(name="dInId")
-	public Interval getdInId() {
+	public Intervals getdInId() {
 		return dInId;
 	}
-	public void setdInId(Interval dInId) {
+	public void setdInId(Intervals dInId) {
 		this.dInId = dInId;
 	}
 	

@@ -12,8 +12,8 @@ import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.springframework.context.annotation.Scope;
 
-import com.lzp.dao.IIntervalDao;
-import com.lzp.model.Interval;
+import com.lzp.dao.IIntervalsDao;
+import com.lzp.model.Intervals;
 import com.lzp.util.JsonUtil;
 import com.lzp.util.PageBean;
 
@@ -23,15 +23,15 @@ import net.sf.json.JSONObject;
 @ParentPackage("struts-default")
 //表示继承的父包
 @Namespace(value = "/interval")
-public class IntervalAction {
+public class IntervalsAction {
 	
-	private IIntervalDao intervalDao;
+	private IIntervalsDao intervalDao;
 	
-	public IIntervalDao getIntervalDao() {
+	public IIntervalsDao getIntervalsDao() {
 		return intervalDao;
 	}
-	@Resource(name="IntervalDao")
-	public void setIntervalDao(IIntervalDao intervalDao) {
+	@Resource(name="IntervalsDao")
+	public void setIntervalsDao(IIntervalsDao intervalDao) {
 		this.intervalDao = intervalDao;
 	}
 	
@@ -43,7 +43,7 @@ public class IntervalAction {
 	 */
 	@Action(value="save")
 	public String save() throws IOException{
-		Interval interval = new Interval();
+		Intervals interval = new Intervals();
 		JSONObject jobj = new JSONObject();
 		if(intervalDao.save(interval)) {
 			jobj.put("mes", "保存成功!");
@@ -67,7 +67,7 @@ public class IntervalAction {
 		
 		
 		String inId = ServletActionContext.getRequest().getParameter("inId");
-		Interval interval = intervalDao.getById(inId);
+		Intervals interval = intervalDao.getById(inId);
 		JSONObject jobj = new JSONObject();
 		if(intervalDao.delete(interval)){
 			//save success
@@ -92,7 +92,7 @@ public class IntervalAction {
 		
 		String inId = ServletActionContext.getRequest().getParameter("inId");
 		
-		Interval interval = intervalDao.getById(inId);
+		Intervals interval = intervalDao.getById(inId);
 		JSONObject jobj = new JSONObject();
 		
 		if(intervalDao.update(interval)) {
@@ -116,7 +116,7 @@ public class IntervalAction {
 	@Action(value="getById")
 	public String getById() throws IOException{
 		String inId = ServletActionContext.getRequest().getParameter("inId");
-		Interval interval = intervalDao.getById(inId);
+		Intervals interval = intervalDao.getById(inId);
 		JSONObject jobj = new JSONObject();
 		if(interval != null){
 			//save success

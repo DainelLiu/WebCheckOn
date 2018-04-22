@@ -14,12 +14,12 @@ import org.springframework.context.annotation.Scope;
 
 import com.lzp.dao.IClassesDao;
 import com.lzp.dao.ICurriculumDao;
-import com.lzp.dao.IIntervalDao;
+import com.lzp.dao.IIntervalsDao;
 import com.lzp.dao.IScheduleDao;
 import com.lzp.dao.IScheduleDetailsDao;
 import com.lzp.model.Classes;
 import com.lzp.model.Curriculum;
-import com.lzp.model.Interval;
+import com.lzp.model.Intervals;
 import com.lzp.model.Schedule;
 import com.lzp.model.ScheduleDetails;
 import com.lzp.util.JsonUtil;
@@ -78,14 +78,14 @@ public class ScheduleAction {
 		this.curriculumDao = curriculumDao;
 	}
 
-	private IIntervalDao intervalDao;
+	private IIntervalsDao intervalDao;
 
-	public IIntervalDao getIntervalDao() {
+	public IIntervalsDao getIntervalsDao() {
 		return intervalDao;
 	}
 
-	@Resource(name = "IntervalDao")
-	public void setIntervalDao(IIntervalDao intervalDao) {
+	@Resource(name = "IntervalsDao")
+	public void setIntervalsDao(IIntervalsDao intervalDao) {
 		this.intervalDao = intervalDao;
 	}
 
@@ -117,12 +117,12 @@ public class ScheduleAction {
 			for (int i = 0; i < jsonArray.size(); i++) {
 				ScheduleDetails scheduleDetails = new ScheduleDetails();
 				JSONObject job = jsonArray.getJSONObject(i);
-				if (!job.get("dCurrId").equals("null")) {
+				if (!"0".equals(job.get("dCurrId"))) {
 					scheduleDetails.setdSchId(scheduleByDetails);
 					scheduleDetails.setdTime(job.getString("dTime"));
 					Curriculum curriculum = curriculumDao.getById(job.getString("dCurrId"));
 					scheduleDetails.setdCurrId(curriculum);
-					Interval interval = intervalDao.getById(job.getString("dInId"));
+					Intervals interval = intervalDao.getById(job.getString("dInId"));
 					scheduleDetails.setdInId(interval);
 					if (scheduleDetailsDao.save(scheduleDetails)) {
 						sign = true;
