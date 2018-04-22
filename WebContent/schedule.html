@@ -64,7 +64,7 @@
 				if(_my.find(tempTime+j+' .item').length > 0){
 					tempObj.dCurrId = _my.find(tempTime+j+' .item').attr('id');
 				}else{
-					tempObj.dCurrId = null;
+					tempObj.dCurrId = "null";
 				}
 				tempObj.dInId = j;
 				mydata.details.push(tempObj);
@@ -242,12 +242,35 @@
     		success:function(data){
     			console.log(data);
     			if(data.status == 'success'){
+    				var info = data.info;
    					var rows = [];
-       				rows = data.data;
-       				for(var i = 0 ; i < rows.length ; i++){
-       					var item = rows[i];
+   					var trueRow = [];
+       				rows = data.details;
+       				for(var i = 1 ; i <= 10 ; i++){//循环10行
+       					for(var j = 1 ; j <= rows.length ; j++){
+       						var ditem = rows[i];
+       						var temp = {
+       	       						day-one:'',
+       	       						day-two:'',
+       	       						day-three:'',
+       	       						day-four:'',
+       	       						day-five:'',
+       	       						day-six:'',
+       	       						day-seven:'',
+       	       					}
+       						if(ditem.dInId.inId == (i+'')){
+       							if(ditem.dTime == '星期一'){ temp.day-one = ditem.dCurrId.currName; }
+       							if(ditem.dTime == '星期二'){ temp.day-one = ditem.dCurrId.currName; }
+       							if(ditem.dTime == '星期三'){ temp.day-one = ditem.dCurrId.currName; }
+       							if(ditem.dTime == '星期四'){ temp.day-one = ditem.dCurrId.currName; }
+       							if(ditem.dTime == '星期五'){ temp.day-one = ditem.dCurrId.currName; }
+       							if(ditem.dTime == '星期六'){ temp.day-one = ditem.dCurrId.currName; }
+       							if(ditem.dTime == '星期日'){ temp.day-one = ditem.dCurrId.currName; }
+           						trueRow.push(temp);
+           					}
+       					}
        				}
-
+       				$('#schedule-datagrid-2').datagrid('loadData', trueRow);
     			}else{
     				//没有数据或服务器错误
     			}
