@@ -188,5 +188,32 @@ public class UsersAction {
 		ServletActionContext.getResponse().getWriter().write(jobj.toString());
 		return null;
 	}
+	
+	/**
+	 * 登录
+	 * @return
+	 * @throws IOException
+	 */
+	@Action(value="loginUsers")
+	public String loginUsers() throws IOException{
+		String username = ServletActionContext.getRequest().getParameter("username");
+		String password = ServletActionContext.getRequest().getParameter("password");
+		String role = ServletActionContext.getRequest().getParameter("role");
+		String hql = "from Users where uName='"+username+"' and uPassword"
+		Users users = usersDao.getById(uId);
+		JSONObject jobj = new JSONObject();
+		if(users != null){
+			//save success
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+		}else{
+			//save failed
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+	}
 
 }

@@ -43,7 +43,14 @@ public class ParameterAction {
 	 */
 	@Action(value="save")
 	public String save() throws IOException{
+		String pLeaveNum = ServletActionContext.getRequest().getParameter("pLeaveNum");
+		String pAbsenceNum = ServletActionContext.getRequest().getParameter("pAbsenceNum");
+		String pNewTerm = ServletActionContext.getRequest().getParameter("pNewTerm");
 		Parameter parameter = new Parameter();
+		parameter.setpLeaveNum(pLeaveNum);
+		parameter.setpAbsenceNum(pAbsenceNum);
+		parameter.setpNewTerm(pNewTerm);
+		
 		JSONObject jobj = new JSONObject();
 		if(parameterDao.save(parameter)) {
 			jobj.put("mes", "保存成功!");

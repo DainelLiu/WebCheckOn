@@ -23,19 +23,24 @@ public class Parameter implements Serializable{
 	private String pLeaveNum;
 	//缺勤次数
 	private String pAbsenceNum;
+	//当前学期
+	private String pNewTerm;
 	public Parameter() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Parameter(String pId, String pLeaveNum, String pAbsenceNum) {
+	public Parameter(String pId, String pLeaveNum, String pAbsenceNum,String pNewTerm) {
 		super();
 		this.pId = pId;
 		this.pLeaveNum = pLeaveNum;
 		this.pAbsenceNum = pAbsenceNum;
+		this.pNewTerm = pNewTerm;
 	}
+	
 	@Override
 	public String toString() {
-		return "Parameter [pId=" + pId + ", pLeaveNum=" + pLeaveNum + ", pAbsenceNum=" + pAbsenceNum + "]";
+		return "Parameter [pId=" + pId + ", pLeaveNum=" + pLeaveNum + ", pAbsenceNum=" + pAbsenceNum + ", pNewTerm="
+				+ pNewTerm + "]";
 	}
 	@Id
 	@GenericGenerator(name="systemUUID",strategy="uuid")  
@@ -57,6 +62,12 @@ public class Parameter implements Serializable{
 	}
 	public void setpAbsenceNum(String pAbsenceNum) {
 		this.pAbsenceNum = pAbsenceNum;
+	}
+	public String getpNewTerm() {
+		return pNewTerm;
+	}
+	public void setpNewTerm(String pNewTerm) {
+		this.pNewTerm = pNewTerm;
 	}
 	
 	
