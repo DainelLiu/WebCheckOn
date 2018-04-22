@@ -224,9 +224,6 @@
                 if(data.status == 'success'){
                     var rows = [];
                     rows = data.data;
-                    for(var i=0;i<rows.length;i++){
-                        rows[i].currTId = rows[i].currTId.tRealName;
-                    }
                     $('#setting-datagrid-2').datagrid('loadData', rows);
                     
                 }else{
