@@ -59,5 +59,7 @@ public interface IClassesDao {
 	 * @return
 	 */
 	public List<Object> getAllByConds(String hql);
+	
+	//public List<Object> getByClaCollId(String claCollId);
 
 }

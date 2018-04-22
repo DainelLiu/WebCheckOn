@@ -25,16 +25,16 @@ public class ScheduleDaoImpl implements IScheduleDao {
 	}
 
 	@Override
-	public boolean save(Schedule schedule) {
+	public String save(Schedule schedule) {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		String returnId = (String) session.save(schedule);
 		session.getTransaction().commit();
 		session.close();
 		if(!"".equals(returnId) && null != returnId){
-			return true;
+			return returnId;
 		}else{
-			return false;
+			return null;
 		}
 	}
 

@@ -13,7 +13,9 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.springframework.context.annotation.Scope;
 
 import com.lzp.dao.ICurriculumDao;
+import com.lzp.dao.ITeacherDao;
 import com.lzp.model.Curriculum;
+import com.lzp.model.Teacher;
 import com.lzp.util.JsonUtil;
 import com.lzp.util.PageBean;
 
@@ -35,6 +37,16 @@ public class CurriculumAction {
 		this.curriculumDao = curriculumDao;
 	}
 	
+	
+	private ITeacherDao teacherDao;
+	
+	public ITeacherDao getTeacherDao() {
+		return teacherDao;
+	}
+	@Resource(name="TeacherDao")
+	public void setTeacherDao(ITeacherDao teacherDao) {
+		this.teacherDao = teacherDao;
+	}
 
 	/**
 	 * 保存缺勤信息
@@ -44,6 +56,13 @@ public class CurriculumAction {
 	@Action(value="save")
 	public String save() throws IOException{
 		Curriculum curriculum = new Curriculum();
+		
+		String currName = ServletActionContext.getRequest().getParameter("currName");
+		String currTId = ServletActionContext.getRequest().getParameter("currTId");
+		Teacher teacher = teacherDao.getById(currTId);
+		curriculum.setcurrName(currName);
+		curriculum.setcurrTId(teacher);
+		
 		JSONObject jobj = new JSONObject();
 		if(curriculumDao.save(curriculum)) {
 			jobj.put("mes", "保存成功!");
@@ -179,6 +198,27 @@ public class CurriculumAction {
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
 			jobj.put("data", JsonUtil.toJsonByListObj(curriculumTypelist));
+		}else{
+			//save failed
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+	}
+	
+	@Action(value="listAllByTId")
+	public String listAllByTId() throws IOException{
+		String currTId = ServletActionContext.getRequest().getParameter("currTId");
+		String hql="from Curriculum where 1=1 and currTId = '" + currTId + "'";
+		List<Object> currListByTId = curriculumDao.getAllByConds(hql);// 获取所有类型数据，不带分页
+		JSONObject jobj = new JSONObject();
+		if(currListByTId.size() > 0){
+			//save success
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("currListByTId", JsonUtil.toJsonByListObj(currListByTId));
 		}else{
 			//save failed
 			jobj.put("mes", "获取失败!");

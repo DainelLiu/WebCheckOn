@@ -50,7 +50,7 @@ public class Schedule implements Serializable{
 		this.schId = schId;
 	}
 	@OneToOne(cascade={CascadeType.MERGE})
-	@JoinColumn(name="aUId")
+	@JoinColumn(name="schClaId")
 	public Classes getschClaId() {
 		return schClaId;
 	}

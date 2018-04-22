@@ -2,30 +2,30 @@ package com.lzp.dao;
 
 import java.util.List;
 
-import com.lzp.model.Schedule;
+import com.lzp.model.ScheduleDetails;
 import com.lzp.util.PageBean;
 
-public interface IScheduleDao {
+public interface IScheduleDetailsDao {
 	/**
 	 * 新增缺勤数据
-	 * @param Schedule
+	 * @param ScheduleDetails
 	 * @return
 	 */
-	public String save(Schedule schedule);
+	public boolean save(ScheduleDetails scheduleDetails);
 	
 	/**
 	 * 删除缺勤数据
-	 * @param Schedule
+	 * @param ScheduleDetails
 	 * @return
 	 */
-	public boolean delete(Schedule schedule);
+	public boolean delete(ScheduleDetails scheduleDetails);
 	
 	/**
 	 * 更新缺勤数据
-	 * @param Schedule
+	 * @param ScheduleDetails
 	 * @return
 	 */
-	public boolean update(Schedule schedule);
+	public boolean update(ScheduleDetails scheduleDetails);
 	
 	/**
 	 * 查询所有缺勤数据
@@ -44,7 +44,7 @@ public interface IScheduleDao {
 	 * @param id
 	 * @return
 	 */
-	public Schedule getById(String id);
+	public ScheduleDetails getById(String id);
 	
 	/**
 	 * 根据其他条件查询缺勤数据带分页

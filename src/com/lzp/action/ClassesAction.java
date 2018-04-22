@@ -16,6 +16,7 @@ import com.lzp.dao.IClassesDao;
 import com.lzp.dao.ICollegeDao;
 import com.lzp.model.Classes;
 import com.lzp.model.College;
+import com.lzp.model.Student;
 import com.lzp.util.JsonUtil;
 import com.lzp.util.PageBean;
 
@@ -59,6 +60,11 @@ public class ClassesAction {
 	@Action(value = "save")
 	public String save() throws IOException {
 		Classes classes = new Classes();
+		String claName = ServletActionContext.getRequest().getParameter("claName");
+		String claCollId = ServletActionContext.getRequest().getParameter("claCollId");
+		College college = collegeDao.getById(claCollId);
+		classes.setclaName(claName);
+		classes.setclaCollId(college);
 		JSONObject jobj = new JSONObject();
 		if (classesDao.save(classes)) {
 			jobj.put("mes", "保存成功!");
@@ -226,5 +232,28 @@ public class ClassesAction {
 		ServletActionContext.getResponse().getWriter().write(jobj.toString());
 		return null;
 	}
+	
+	@Action(value = "getByClaCollId")
+	public String getByClaCollId() throws IOException {
+		String claCollId = ServletActionContext.getRequest().getParameter("claCollId");
+		String hql="from Classes where 1=1 and claCollId = '" + claCollId + "'";
+		System.out.println(hql);
+		List<Object> studentListByCollId = classesDao.getAllByConds(hql);// 获取所有类型数据，不带分页
+		JSONObject jobj = new JSONObject();
+		if (studentListByCollId.size() > 0) {
+			// save success
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("studentListByCollId", JsonUtil.toJsonByListObj(studentListByCollId));
+		} else {
+			// save failed
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+	}
+
 
 }

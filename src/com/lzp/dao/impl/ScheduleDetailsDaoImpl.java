@@ -10,12 +10,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Component;
 
-import com.lzp.dao.IClassesDao;
-import com.lzp.model.Classes;
+import com.lzp.dao.IScheduleDetailsDao;
+import com.lzp.model.ScheduleDetails;
 import com.lzp.util.PageBean;
 
-@Component(value="ClassesDao")
-public class ClassesDaoImpl implements IClassesDao {
+@Component(value="ScheduleDetailsDao")
+public class ScheduleDetailsDaoImpl implements IScheduleDetailsDao {
 	
 	private SessionFactory sessionFactory;
 	
@@ -25,10 +25,10 @@ public class ClassesDaoImpl implements IClassesDao {
 	}
 
 	@Override
-	public boolean save(Classes classes) {
+	public boolean save(ScheduleDetails scheduleDetails) {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		String returnId = (String) session.save(classes);
+		String returnId = (String) session.save(scheduleDetails);
 		session.getTransaction().commit();
 		session.close();
 		if(!"".equals(returnId) && null != returnId){
@@ -39,13 +39,13 @@ public class ClassesDaoImpl implements IClassesDao {
 	}
 
 	@Override
-	public boolean delete(Classes classes) {
+	public boolean delete(ScheduleDetails scheduleDetails) {
 		boolean result = false;
 		try{
-			if(classes != null){
+			if(scheduleDetails != null){
 				Session session = sessionFactory.openSession();
 				session.beginTransaction();
-				session.delete(classes);
+				session.delete(scheduleDetails);
 				session.getTransaction().commit();
 				session.close();
 				result = true;
@@ -57,13 +57,13 @@ public class ClassesDaoImpl implements IClassesDao {
 	}
 
 	@Override
-	public boolean update(Classes classes) {
+	public boolean update(ScheduleDetails scheduleDetails) {
 		boolean result = false;
 		try{
-			if(classes != null){
+			if(scheduleDetails != null){
 				Session session = sessionFactory.openSession();
 				session.beginTransaction();
-				session.update(classes);
+				session.update(scheduleDetails);
 				session.getTransaction().commit();
 				session.close();
 				result = true;
@@ -77,7 +77,7 @@ public class ClassesDaoImpl implements IClassesDao {
 	@Override
 	public List<Object> list() {
 		Session session = sessionFactory.openSession();
-		Query query = session.createQuery("from Classes");
+		Query query = session.createQuery("from ScheduleDetails");
 		List<Object> list = query.list();
 		session.close();
 		return list;
@@ -86,7 +86,7 @@ public class ClassesDaoImpl implements IClassesDao {
 	@Override
 	public List<Object> listAll(PageBean page) {
 		Session session = sessionFactory.openSession();
-		Query query = session.createQuery("from Classes");
+		Query query = session.createQuery("from ScheduleDetails");
 		query.setFirstResult(page.getRowStart());
 		query.setMaxResults(page.getPageSize());
 		List<Object> list = query.list();
@@ -95,9 +95,9 @@ public class ClassesDaoImpl implements IClassesDao {
 	}
 
 	@Override
-	public Classes getById(String id) {
+	public ScheduleDetails getById(String id) {
 		Session session = sessionFactory.openSession();
-		Classes dto = (Classes)session.get(Classes.class, id);
+		ScheduleDetails dto = (ScheduleDetails)session.get(ScheduleDetails.class, id);
 		session.close();
 		return dto;
 	}
@@ -122,13 +122,4 @@ public class ClassesDaoImpl implements IClassesDao {
 		return list;
 	}
 
-	/*@Override
-	public List<Object> getByClaCollId(String claCollId) {
-		Session session = sessionFactory.openSession();
-		Query query = session.createQuery("select * from Classes where 1=1 and claCollId = '" + claCollId + "'");
-		List<Object> list = query.list();
-		session.close();
-		return list;
-	}
-*/
 }
