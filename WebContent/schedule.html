@@ -61,11 +61,16 @@
 			if(c == 6){ tempObj.dTime = '星期六'; tempTime = '#sta'; }
 			if(c == 7){ tempObj.dTime = '星期日'; tempTime = '#sun'; }
 			for(var j = 1 ; j <= 10 ; j++){
-				tempObj.dCurrId = _my.find(tempTime+j+' .item').attr('id');
+				if(_my.find(tempTime+j+' .item').length > 0){
+					tempObj.dCurrId = _my.find(tempTime+j+' .item').attr('id');
+				}else{
+					tempObj.dCurrId = null;
+				}
 				tempObj.dInId = j;
 				mydata.details.push(tempObj);
 			}
 		}
+		//console.log(mydata);
 		$.ajax({
             type:"post",
             async:false,
