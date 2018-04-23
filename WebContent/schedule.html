@@ -12,9 +12,65 @@
 <!-- Begin of easyui-dialog -->
 <div id="schedule-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
 </div>
+<div id="schedule-dialog-3" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+	<form id="schedule-form-3" method="post" action="leave/save.action">
+        <table>
+        	<tr>
+                <td align="right">课程名称:</td>
+                <td><input type="text" name="attr1" class="wu-text" id="cName" readonly/></td>
+            </tr>
+            <tr>
+                <td align="right">教师姓名:</td>
+                <td><input type="text" name="attr2" class="wu-text" id="tName" readonly/></td>
+            </tr>
+            <tr>
+                <td align="right">教师联系方式:</td>
+                <td><input type="text" name="attr" class="wu-text" id="tPhone" readonly/></td>
+            </tr>
+            <tr>
+                <td width="60" align="right">请假事由:</td>
+                <td>
+                    <textarea rows="3" cols="5" name="lReason" id="reason"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">学生学号:</td>
+                <td><input type="text" name="lSId" class="wu-text" id="sNumber" readonly/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="schedule-dialog-4" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+	<table id="schedule-datagrid-4" class="easyui-datagrid"></table>
+</div>
 <!-- End of easyui-dialog -->
 <script type="text/javascript">
     $(function(){
+    	var role = Util.getLocalStorage("role");
+    	var loginUser = JSON.parse(Util.getLocalStorage("loginUser"));
+    	
+    	$('#schedule-datagrid-4').datagrid({
+            loadFilter:pagerFilter,
+            rownumbers:true,
+            singleSelect:false,
+            selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项。重点在这里  
+            checkOnSelect: true, //true选择行勾选，false选择行不勾选, 1.3以后有此选项
+            pageSize:20,
+            pagination:true,
+            multiSort:false,
+            fitColumns:true,
+            fit:true,
+            height:300,
+            columns:[[
+				{ field:'ck',checkbox:true,width:5},
+				{ field:'sId',title:'编号',width:100,hidden:'true'},
+                { field:'sNumber',title:'学号',width:100},
+                { field:'sRealName',title:'姓名',width:80},
+                { field:'sSex',title:'性别',width:50},
+                { field:'sPhone',title:'联系电话',width:100}
+            ]]
+    	});
+    	
         /**
          * Name 载入数据
          */
@@ -29,33 +85,141 @@
             fit:true,
             height:485,
             columns:[[
-                { field:'dayone',title:'星期一',width:100},
-                { field:'daytwo',title:'星期二',width:100},
-                { field:'daythree',title:'星期三',width:100},
-                { field:'dayfour',title:'星期四',width:100},
-                { field:'dayfive',title:'星期五',width:100},
-                { field:'daysix',title:'星期六',width:100},
-                { field:'dayseven',title:'星期日',width:100}
+                { field:'dayone',title:'星期一',width:155},
+                { field:'daytwo',title:'星期二',width:160},
+                { field:'daythree',title:'星期三',width:165},
+                { field:'dayfour',title:'星期四',width:165},
+                { field:'dayfive',title:'星期五',width:165},
+                { field:'daysix',title:'星期六',width:165},
+                { field:'dayseven',title:'星期日',width:170}
             ]],
             onClickCell:function(rowIndex, field, value){
-           	  alert(rowIndex +','+field+','+value);
+            	console.log(rowIndex +','+field+','+value);
+        		var time;
+        		if(field == 'dayone'){
+        			time = '星期一';
+        		}else if(field == 'daytwo'){
+        			time = '星期二';
+        		}else if(field == 'daythree'){
+        			time = '星期三';
+        		}else if(field == 'dayfour'){
+        			time = '星期四';
+        		}else if(field == 'dayfive'){
+        			time = '星期五';
+        		}else if(field == 'daysix'){
+        			time = '星期六';
+        		}else if(field == 'dayseven'){
+        			time = '星期日';
+        		}
+            	if(role == '0'){
+            		$.ajax({
+                        type:"get",
+                        async:false,
+                        url:"./curriculum/listByLeave.action",
+                        dataType:"json",
+                        data:{
+                        	dTime:time,
+                       		inContent:rowIndex+1
+                        },
+                        success:function(data){
+                            console.log(data);
+                            if(data.status == 'success'){
+                            	var info = data.curriculum;
+                            	$('#cName').val(info.currName);
+                            	$('#tName').val(info.currTId.tRealName);
+                            	$('#tPhone').val(info.currTId.tPhone);
+                            	$('#schedule-dialog-3').dialog({
+                        			closed: false,
+                        			modal:true,
+                                    title: "请假信息",
+                                    buttons: [{
+                                        text: '确定',
+                                        iconCls: 'icon-ok',
+                                        handler: addLeave(time,rowIndex+1)
+                                    }, {
+                                        text: '取消',
+                                        iconCls: 'icon-cancel2',
+                                        handler: function () {
+                                            $('#schedule-dialog-3').dialog('close');                    
+                                        }
+                                    }]
+                                });
+                            }else{
+                                //没有数据或服务器错误
+                            }
+                        }
+                    });
+                }else if(role == '1'){
+                	$.ajax({
+                        type:"get",
+                        async:false,
+                        url:"./student/listStudentByAbence.action",
+                        dataType:"json",
+                        data:{
+                        	dTime:time,
+                       		inContent:rowIndex+1
+                        },
+                        success:function(data){
+                            console.log(data);
+                            if(data.status == 'success'){
+                            	var stuList = data.data;
+                            	for(var i = 0 ; i < stuList.length ; i++){
+                            		var item = stuList[i];
+                            		if(item.sSex == '0'){
+                            			item.sSex = '男';
+                            		}else{
+                            			item.sSex = '女';
+                            		}
+                            	}
+                            	$('#schedule-datagrid-4').datagrid('loadData', stuList);
+                            	$('#schedule-dialog-4').dialog({
+                        			closed: false,
+                        			modal:true,
+                                    title: "学生信息",
+                                    buttons: [{
+                                        text: '缺勤',
+                                        iconCls: 'icon-ok',
+                                        handler: queqin(time,rowIndex+1)
+                                    }, {
+                                        text: '取消',
+                                        iconCls: 'icon-cancel2',
+                                        handler: function () {
+                                            $('#schedule-dialog-4').dialog('close');                    
+                                        }
+                                    }]
+                                });
+                            }else{
+                                //没有数据或服务器错误
+                            }
+                        }
+                    });
+                }
             }
         });
-        //初始加载，表格宽度自适应
-        fitCoulms();
-        //浏览器窗口大小变化后，表格宽度自适应
-        $(window).resize(function(){
-            fitCoulms();
-        });
     });
-
-    //表格宽度自适应，这里的#dg是datagrid表格生成的div标签
-    function fitCoulms(){
-        $('#schedule-datagrid-2').datagrid({
-            fitColumns:true
+    function addLeave(time,inContent){
+    	$.ajax({
+            type:"post",
+            async:false,
+            url:"./schedule/save.action",
+            dataType:"json",
+            data:{
+            	dTime:time,
+            	inContent:inContent,
+            	lReason:$('#reason').val(),
+            	lSId:loginUser.sId,
+            },
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                	$('#schedule-dialog-3').dialog('close');
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
         });
     }
-
+    
 	/**
 	* Name 添加记录
 	*/
@@ -108,6 +272,7 @@
             success:function(data){
                 console.log(data);
                 if(data.status == 'success'){
+                	$('#schedule-dialog-2').dialog('close');
                 	getData();
                 }else{
                     //没有数据或服务器错误
@@ -264,7 +429,6 @@
 			param['sClaId'] = JSON.parse(Util.getLocalStorage("loginUser")).sClaId.claId;
 			param['schSemester'] = encodeURI(Util.getLocalStorage("term"));
 		}else if(Util.getLocalStorage("role") == '1'){
-            param['tId'] = JSON.parse(Util.getLocalStorage("loginUser")).tId;
 			param['schSemester'] = encodeURI(Util.getLocalStorage("term"));
 		}else{
 			//管理员登录，界面变化
@@ -281,36 +445,34 @@
     				var info = data.info;//得到课表
    					var rows = [];
    					var trueRow = [];
-   					if(data.details.length > 0){
-   						rows = data.details[0];//得到课表详情
-   	       				if(rows.length > 0){
-   	       					for(var i = 0 ; i < 10 ; i++){//循环10行
-   	       						var temp = {
-   	       	       						dayone:'',
-   	       	       						daytwo:'',
-   	       	       						daythree:'',
-   	       	       						dayfour:'',
-   	       	       						dayfive:'',
-   	       	       						daysix:'',
-   	       	       						dayseven:'',
-   	       	       					}
-   	       						for(var h = 0 ; h < rows.length ; h++){
-   	       							var tempItem = rows[h];
-   	       							if(tempItem.dInId.inContent == (i+1+'')){
-   	           							if(tempItem.dTime == '星期一'){ temp.dayone = tempItem.dCurrId.currName;}
-   	           							if(tempItem.dTime == '星期二'){ temp.daytwo = tempItem.dCurrId.currName;}
-   	           							if(tempItem.dTime == '星期三'){ temp.daythree = tempItem.dCurrId.currName;}
-   	           							if(tempItem.dTime == '星期四'){ temp.dayfour = tempItem.dCurrId.currName;}
-   	           							if(tempItem.dTime == '星期五'){ temp.dayfive = tempItem.dCurrId.currName;}
-   	           							if(tempItem.dTime == '星期六'){ temp.daysix = tempItem.dCurrId.currName;}
-   	           							if(tempItem.dTime == '星期日'){ temp.dayseven = tempItem.dCurrId.currName;	}
-   	               					}
-   	       						}
-   	           					trueRow.push(temp);
-   	           				}
-   	           				$('#schedule-datagrid-2').datagrid('loadData', trueRow);
-   	       				}
-   					}
+       				rows = data.details[0];//得到课表详情
+       				if(rows.length > 0){
+       					for(var i = 0 ; i < 10 ; i++){//循环10行
+       						var temp = {
+       	       						dayone:'',
+       	       						daytwo:'',
+       	       						daythree:'',
+       	       						dayfour:'',
+       	       						dayfive:'',
+       	       						daysix:'',
+       	       						dayseven:'',
+       	       					}
+       						for(var h = 0 ; h < rows.length ; h++){
+       							var tempItem = rows[h];
+       							if(tempItem.dInId.inContent == (i+1+'')){
+           							if(tempItem.dTime == '星期一'){ temp.dayone = tempItem.dCurrId.currName;}
+           							if(tempItem.dTime == '星期二'){ temp.daytwo = tempItem.dCurrId.currName;}
+           							if(tempItem.dTime == '星期三'){ temp.daythree = tempItem.dCurrId.currName;}
+           							if(tempItem.dTime == '星期四'){ temp.dayfour = tempItem.dCurrId.currName;}
+           							if(tempItem.dTime == '星期五'){ temp.dayfive = tempItem.dCurrId.currName;}
+           							if(tempItem.dTime == '星期六'){ temp.daysix = tempItem.dCurrId.currName;}
+           							if(tempItem.dTime == '星期日'){ temp.dayseven = tempItem.dCurrId.currName;}
+               					}
+       						}
+           					trueRow.push(temp);
+           				}
+           				$('#schedule-datagrid-2').datagrid('loadData', trueRow);
+       				}
     			}else{
     				//没有数据或服务器错误
     			}
@@ -318,5 +480,51 @@
     	});
 	}
 	getData();
-	
+	function queqin(time,inContent){
+		//返回选中多行  
+        var selRow = $('#schedule-datagrid-4').datagrid('getSelections');
+      //判断是否选中行  
+        if (selRow.length==0) {  
+            $.messager.alert("提示", "请选择缺勤学生！", "info");  
+            return;  
+        }else{      
+            var temID="";  
+            //批量获取选中行的评估模板ID  
+            for (i = 0; i < selRow.length;i++) {  
+                if (temID =="") {  
+                    temID = selRow[i].sId;  
+                } else {  
+                    temID = selRow[i].sId + "," + temID;  
+                }                 
+            }  
+                        
+            $.messager.confirm('提示', '是否将选中学生标记为缺勤?', function (r) {  
+  
+                if (!r) {  
+                    return;  
+                }  
+                //提交  
+                $.ajax({  
+                    type: "POST",  
+                    async: false,  
+                    url: "/absence/save.action",  
+                    data: {
+                    	dTime:time,
+                    	inContent:inContent,
+                    	aSId:temID
+                    },  
+                    success: function (result) {  
+                        if (result.status == 'success') {  
+                            $('#schedule-datagrid-4').datagrid('clearSelections');  
+                            $.messager.alert("提示", "操作成功", "info");  
+                            $('#schedule-datagrid-4').datagrid('reload');  
+                        } else {  
+                            $.messager.alert("提示", "操作失败", "info");  
+                            return;  
+                        }  
+                    }  
+                });  
+            });  
+        } 
+	}
 </script>
