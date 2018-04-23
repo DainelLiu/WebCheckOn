@@ -127,7 +127,7 @@
                             	$('#cName').val(info.currName);
                             	$('#tName').val(info.currTId.tRealName);
                             	$('#tPhone').val(info.currTId.tPhone);
-                            	$('#sNumber').val(loginUser.sId);
+                            	$('#sNumber').val(loginUser.sNumber);
                             	$('#schedule-dialog-3').dialog({
                         			closed: false,
                         			modal:true,
@@ -135,7 +135,28 @@
                                     buttons: [{
                                         text: '确定',
                                         iconCls: 'icon-ok',
-                                        handler: addLeave(time,rowIndex+1)
+                                        handler: function(){
+                                        	$.ajax({
+                                                type:"post",
+                                                async:false,
+                                                url:"./leave/save.action",
+                                                dataType:"json",
+                                                data:{
+                                                	dTime:encodeURI(time),
+                                                	inContent:rowIndex+1,
+                                                	lReason:$('#reason').val(),
+                                                	lSId:loginUser.sId,
+                                                },
+                                                success:function(data){
+                                                    console.log(data);
+                                                    if(data.status == 'success'){
+                                                    	$('#schedule-dialog-3').dialog('close');
+                                                    }else{
+                                                        //没有数据或服务器错误
+                                                    }
+                                                }
+                                            });
+                                        }
                                     }, {
                                         text: '取消',
                                         iconCls: 'icon-cancel2',
@@ -179,7 +200,53 @@
                                     buttons: [{
                                         text: '缺勤',
                                         iconCls: 'icon-ok',
-                                        handler: queqin(time,rowIndex+1)
+                                        handler: function(){
+                                        	//返回选中多行  
+                                            var selRow = $('#schedule-datagrid-4').datagrid('getSelections');
+                                          //判断是否选中行  
+                                            if (selRow.length==0) {  
+                                                $.messager.alert("提示", "请选择缺勤学生！", "info");  
+                                                return;  
+                                            }else{      
+                                                var temID="";  
+                                                //批量获取选中行的评估模板ID  
+                                                for (i = 0; i < selRow.length;i++) {  
+                                                    if (temID =="") {  
+                                                        temID = selRow[i].sId;  
+                                                    } else {  
+                                                        temID = selRow[i].sId + "," + temID;  
+                                                    }                 
+                                                }  
+                                                            
+                                                $.messager.confirm('提示', '是否将选中学生标记为缺勤?', function (r) {  
+                                      
+                                                    if (!r) {  
+                                                        return;  
+                                                    }  
+                                                    //提交  
+                                                    $.ajax({  
+                                                        type: "POST",  
+                                                        async: false,  
+                                                        url: "/absence/save.action",  
+                                                        data: {
+                                                        	dTime:time,
+                                                        	inContent:rowIndex+1,
+                                                        	aSId:temID
+                                                        },  
+                                                        success: function (result) {  
+                                                            if (result.status == 'success') {  
+                                                                $('#schedule-datagrid-4').datagrid('clearSelections');  
+                                                                $.messager.alert("提示", "操作成功", "info");  
+                                                                $('#schedule-datagrid-4').datagrid('reload');  
+                                                            } else {  
+                                                                $.messager.alert("提示", "操作失败", "info");  
+                                                                return;  
+                                                            }  
+                                                        }  
+                                                    });  
+                                                });  
+                                            } 
+                                        }
                                     }, {
                                         text: '取消',
                                         iconCls: 'icon-cancel2',
@@ -197,29 +264,6 @@
             }
         });
     });
-    function addLeave(time,inContent){
-    	$.ajax({
-            type:"post",
-            async:false,
-            url:"./leave/save.action",
-            dataType:"json",
-            data:{
-            	dTime:encodeURI(time),
-            	inContent:inContent,
-            	lReason:$('#reason').val(),
-            	lSId:loginUser.sId,
-            },
-            success:function(data){
-                console.log(data);
-                if(data.status == 'success'){
-                	$('#schedule-dialog-3').dialog('close');
-                }else{
-                    //没有数据或服务器错误
-                }
-            }
-        });
-    }
-    
 	/**
 	* Name 添加记录
 	*/
@@ -480,51 +524,4 @@
     	});
 	}
 	getData();
-	function queqin(time,inContent){
-		//返回选中多行  
-        var selRow = $('#schedule-datagrid-4').datagrid('getSelections');
-      //判断是否选中行  
-        if (selRow.length==0) {  
-            $.messager.alert("提示", "请选择缺勤学生！", "info");  
-            return;  
-        }else{      
-            var temID="";  
-            //批量获取选中行的评估模板ID  
-            for (i = 0; i < selRow.length;i++) {  
-                if (temID =="") {  
-                    temID = selRow[i].sId;  
-                } else {  
-                    temID = selRow[i].sId + "," + temID;  
-                }                 
-            }  
-                        
-            $.messager.confirm('提示', '是否将选中学生标记为缺勤?', function (r) {  
-  
-                if (!r) {  
-                    return;  
-                }  
-                //提交  
-                $.ajax({  
-                    type: "POST",  
-                    async: false,  
-                    url: "/absence/save.action",  
-                    data: {
-                    	dTime:time,
-                    	inContent:inContent,
-                    	aSId:temID
-                    },  
-                    success: function (result) {  
-                        if (result.status == 'success') {  
-                            $('#schedule-datagrid-4').datagrid('clearSelections');  
-                            $.messager.alert("提示", "操作成功", "info");  
-                            $('#schedule-datagrid-4').datagrid('reload');  
-                        } else {  
-                            $.messager.alert("提示", "操作失败", "info");  
-                            return;  
-                        }  
-                    }  
-                });  
-            });  
-        } 
-	}
 </script>
