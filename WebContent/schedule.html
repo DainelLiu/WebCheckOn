@@ -197,6 +197,8 @@
                         			closed: false,
                         			modal:true,
                                     title: "学生信息",
+                                    width:400,
+                                    height:500,
                                     buttons: [{
                                         text: '缺勤',
                                         iconCls: 'icon-ok',
@@ -547,8 +549,8 @@
                							if(tempItem.dTime == '星期日'){ temp.dayseven = tempobj;}
                    					}
            						}
-               					trueRow.push(temp);
     						}
+       						trueRow.push(temp);
     					}
    						$('#schedule-datagrid-2').datagrid('loadData', trueRow);
     				}
