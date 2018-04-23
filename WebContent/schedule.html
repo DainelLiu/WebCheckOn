@@ -45,10 +45,9 @@
 </div>
 <!-- End of easyui-dialog -->
 <script type="text/javascript">
+	var role = Util.getLocalStorage("role");
+	var loginUser = JSON.parse(Util.getLocalStorage("loginUser"));
     $(function(){
-    	var role = Util.getLocalStorage("role");
-    	var loginUser = JSON.parse(Util.getLocalStorage("loginUser"));
-    	
     	$('#schedule-datagrid-4').datagrid({
             loadFilter:pagerFilter,
             rownumbers:true,
