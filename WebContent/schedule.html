@@ -7,6 +7,26 @@
             <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="remove()" plain="true">删除</a>
         </div>
     </div>
+    <div class="scheduleToolbarSearch" id="searchbox" style="display: none;">
+        <label>查询学期：</label>
+        <select class="" panelHeight="auto" id="schedule-term-combobox">
+        	<option value="2017-2018第一学期">2017-2018第一学期</option>
+        	<option value="2017-2018第二学期">2017-2018第二学期</option>
+        	<option value="2016-2017第一学期">2016-2017第一学期</option>
+        	<option value="2016-2017第二学期">2016-2017第二学期</option>
+        	<option value="2015-2016第一学期">2015-2016第一学期</option>
+        	<option value="2015-2016第二学期">2015-2016第二学期</option>
+        	<option value="2014-2015第一学期">2014-2015第一学期</option>
+        	<option value="2014-2015第二学期">2014-2015第二学期</option>
+        	<option value="2013-2014第一学期">2013-2014第一学期</option>
+        	<option value="2013-2014第二学期">2013-2014第二学期</option>
+        </select>
+        <label>所属院系：</label>
+        <select class="" panelHeight="auto" id="schedule-depart-combobox"></select>
+        <label>所属班级：</label>
+        <select class="" panelHeight="auto" id="schedule-grade-combobox"></select>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+    </div>
     <table id="schedule-datagrid-2" class="easyui-datagrid" toolbar="#schedule-toolbar-2"></table>
 </div>
 <!-- Begin of easyui-dialog -->
@@ -48,6 +68,20 @@
 	var role = Util.getLocalStorage("role");
 	var loginUser = JSON.parse(Util.getLocalStorage("loginUser"));
     $(function(){
+    	if(role == '2'){
+    		$('#searchbox').show();
+    	}else{
+    		$('#searchbox').hide();
+    	}
+    	$('#schedule-term-combobox option').each(function(){
+    		if($(this).val() == Util.getLocalStorage("term")){
+   		    	$(this).attr('selected');
+   		   	}
+    	})
+    	getDepart();
+    	$(document).on('change','#schedule-depart-combobox',function(){
+            getClasses($(this).find("option:selected").val());
+        });
     	$('#schedule-datagrid-4').datagrid({
             loadFilter:pagerFilter,
             rownumbers:true,
@@ -229,7 +263,7 @@
                                                     $.ajax({  
                                                         type: "POST",  
                                                         async: false,  
-                                                        url: "/absence/save.action",  
+                                                        url: "./absence/save.action",  
                                                         data: {
                                                         	dTime:time,
                                                         	inContent:rowIndex+1,
@@ -479,6 +513,8 @@
 			param['schSemester'] = encodeURI(Util.getLocalStorage("term"));
 		}else{
 			//管理员登录，界面变化
+			param['sClaId'] = $('#schedule-grade-combobox').val());
+			param['schSemester'] = encodeURI(Util.getLocalStorage("term"));
 		}
 		$.ajax({
     		type:"get",
@@ -561,4 +597,60 @@
     	});
 	}
 	getData();
+	function getDepart(){
+        $.ajax({
+            type:"get",
+            async:false,
+            url:"./college/listAll.action",
+            dataType:"json",
+            data:{},
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.data;
+                    var html = '';
+                    for(var i = 0 ; i < rows.length; i++){
+                        if(i == 0){
+                            html += '<option value="'+rows[i].collId+'" selected>'+rows[i].collName+'</option>';
+                            getClasses(rows[i].collId);
+                        }else{
+                            html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
+                        }
+                    }
+                    $('#schedule-depart-combobox').empty().append(html);
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
+    }
+	function getClasses(yxid){
+        $.ajax({
+            type:"get",
+            async:false,
+            url:"./classes/getByClaCollId.action",
+            dataType:"json",
+            data:{
+            	claCollId:yxid
+            },
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.studentListByCollId;
+                    var html = '';
+                    for(var i = 0 ; i < rows.length; i++){
+                        if(i == 0){
+                            html += '<option value="'+rows[i].claId+'" selected>'+rows[i].claName+'</option>';
+                        }else{
+                            html += '<option value="'+rows[i].claId+'">'+rows[i].claName+'</option>';
+                        }
+                    }
+                    $('#schedule-grade-combobox').empty().append(html);
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
 </script>
