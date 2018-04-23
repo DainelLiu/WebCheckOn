@@ -269,7 +269,8 @@
                                                         	inContent:rowIndex+1,
                                                         	aSId:temID
                                                         },  
-                                                        success: function (result) {  
+                                                        success: function (result) {
+                                                        	result = JSON.parse(result);
                                                             if (result.status == 'success') {  
                                                                 $('#schedule-datagrid-4').datagrid('clearSelections');  
                                                                 $.messager.alert("提示", "操作成功", "info");  
