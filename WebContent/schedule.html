@@ -522,18 +522,18 @@
     				}else{
     					var rows = data.details;
     					var trueRow = [];
-    					for(var j = 0 ; j < rows.length ; j++){
-    						var items = rows[j];
-    						for(var i = 0 ; i < 10 ; i++){//循环10行
-           						var temp = {
-           	       						dayone:'',
-           	       						daytwo:'',
-           	       						daythree:'',
-           	       						dayfour:'',
-           	       						dayfive:'',
-           	       						daysix:'',
-           	       						dayseven:'',
-           	       					}
+   						for(var i = 0 ; i < 10 ; i++){//循环10行
+       						var temp = {
+       	       						dayone:'',
+       	       						daytwo:'',
+       	       						daythree:'',
+       	       						dayfour:'',
+       	       						dayfive:'',
+       	       						daysix:'',
+       	       						dayseven:'',
+       	       					}
+       						for(var j = 0 ; j < rows.length ; j++){
+        						var items = rows[j];
            						for(var h = 0 ; h < items.length ; h++){
            							var tempItem = items[h];
            							if(tempItem.dInId.inContent == (i+1+'')){
@@ -549,8 +549,8 @@
            						}
                					trueRow.push(temp);
     						}
-    						$('#schedule-datagrid-2').datagrid('loadData', trueRow);
     					}
+   						$('#schedule-datagrid-2').datagrid('loadData', trueRow);
     				}
     			}else{
     				//没有数据或服务器错误
