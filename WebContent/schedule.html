@@ -118,7 +118,7 @@
                         url:"./curriculum/listByLeave.action",
                         dataType:"json",
                         data:{
-                        	dTime:time,
+                        	dTime:encodeURI(time),
                        		inContent:rowIndex+1
                         },
                         success:function(data){
@@ -156,7 +156,7 @@
                         url:"./student/listStudentByAbence.action",
                         dataType:"json",
                         data:{
-                        	dTime:time,
+                        	dTime:encodeURI(time),
                        		inContent:rowIndex+1
                         },
                         success:function(data){
@@ -204,7 +204,7 @@
             url:"./schedule/save.action",
             dataType:"json",
             data:{
-            	dTime:time,
+            	dTime:encodeURI(time),
             	inContent:inContent,
             	lReason:$('#reason').val(),
             	lSId:loginUser.sId,
