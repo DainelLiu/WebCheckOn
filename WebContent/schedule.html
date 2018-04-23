@@ -13,7 +13,7 @@
 <div id="schedule-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
 </div>
 <div id="schedule-dialog-3" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
-	<form id="schedule-form-3" method="post" action="leave/save.action">
+	<form id="schedule-form-3">
         <table>
         	<tr>
                 <td align="right">课程名称:</td>
@@ -24,13 +24,13 @@
                 <td><input type="text" name="attr2" class="wu-text" id="tName" readonly/></td>
             </tr>
             <tr>
-                <td align="right">教师联系方式:</td>
+                <td align="right">联系方式:</td>
                 <td><input type="text" name="attr" class="wu-text" id="tPhone" readonly/></td>
             </tr>
             <tr>
                 <td width="60" align="right">请假事由:</td>
                 <td>
-                    <textarea rows="3" cols="5" name="lReason" id="reason"></textarea>
+                    <textarea rows="3" name="lReason" id="reason"></textarea>
                 </td>
             </tr>
             <tr>
@@ -127,6 +127,7 @@
                             	$('#cName').val(info.currName);
                             	$('#tName').val(info.currTId.tRealName);
                             	$('#tPhone').val(info.currTId.tPhone);
+                            	$('#sNumber').val(loginUser.sId);
                             	$('#schedule-dialog-3').dialog({
                         			closed: false,
                         			modal:true,
@@ -200,7 +201,7 @@
     	$.ajax({
             type:"post",
             async:false,
-            url:"./schedule/save.action",
+            url:"./leave/save.action",
             dataType:"json",
             data:{
             	dTime:encodeURI(time),
