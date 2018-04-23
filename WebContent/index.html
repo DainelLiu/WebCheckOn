@@ -89,15 +89,20 @@
     <script type="text/javascript">
 		$(function(){
 			var loginUser = JSON.parse(Util.getLocalStorage("loginUser"));
-			var role = Util.getLocalStorage("role");
-			if(role == '0'){
-				$('#username').text(loginUser.sRealName);
-			}else if(role == '1'){
-				$('#username').text(loginUser.tRealName);
-			}else{
-				$('#username').text(loginUser.uName);
-			}
-			$('#term').text(Util.getLocalStorage("term"));
+			if(loginUser){
+                var role = Util.getLocalStorage("role");
+                if(role == '0'){
+                    $('#username').text(loginUser.sRealName);
+                }else if(role == '1'){
+                    $('#username').text(loginUser.tRealName);
+                }else{
+                    $('#username').text(loginUser.uName);
+                }
+                $('#term').text(Util.getLocalStorage("term"));
+            }else{
+                $.messager.alert("操作提示", "请登录!", "error", function() {window.location.href = 'login.html';});
+            }
+
 			$('.wu-side-tree a').bind("click",function(){
 				var title = $(this).text();
 				var url = $(this).attr('data-link');

@@ -29,19 +29,33 @@
             fit:true,
             height:485,
             columns:[[
-                { field:'dayone',title:'星期一',width:155},
-                { field:'daytwo',title:'星期二',width:160},
-                { field:'daythree',title:'星期三',width:165},
-                { field:'dayfour',title:'星期四',width:165},
-                { field:'dayfive',title:'星期五',width:165},
-                { field:'daysix',title:'星期六',width:165},
-                { field:'dayseven',title:'星期日',width:170}
+                { field:'dayone',title:'星期一',width:100},
+                { field:'daytwo',title:'星期二',width:100},
+                { field:'daythree',title:'星期三',width:100},
+                { field:'dayfour',title:'星期四',width:100},
+                { field:'dayfive',title:'星期五',width:100},
+                { field:'daysix',title:'星期六',width:100},
+                { field:'dayseven',title:'星期日',width:100}
             ]],
             onClickCell:function(rowIndex, field, value){
            	  alert(rowIndex +','+field+','+value);
             }
         });
+        //初始加载，表格宽度自适应
+        fitCoulms();
+        //浏览器窗口大小变化后，表格宽度自适应
+        $(window).resize(function(){
+            fitCoulms();
+        });
     });
+
+    //表格宽度自适应，这里的#dg是datagrid表格生成的div标签
+    function fitCoulms(){
+        $('#schedule-datagrid-2').datagrid({
+            fitColumns:true
+        });
+    }
+
 	/**
 	* Name 添加记录
 	*/
