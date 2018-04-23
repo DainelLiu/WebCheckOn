@@ -280,34 +280,36 @@
     				var info = data.info;//得到课表
    					var rows = [];
    					var trueRow = [];
-       				rows = data.details[0];//得到课表详情
-       				if(rows.length > 0){
-       					for(var i = 0 ; i < 10 ; i++){//循环10行
-       						var temp = {
-       	       						dayone:'',
-       	       						daytwo:'',
-       	       						daythree:'',
-       	       						dayfour:'',
-       	       						dayfive:'',
-       	       						daysix:'',
-       	       						dayseven:'',
-       	       					}
-       						for(var h = 0 ; h < rows.length ; h++){
-       							var tempItem = rows[h];
-       							if(tempItem.dInId.inContent == (i+1+'')){
-           							if(tempItem.dTime == '星期一'){ temp.dayone = tempItem.dCurrId.currName;}
-           							if(tempItem.dTime == '星期二'){ temp.daytwo = tempItem.dCurrId.currName;}
-           							if(tempItem.dTime == '星期三'){ temp.daythree = tempItem.dCurrId.currName;}
-           							if(tempItem.dTime == '星期四'){ temp.dayfour = tempItem.dCurrId.currName;}
-           							if(tempItem.dTime == '星期五'){ temp.dayfive = tempItem.dCurrId.currName;}
-           							if(tempItem.dTime == '星期六'){ temp.daysix = tempItem.dCurrId.currName;}
-           							if(tempItem.dTime == '星期日'){ temp.dayseven = tempItem.dCurrId.currName;	}
-               					}
-       						}
-           					trueRow.push(temp);
-           				}
-           				$('#schedule-datagrid-2').datagrid('loadData', trueRow);
-       				}
+   					if(data.details.length > 0){
+   						rows = data.details[0];//得到课表详情
+   	       				if(rows.length > 0){
+   	       					for(var i = 0 ; i < 10 ; i++){//循环10行
+   	       						var temp = {
+   	       	       						dayone:'',
+   	       	       						daytwo:'',
+   	       	       						daythree:'',
+   	       	       						dayfour:'',
+   	       	       						dayfive:'',
+   	       	       						daysix:'',
+   	       	       						dayseven:'',
+   	       	       					}
+   	       						for(var h = 0 ; h < rows.length ; h++){
+   	       							var tempItem = rows[h];
+   	       							if(tempItem.dInId.inContent == (i+1+'')){
+   	           							if(tempItem.dTime == '星期一'){ temp.dayone = tempItem.dCurrId.currName;}
+   	           							if(tempItem.dTime == '星期二'){ temp.daytwo = tempItem.dCurrId.currName;}
+   	           							if(tempItem.dTime == '星期三'){ temp.daythree = tempItem.dCurrId.currName;}
+   	           							if(tempItem.dTime == '星期四'){ temp.dayfour = tempItem.dCurrId.currName;}
+   	           							if(tempItem.dTime == '星期五'){ temp.dayfive = tempItem.dCurrId.currName;}
+   	           							if(tempItem.dTime == '星期六'){ temp.daysix = tempItem.dCurrId.currName;}
+   	           							if(tempItem.dTime == '星期日'){ temp.dayseven = tempItem.dCurrId.currName;	}
+   	               					}
+   	       						}
+   	           					trueRow.push(temp);
+   	           				}
+   	           				$('#schedule-datagrid-2').datagrid('loadData', trueRow);
+   	       				}
+   					}
     			}else{
     				//没有数据或服务器错误
     			}
