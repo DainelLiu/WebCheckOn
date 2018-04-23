@@ -487,7 +487,7 @@
     		success:function(data){
     			console.log(data);
     			if(data.status == 'success'){
-    				//if(role == '0'){
+    				if(role == '0'){
     					var info = data.info;//得到课表
        					var rows = [];
        					var trueRow = [];
@@ -519,9 +519,39 @@
                				}
                				$('#schedule-datagrid-2').datagrid('loadData', trueRow);
            				}
-    				/* }else{
-    					
-    				} */
+    				}else{
+    					var rows = data.details;
+    					var trueRow = [];
+    					for(var j = 0 ; j < rows.length ; j++){
+    						var items = rows[j];
+    						for(var i = 0 ; i < 10 ; i++){//循环10行
+           						var temp = {
+           	       						dayone:'',
+           	       						daytwo:'',
+           	       						daythree:'',
+           	       						dayfour:'',
+           	       						dayfive:'',
+           	       						daysix:'',
+           	       						dayseven:'',
+           	       					}
+           						for(var h = 0 ; h < items.length ; h++){
+           							var tempItem = items[h];
+           							if(tempItem.dInId.inContent == (i+1+'')){
+           								var tempobj = tempItem.dCurrId.currName + '<br>'+ tempItem.dSchId.schClaId.claCollId.collName+'<br>'+tempItem.dSchId.schClaId.claName;
+               							if(tempItem.dTime == '星期一'){ temp.dayone = tempobj;}
+               							if(tempItem.dTime == '星期二'){ temp.daytwo = tempobj;}
+               							if(tempItem.dTime == '星期三'){ temp.daythree = tempobj;}
+               							if(tempItem.dTime == '星期四'){ temp.dayfour = tempobj;}
+               							if(tempItem.dTime == '星期五'){ temp.dayfive = tempobj;}
+               							if(tempItem.dTime == '星期六'){ temp.daysix = tempobj;}
+               							if(tempItem.dTime == '星期日'){ temp.dayseven = tempobj;}
+                   					}
+           						}
+               					trueRow.push(temp);
+    						}
+    						$('#schedule-datagrid-2').datagrid('loadData', trueRow);
+    					}
+    				}
     			}else{
     				//没有数据或服务器错误
     			}
