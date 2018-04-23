@@ -525,7 +525,7 @@
     		success:function(data){
     			console.log(data);
     			if(data.status == 'success'){
-    				if(role == '0'){
+    				if(role == '0' || role == '2'){
     					var info = data.info;//得到课表
        					var rows = [];
        					var trueRow = [];
