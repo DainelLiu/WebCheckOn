@@ -29,12 +29,12 @@ public class Leave implements Serializable{
 	//学生编号
 	private Student lSId;
 	//请假状态
-	private String lSign;
+	private int lSign;
 	public Leave() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Leave(String lId, ScheduleDetails lDId, String lReason, Student lSId, String lSign) {
+	public Leave(String lId, ScheduleDetails lDId, String lReason, Student lSId, int lSign) {
 		super();
 		this.lId = lId;
 		this.lDId = lDId;
@@ -78,10 +78,10 @@ public class Leave implements Serializable{
 	public void setlSId(Student lSId) {
 		this.lSId = lSId;
 	}
-	public String getlSign() {
+	public int getlSign() {
 		return lSign;
 	}
-	public void setlSign(String lSign) {
+	public void setlSign(int lSign) {
 		this.lSign = lSign;
 	}
 	

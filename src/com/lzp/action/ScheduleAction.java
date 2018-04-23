@@ -289,17 +289,17 @@ public class ScheduleAction {
 				hqlToDetial =  "from ScheduleDetails where 1 = 1 and dCurrId ='"+currId+"'";
 				scheduleDetailslist =  scheduleDetailsDao.getAllByConds(hqlToDetial);//查出该老师所有课的详情
 				list.add(scheduleDetailslist);
-				for(int j = 0; j<scheduleDetailslist.size();j++){
+				/*for(int j = 0; j<scheduleDetailslist.size();j++){
 					ScheduleDetails scheduleDetails = (ScheduleDetails) scheduleDetailslist.get(j);
 					Schedule schedule = scheduleDetails.getdSchId();
 					listToTeacher.add(schedule);
-				}
+				}*/
 				
 			}
 			//hql = "from Schedule where 1 = 1 and schSemester='"+schSemester+"'";
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
-			jobj.put("info",JsonUtil.toJsonByListObj(listToTeacher));//存放是的课程的信息，里面包含班级信息
+			//jobj.put("info",JsonUtil.toJsonByListObj(listToTeacher));//存放是的课程的信息，里面包含班级信息
 			jobj.put("details", JsonUtil.toJsonByListObj(list));//存放课程表详细信息，包含时段、星期？，课程编号
 		}else if(sClaId != null && tId == null){		//学生查看课表
 			
