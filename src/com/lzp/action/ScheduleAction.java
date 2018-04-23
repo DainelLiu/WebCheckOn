@@ -89,6 +89,8 @@ public class ScheduleAction {
 	public void setIntervalsDao(IIntervalsDao intervalDao) {
 		this.intervalDao = intervalDao;
 	}
+	
+	
 
 	/**
 	 * 保存缺勤信息
@@ -271,27 +273,36 @@ public class ScheduleAction {
 		JSONObject jobj = new JSONObject();
 		String sClaId = ServletActionContext.getRequest().getParameter("sClaId");
 		String schSemester = URLDecoder.decode(ServletActionContext.getRequest().getParameter("schSemester"), "utf-8");
+		String tId = ServletActionContext.getRequest().getParameter("tId");
 		JSONArray list = new JSONArray();
+		JSONArray listToTeacher = new JSONArray();
 		List<Object> scheduleDetailslist = new ArrayList<Object>();
 		String hql;
 		String hqlToDetial;
-		if (sClaId == null) {
-			hql = "from Schedule where 1 = 1 and schSemester='"+schSemester+"'";
-			List<Object> schedulelist = scheduleDao.getAllByConds(hql);
-			for (int i = 0; i < schedulelist.size(); i++) {
-				Schedule schedule = (Schedule) schedulelist.get(i);
-				String scheduleId = schedule.getschId();
-				hqlToDetial =  "from ScheduleDetails where 1 = 1 and dSchId ='"+scheduleId+"'";
-				scheduleDetailslist =  scheduleDao.getAllByConds(hqlToDetial);
+		
+		if (sClaId == null  && tId != null) {  	//教师查看课表
+			hql  = "from Curriculum where 1 = 1 and currTId='"+tId+"'";
+			List<Object> curriculumList = curriculumDao.getAllByConds(hql);//查出该老师所有的课
+			for(int i = 0; i<curriculumList.size();i++){
+				Curriculum curriculum = (Curriculum) curriculumList.get(i);
+				String currId = curriculum.getcurrId();
+				hqlToDetial =  "from ScheduleDetails where 1 = 1 and dCurrId ='"+currId+"'";
+				scheduleDetailslist =  scheduleDetailsDao.getAllByConds(hqlToDetial);//查出该老师所有课的详情
 				list.add(scheduleDetailslist);
+				for(int j = 0; j<scheduleDetailslist.size();j++){
+					ScheduleDetails scheduleDetails = (ScheduleDetails) scheduleDetailslist.get(j);
+					Schedule schedule = scheduleDetails.getdSchId();
+					listToTeacher.add(schedule);
+				}
+				
 			}
+			//hql = "from Schedule where 1 = 1 and schSemester='"+schSemester+"'";
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
-			jobj.put("info",JsonUtil.toJsonByListObj(schedulelist));
-			jobj.put("details", JsonUtil.toJsonByListObj(list));
-		}else if(!sClaId.equals("null")){
+			jobj.put("info",JsonUtil.toJsonByListObj(listToTeacher));//存放是的课程的信息，里面包含班级信息
+			jobj.put("details", JsonUtil.toJsonByListObj(list));//存放课程表详细信息，包含时段、星期？，课程编号
+		}else if(sClaId != null && tId == null){		//学生查看课表
 			
-
 			hql = "from Schedule where 1 = 1 and schSemester='"+schSemester+" ' and schClaId= '" + sClaId + "'";
 			List<Object> schedulelist = scheduleDao.getAllByConds(hql);
 			for (int i = 0; i < schedulelist.size(); i++) {
