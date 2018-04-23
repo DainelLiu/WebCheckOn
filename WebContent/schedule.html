@@ -264,6 +264,7 @@
 			param['sClaId'] = JSON.parse(Util.getLocalStorage("loginUser")).sClaId.claId;
 			param['schSemester'] = encodeURI(Util.getLocalStorage("term"));
 		}else if(Util.getLocalStorage("role") == '1'){
+            param['tId'] = JSON.parse(Util.getLocalStorage("loginUser")).tId;
 			param['schSemester'] = encodeURI(Util.getLocalStorage("term"));
 		}else{
 			//管理员登录，界面变化
