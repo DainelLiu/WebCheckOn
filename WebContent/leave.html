@@ -40,7 +40,7 @@
 <script type="text/javascript">
 	var loginUser = JSON.parse(Util.getLocalStorage("loginUser"));
 	var role = Util.getLocalStorage("role");
-	var term = Util.getLocalStorage("term");
+	var term = encodeURI(Util.getLocalStorage("term"));
     $(function(){
         /**
          * Name 载入数据
