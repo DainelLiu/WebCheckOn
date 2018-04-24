@@ -1,6 +1,6 @@
 <div class="easyui-layout" data-options="fit:true">
     <!-- Begin of toolbar -->
-    <div class="leave-toolbar-search">
+    <div class="leave-toolbar-search" id="topbar" style="display:none;">
         <select class="" panelHeight="auto">
             <option value="0">未批准</option>
             <option value="1">已批准</option>
@@ -282,7 +282,7 @@
    					var rows = [];
        				rows = data.data;
        				var trueRow = [];
-       				for(var i = 0 ; i < rows[i] ; i++){
+       				for(var i = 0 ; i < rows[i].length ; i++){
        					var item = rows[i];
        					var temp = {
        						term:term,
@@ -303,6 +303,7 @@
        				}
        				$('#leave-datagrid-2').datagrid('loadData', trueRow);
        				$('#leave-datagrid-2').show();
+       				$('#topbar').hide();
        				$('#leave-datagrid-3').hide();
        				$('#leave-datagrid-4').hide();
     			}else{
@@ -328,7 +329,7 @@
    					var rows = [];
        				rows = data.data;
        				var trueRow = [];
-       				for(var i = 0 ; i < rows[i] ; i++){
+       				for(var i = 0 ; i < rows[i].length ; i++){
        					var item = rows[i];
        					var temp = {
        						term:term,
@@ -349,6 +350,7 @@
        				}
        				$('#leave-datagrid-3').datagrid('loadData', trueRow);
        				$('#leave-datagrid-3').show();
+       				$('#topbar').show();
        				$('#leave-datagrid-2').hide();
        				$('#leave-datagrid-4').hide();
     			}else{
@@ -370,7 +372,7 @@
    					var rows = [];
        				rows = data.data;
        				var trueRow = [];
-       				for(var i = 0 ; i < rows[i] ; i++){
+       				for(var i = 0 ; i < rows[i].length ; i++){
        					var item = rows[i];
        					var temp = {
        						term:term,
@@ -392,6 +394,7 @@
        				}
        				$('#leave-datagrid-4').datagrid('loadData', trueRow);
        				$('#leave-datagrid-4').show();
+       				$('#topbar').hide();
        				$('#leave-datagrid-2').hide();
        				$('#leave-datagrid-3').hide();
     			}else{
