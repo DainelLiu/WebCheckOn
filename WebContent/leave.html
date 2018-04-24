@@ -9,9 +9,9 @@
         <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
-    <table id="leave-datagrid-2" class="easyui-datagrid" style="display:none;"></table>
-    <table id="leave-datagrid-3" class="easyui-datagrid" toolbar="#leave-toolbar-search" style="display:none;"></table>
-    <table id="leave-datagrid-4" class="easyui-datagrid" style="display:none;"></table>
+    <div class="easyui-panel" id="stutable"><table id="leave-datagrid-2" class="easyui-datagrid" style="display:none;"></table></div>
+    <div class="easyui-panel" id="teatable"><table id="leave-datagrid-3" class="easyui-datagrid" toolbar="#leave-toolbar-search" style="display:none;"></table></div>
+    <div class="easyui-panel" id="alltable"><table id="leave-datagrid-4" class="easyui-datagrid" style="display:none;"></table></div>
 </div>
 <!-- Begin of easyui-dialog -->
 <div id="leave-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
@@ -101,24 +101,15 @@
             ]]
         });
         if(role == '0'){
-        	$('#leave-datagrid-2').show();
-        	$('#leave-datagrid-3').hide();
-        	$('#topbar').hide();
-        	$('#leave-datagrid-4').hide();
         	getDataByStu();
         }else if(role == '1'){
-        	$('#leave-datagrid-2').hide();
-        	$('#leave-datagrid-3').show();
-        	$('#topbar').show();
-        	$('#leave-datagrid-4').hide();
         	getDataByTea();
         }else{
-        	$('#leave-datagrid-2').hide();
-        	$('#leave-datagrid-3').hide();
-        	$('#topbar').hide();
-        	$('#leave-datagrid-4').show();
         	getDataAll();
         }
+        $('#stutable').panel('close'); 
+        $('#teatable').panel('close');
+        $('#alltable').panel('close');
     })
 	/**
 	* Name 添加记录
@@ -314,11 +305,10 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-2').datagrid('loadData', trueRow);
-       				$('#leave-datagrid-2').show();
-       				$('#leave-datagrid-2').datagrid('resize');
+       				$('#stutable').panel('open'); 
        				$('#topbar').hide();
-       				$('#leave-datagrid-3').hide();
-       				$('#leave-datagrid-4').hide();
+       				$('#teatable').panel('close');
+       				$('#alltable').panel('close');
     			}else{
     				//没有数据或服务器错误
     			}
@@ -362,11 +352,10 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-3').datagrid('loadData', trueRow);
-       				$('#leave-datagrid-3').show();
-       				$('#leave-datagrid-3').datagrid('resize');
+       				$('#teatable').panel('open');
        				$('#topbar').show();
-       				$('#leave-datagrid-2').hide();
-       				$('#leave-datagrid-4').hide();
+       				$('#stutable').panel('close');
+       				$('#alltable').panel('close');
     			}else{
     				//没有数据或服务器错误
     			}
@@ -407,11 +396,10 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-4').datagrid('loadData', trueRow);
-       				$('#leave-datagrid-4').show();
-       				$('#leave-datagrid-4').datagrid('resize');
+       				$('#alltable').panel('open');
        				$('#topbar').hide();
-       				$('#leave-datagrid-2').hide();
-       				$('#leave-datagrid-3').hide();
+       				$('#stutable').panel('close');
+       				$('#teatable').panel('close');
     			}else{
     				//没有数据或服务器错误
     			}
