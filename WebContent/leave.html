@@ -456,7 +456,7 @@
 	                    if (result.status == 'success') {  
 	                        $('#leave-datagrid-3').datagrid('clearSelections');  
 	                        $.messager.alert("提示", "操作成功", "info");  
-	                        $('#leave-datagrid-3').datagrid('reload');  
+	                        getDataByTea();
 	                    } else {  
 	                        $.messager.alert("提示", "操作失败", "info");  
 	                        return;  
