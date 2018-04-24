@@ -20,7 +20,7 @@ public class Parameter implements Serializable{
 	//系统参数编号
 	private String pId;
 	//请假次数
-	private String pLeaveNum;
+	private String pLeaveTableNum;
 	//缺勤次数
 	private String pAbsenceNum;
 	//当前学期
@@ -29,17 +29,17 @@ public class Parameter implements Serializable{
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Parameter(String pId, String pLeaveNum, String pAbsenceNum,String pNewTerm) {
+	public Parameter(String pId, String pLeaveTableNum, String pAbsenceNum,String pNewTerm) {
 		super();
 		this.pId = pId;
-		this.pLeaveNum = pLeaveNum;
+		this.pLeaveTableNum = pLeaveTableNum;
 		this.pAbsenceNum = pAbsenceNum;
 		this.pNewTerm = pNewTerm;
 	}
 	
 	@Override
 	public String toString() {
-		return "Parameter [pId=" + pId + ", pLeaveNum=" + pLeaveNum + ", pAbsenceNum=" + pAbsenceNum + ", pNewTerm="
+		return "Parameter [pId=" + pId + ", pLeaveTableNum=" + pLeaveTableNum + ", pAbsenceNum=" + pAbsenceNum + ", pNewTerm="
 				+ pNewTerm + "]";
 	}
 	@Id
@@ -51,11 +51,11 @@ public class Parameter implements Serializable{
 	public void setpId(String pId) {
 		this.pId = pId;
 	}
-	public String getpLeaveNum() {
-		return pLeaveNum;
+	public String getpLeaveTableNum() {
+		return pLeaveTableNum;
 	}
-	public void setpLeaveNum(String pLeaveNum) {
-		this.pLeaveNum = pLeaveNum;
+	public void setpLeaveTableNum(String pLeaveTableNum) {
+		this.pLeaveTableNum = pLeaveTableNum;
 	}
 	public String getpAbsenceNum() {
 		return pAbsenceNum;

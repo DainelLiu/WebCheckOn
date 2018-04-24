@@ -286,7 +286,8 @@ public class ScheduleAction {
 			for(int i = 0; i<curriculumList.size();i++){
 				Curriculum curriculum = (Curriculum) curriculumList.get(i);
 				String currId = curriculum.getcurrId();
-				hqlToDetial =  "from ScheduleDetails where 1 = 1 and dCurrId ='"+currId+"'";
+				hqlToDetial =  "from ScheduleDetails where 1 = 1 and dCurrId ='"+currId+
+						"' and dSchId IN(SELECT schId from Schedule WHERE 1=1 and schSemester ='"+ schSemester + "')";
 				scheduleDetailslist =  scheduleDetailsDao.getAllByConds(hqlToDetial);//查出该老师所有课的详情
 				list.add(scheduleDetailslist);
 				/*for(int j = 0; j<scheduleDetailslist.size();j++){

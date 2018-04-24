@@ -10,12 +10,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Component;
 
-import com.lzp.dao.ILeaveDao;
-import com.lzp.model.Leave;
+import com.lzp.dao.ILeaveTableDao;
+import com.lzp.model.LeaveTable;
 import com.lzp.util.PageBean;
 
-@Component(value="LeaveDao")
-public class LeaveDaoImpl implements ILeaveDao {
+@Component(value="leaveTableDao")
+public class LeaveTableDaoImpl implements ILeaveTableDao {
 	
 	private SessionFactory sessionFactory;
 	
@@ -25,10 +25,10 @@ public class LeaveDaoImpl implements ILeaveDao {
 	}
 
 	@Override
-	public boolean save(Leave leave) {
+	public boolean save(LeaveTable LeaveTable) {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		String returnId = (String) session.save(leave);
+		String returnId = (String) session.save(LeaveTable);
 		session.getTransaction().commit();
 		session.close();
 		if(!"".equals(returnId) && null != returnId){
@@ -39,13 +39,13 @@ public class LeaveDaoImpl implements ILeaveDao {
 	}
 
 	@Override
-	public boolean delete(Leave leave) {
+	public boolean delete(LeaveTable LeaveTable) {
 		boolean result = false;
 		try{
-			if(leave != null){
+			if(LeaveTable != null){
 				Session session = sessionFactory.openSession();
 				session.beginTransaction();
-				session.delete(leave);
+				session.delete(LeaveTable);
 				session.getTransaction().commit();
 				session.close();
 				result = true;
@@ -57,13 +57,13 @@ public class LeaveDaoImpl implements ILeaveDao {
 	}
 
 	@Override
-	public boolean update(Leave leave) {
+	public boolean update(LeaveTable LeaveTable) {
 		boolean result = false;
 		try{
-			if(leave != null){
+			if(LeaveTable != null){
 				Session session = sessionFactory.openSession();
 				session.beginTransaction();
-				session.update(leave);
+				session.update(LeaveTable);
 				session.getTransaction().commit();
 				session.close();
 				result = true;
@@ -77,7 +77,7 @@ public class LeaveDaoImpl implements ILeaveDao {
 	@Override
 	public List<Object> list() {
 		Session session = sessionFactory.openSession();
-		Query query = session.createQuery("from Leave");
+		Query query = session.createQuery("from LeaveTable");
 		List<Object> list = query.list();
 		session.close();
 		return list;
@@ -86,7 +86,7 @@ public class LeaveDaoImpl implements ILeaveDao {
 	@Override
 	public List<Object> listAll(PageBean page) {
 		Session session = sessionFactory.openSession();
-		Query query = session.createQuery("from Leave");
+		Query query = session.createQuery("from LeaveTable");
 		query.setFirstResult(page.getRowStart());
 		query.setMaxResults(page.getPageSize());
 		List<Object> list = query.list();
@@ -95,9 +95,9 @@ public class LeaveDaoImpl implements ILeaveDao {
 	}
 
 	@Override
-	public Leave getById(String id) {
+	public LeaveTable getById(String id) {
 		Session session = sessionFactory.openSession();
-		Leave dto = (Leave)session.get(Leave.class, id);
+		LeaveTable dto = (LeaveTable)session.get(LeaveTable.class, id);
 		session.close();
 		return dto;
 	}

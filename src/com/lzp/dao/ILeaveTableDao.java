@@ -2,30 +2,30 @@ package com.lzp.dao;
 
 import java.util.List;
 
-import com.lzp.model.Leave;
+import com.lzp.model.LeaveTable;
 import com.lzp.util.PageBean;
 
-public interface ILeaveDao {
+public interface ILeaveTableDao {
 	/**
 	 * 新增缺勤数据
-	 * @param Leave
+	 * @param LeaveTable
 	 * @return
 	 */
-	public boolean save(Leave leave);
+	public boolean save(LeaveTable LeaveTable);
 	
 	/**
 	 * 删除缺勤数据
-	 * @param Leave
+	 * @param LeaveTable
 	 * @return
 	 */
-	public boolean delete(Leave leave);
+	public boolean delete(LeaveTable LeaveTable);
 	
 	/**
 	 * 更新缺勤数据
-	 * @param Leave
+	 * @param LeaveTable
 	 * @return
 	 */
-	public boolean update(Leave leave);
+	public boolean update(LeaveTable LeaveTable);
 	
 	/**
 	 * 查询所有缺勤数据
@@ -44,7 +44,7 @@ public interface ILeaveDao {
 	 * @param id
 	 * @return
 	 */
-	public Leave getById(String id);
+	public LeaveTable getById(String id);
 	
 	/**
 	 * 根据其他条件查询缺勤数据带分页

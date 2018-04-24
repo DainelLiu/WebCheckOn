@@ -1,6 +1,7 @@
 package com.lzp.action;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +14,12 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.springframework.context.annotation.Scope;
 
 import com.lzp.dao.ICurriculumDao;
+import com.lzp.dao.IIntervalsDao;
+import com.lzp.dao.IScheduleDetailsDao;
 import com.lzp.dao.ITeacherDao;
 import com.lzp.model.Curriculum;
+import com.lzp.model.Intervals;
+import com.lzp.model.ScheduleDetails;
 import com.lzp.model.Teacher;
 import com.lzp.util.JsonUtil;
 import com.lzp.util.PageBean;
@@ -37,6 +42,17 @@ public class CurriculumAction {
 		this.curriculumDao = curriculumDao;
 	}
 	
+
+	private IScheduleDetailsDao scheduleDetailsDao;
+
+	public IScheduleDetailsDao getScheduleDetailsDao() {
+		return scheduleDetailsDao;
+	}
+
+	@Resource(name = "ScheduleDetailsDao")
+	public void setScheduleDetailsDao(IScheduleDetailsDao scheduleDetailsDao) {
+		this.scheduleDetailsDao = scheduleDetailsDao;
+	}
 	
 	private ITeacherDao teacherDao;
 	
@@ -46,6 +62,17 @@ public class CurriculumAction {
 	@Resource(name="TeacherDao")
 	public void setTeacherDao(ITeacherDao teacherDao) {
 		this.teacherDao = teacherDao;
+	}
+	
+	private IIntervalsDao intervalDao;
+
+	public IIntervalsDao getIntervalsDao() {
+		return intervalDao;
+	}
+
+	@Resource(name = "IntervalsDao")
+	public void setIntervalsDao(IIntervalsDao intervalDao) {
+		this.intervalDao = intervalDao;
 	}
 
 	/**
@@ -227,6 +254,37 @@ public class CurriculumAction {
 		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
 		ServletActionContext.getResponse().getWriter().write(jobj.toString());
 		return null;
+	}
+	
+	@Action(value="listByLeave")
+	public String listByLeave() throws IOException{
+		String dTime = URLDecoder.decode(ServletActionContext.getRequest().getParameter("dTime"), "utf-8");
+		String inContent = ServletActionContext.getRequest().getParameter("inContent");
+		
+		String hql = "from Intervals where 1 = 1 and inContent ='"+inContent+"'";
+		List intervalsList = intervalDao.getAllByConds(hql);
+		Intervals intervals = (Intervals) intervalsList.get(0);
+		String dInId = intervals.getinId();
+		String hqlToDetails = "from ScheduleDetails where 1 = 1 and dInId ='"+dInId+"' and dTime = '"+dTime +"'";
+		System.out.println(hqlToDetails);
+		List scheduleDetails = scheduleDetailsDao.getAllByConds(hqlToDetails);
+		ScheduleDetails scheduleDetail = (ScheduleDetails) scheduleDetails.get(0);
+		Curriculum curriculum = scheduleDetail.getdCurrId();
+		JSONObject jobj = new JSONObject();
+		if(curriculum != null){
+			//save success
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("curriculum", JsonUtil.objectToJson(curriculum));
+		}else{
+			//save failed
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+		
 	}
 
 }

@@ -43,11 +43,11 @@ public class ParameterAction {
 	 */
 	@Action(value="save")
 	public String save() throws IOException{
-		String pLeaveNum = ServletActionContext.getRequest().getParameter("pLeaveNum");
+		String pLeaveTableNum = ServletActionContext.getRequest().getParameter("pLeaveTableNum");
 		String pAbsenceNum = ServletActionContext.getRequest().getParameter("pAbsenceNum");
 		String pNewTerm = ServletActionContext.getRequest().getParameter("pNewTerm");
 		Parameter parameter = new Parameter();
-		parameter.setpLeaveNum(pLeaveNum);
+		parameter.setpLeaveTableNum(pLeaveTableNum);
 		parameter.setpAbsenceNum(pAbsenceNum);
 		parameter.setpNewTerm(pNewTerm);
 		

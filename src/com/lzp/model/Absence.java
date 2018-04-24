@@ -25,20 +25,20 @@ public class Absence implements Serializable{
 	//学生编号
 	private Student aSId;
 	//课程表编号
-	private Schedule aSchId;
+	private ScheduleDetails aDId;
 	public Absence() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Absence(String aId, Student aSId, Schedule aSchId) {
+	public Absence(String aId, Student aSId, ScheduleDetails aDId) {
 		super();
 		this.aId = aId;
 		this.aSId = aSId;
-		this.aSchId = aSchId;
+		this.aDId = aDId;
 	}
 	@Override
 	public String toString() {
-		return "Absence [aId=" + aId + ", aSId=" + aSId + ", aSchId=" + aSchId + "]";
+		return "Absence [aId=" + aId + ", aSId=" + aSId + ", aDId=" + aDId + "]";
 	}
 	
 	@Id
@@ -59,12 +59,12 @@ public class Absence implements Serializable{
 		this.aSId = aSId;
 	}
 	@ManyToOne(cascade={CascadeType.MERGE})
-	@JoinColumn(name="aSchId")
-	public Schedule getaSchId() {
-		return aSchId;
+	@JoinColumn(name="aDId")
+	public ScheduleDetails getaDId() {
+		return aDId;
 	}
-	public void setaSchId(Schedule aSchId) {
-		this.aSchId = aSchId;
+	public void setaDId(ScheduleDetails aDId) {
+		this.aDId = aDId;
 	}
 	
 	

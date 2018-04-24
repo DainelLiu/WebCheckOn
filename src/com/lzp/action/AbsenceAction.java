@@ -1,6 +1,7 @@
 package com.lzp.action;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,13 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.springframework.context.annotation.Scope;
 
 import com.lzp.dao.IAbsenceDao;
+import com.lzp.dao.IIntervalsDao;
+import com.lzp.dao.IScheduleDetailsDao;
+import com.lzp.dao.IStudentDao;
 import com.lzp.model.Absence;
+import com.lzp.model.Intervals;
+import com.lzp.model.ScheduleDetails;
+import com.lzp.model.Student;
 import com.lzp.util.JsonUtil;
 import com.lzp.util.PageBean;
 
@@ -35,6 +42,37 @@ public class AbsenceAction {
 		this.absenceDao = absenceDao;
 	}
 	
+	private IIntervalsDao intervalDao;
+
+	public IIntervalsDao getIntervalsDao() {
+		return intervalDao;
+	}
+
+	@Resource(name = "IntervalsDao")
+	public void setIntervalsDao(IIntervalsDao intervalDao) {
+		this.intervalDao = intervalDao;
+	}
+	private IScheduleDetailsDao scheduleDetailsDao;
+
+	public IScheduleDetailsDao getScheduleDetailsDao() {
+		return scheduleDetailsDao;
+	}
+
+	@Resource(name = "ScheduleDetailsDao")
+	public void setScheduleDetailsDao(IScheduleDetailsDao scheduleDetailsDao) {
+		this.scheduleDetailsDao = scheduleDetailsDao;
+	}
+	
+	private IStudentDao studentDao;
+
+	public IStudentDao getStudentDao() {
+		return studentDao;
+	}
+
+	@Resource(name = "StudentDao")
+	public void setStudentDao(IStudentDao studentDao) {
+		this.studentDao = studentDao;
+	}
 
 	/**
 	 * 保存缺勤信息
@@ -43,9 +81,34 @@ public class AbsenceAction {
 	 */
 	@Action(value="save")
 	public String save() throws IOException{
-		Absence absence = new Absence();
 		JSONObject jobj = new JSONObject();
-		if(absenceDao.save(absence)) {
+		Absence absence = new Absence();
+		boolean sign = false;
+		String dTime = URLDecoder.decode(ServletActionContext.getRequest().getParameter("dTime"), "utf-8");
+		String inContent = ServletActionContext.getRequest().getParameter("inContent");
+		String aSId = ServletActionContext.getRequest().getParameter("aSId");
+		String hql = "from Intervals where 1 = 1 and inContent ='"+inContent+"'";
+		List intervalsList = intervalDao.getAllByConds(hql);
+		Intervals intervals = (Intervals) intervalsList.get(0);
+		String dInId = intervals.getinId();
+		String hqlToDetails = "from ScheduleDetails where 1 = 1 and dInId ='"+dInId+"' and dTime = '"+dTime +"'";
+		List scheduleDetails = scheduleDetailsDao.getAllByConds(hqlToDetails);
+		ScheduleDetails scheduleDetail = (ScheduleDetails) scheduleDetails.get(0);
+		absence.setaDId(scheduleDetail);
+		String date[]=aSId.split(",");  
+		
+		for (int i = 0; i < date.length; i++) {
+			String sId = date[i];
+			Student student =studentDao.getById(sId);
+			absence.setaSId(student);
+			if(absenceDao.save(absence)){
+				sign = true;
+			}else{
+				sign = false;
+			}
+			
+		}
+		if(sign) {
 			jobj.put("mes", "保存成功!");
 			jobj.put("status", "success");
 		}else {
