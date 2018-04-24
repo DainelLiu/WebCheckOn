@@ -1,25 +1,21 @@
 <div class="easyui-layout" data-options="fit:true">
     <!-- Begin of toolbar -->
-    <div id="wu-toolbar-2">
-        <div class="wu-toolbar-button">
-            <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openAdd()" plain="true">添加</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openEdit()" plain="true">修改</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="remove()" plain="true">删除</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel()" plain="true">取消</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="reload()" plain="true">保存</a>
-        </div>
-    </div>
-    <div class="wu-toolbar-search">
-        <label>起始时间：</label><input class="easyui-datebox" style="width:100px">
-        <label>结束时间：</label><input class="easyui-datebox" style="width:100px">
+    <div class="leave-toolbar-search">
+        <select class="" panelHeight="auto">
+            <option value="0">未批准</option>
+            <option value="1">已批准</option>
+            <option value="2">已销假</option>
+        </select>
         <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
-    <table id="wu-datagrid-2" class="easyui-datagrid" toolbar="#wu-toolbar-2"></table>
+    <table id="leave-datagrid-2" class="easyui-datagrid" style="display:none;"></table>
+    <table id="leave-datagrid-3" class="easyui-datagrid" toolbar="#leave-toolbar-search" style="display:none;"></table>
+    <table id="leave-datagrid-4" class="easyui-datagrid" style="display:none;"></table>
 </div>
 <!-- Begin of easyui-dialog -->
-<div id="wu-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
-	<form id="wu-form-2" method="post">
+<div id="leave-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+	<form id="leave-form-2" method="post">
         <table>
             <tr>
                 <td width="60" align="right">姓 名:</td>
@@ -42,12 +38,14 @@
 </div>
 <!-- End of easyui-dialog -->
 <script type="text/javascript">
+	var loginUser = JSON.parse(Util.getLocalStorage("loginUser"));
+	var role = Util.getLocalStorage("role");
+	var term = Util.getLocalStorage("term");
     $(function(){
         /**
          * Name 载入数据
          */
-        $('#wu-datagrid-2').datagrid({
-            url:'temp/datagrid.json',
+        $('#leave-datagrid-2').datagrid({
             loadFilter:pagerFilter,
             rownumbers:true,
             singleSelect:false,
@@ -57,27 +55,69 @@
             fitColumns:true,
             fit:true,
             columns:[[
-                { checkbox:true},
-                { field:'productid',title:'productid',width:100,sortable:true},
-                { field:'productname',title:'productname',width:180,sortable:true},
-                { field:'unitcost',title:'unitcost',width:100},
-                { field:'listprice',title:'listprice',width:100},
-                { field:'attr1',title:'attr1',width:100},
-                { field:'itemid',title:'itemid',width:100},
-                { field:'status',title:'status',width:100}
+                { field:'term',title:'学期',width:100,sortable:true},
+                { field:'cName',title:'课程名',width:100},
+                { field:'cTime',title:'时间',width:100},
+                { field:'tName',title:'授课老师',width:100},
+                { field:'reason',title:'请假事由',width:180},
+                { field:'status',title:'状态',width:100}
             ]]
         });
+        $('#leave-datagrid-3').datagrid({
+            loadFilter:pagerFilter,
+            rownumbers:true,
+            singleSelect:false,
+            pageSize:20,
+            pagination:true,
+            multiSort:true,
+            fitColumns:true,
+            fit:true,
+            columns:[[
+                { field:'term',title:'学期',width:100,sortable:true},
+                { field:'cName',title:'课程名',width:100},
+                { field:'cTime',title:'时间',width:100},
+                { field:'sName',title:'请假学生',width:100},
+                { field:'reason',title:'请假事由',width:180},
+                { field:'status',title:'状态',width:100}
+            ]]
+        });
+        $('#leave-datagrid-4').datagrid({
+            loadFilter:pagerFilter,
+            rownumbers:true,
+            singleSelect:false,
+            pageSize:20,
+            pagination:true,
+            multiSort:true,
+            fitColumns:true,
+            fit:true,
+            columns:[[
+                { field:'term',title:'学期',width:100,sortable:true},
+                { field:'cName',title:'课程名',width:100},
+                { field:'cTime',title:'时间',width:100},
+                { field:'sName',title:'请假学生',width:100},
+                { field:'tName',title:'授课老师',width:100},
+                { field:'reason',title:'请假事由',width:180},
+                { field:'status',title:'状态',width:100}
+            ]]
+        });
+        if(role == '0'){
+        	getDataByStu();
+        }else if(role == '1'){
+        	getDataByTea();
+        }else{
+        	getDataAll();
+        }
     })
 	/**
 	* Name 添加记录
 	*/
 	function add(){
-		$('#wu-form-2').form('submit', {
+		$('#leave-form-2').form('submit', {
 			url:'',
 			success:function(data){
 				if(data){
 					$.messager.alert('信息提示','提交成功！','info');
-					$('#wu-dialog-2').dialog('close');
+					$('#leave-dialog-2').dialog('close');
 				}
 				else
 				{
@@ -91,12 +131,12 @@
 	* Name 修改记录
 	*/
 	function edit(){
-		$('#wu-form-2').form('submit', {
+		$('#leave-form-2').form('submit', {
 			url:'',
 			success:function(data){
 				if(data){
 					$.messager.alert('信息提示','提交成功！','info');
-					$('#wu-dialog-2').dialog('close');
+					$('#leave-dialog-2').dialog('close');
 				}
 				else
 				{
@@ -112,7 +152,7 @@
 	function remove(){
 		$.messager.confirm('信息提示','确定要删除该记录？', function(result){
 			if(result){
-				var items = $('#wu-datagrid-2').datagrid('getSelections');
+				var items = $('#leave-datagrid-2').datagrid('getSelections');
 				var ids = [];
 				$(items).each(function(){
 					ids.push(this.productid);	
@@ -139,8 +179,8 @@
 	* Name 打开添加窗口
 	*/
 	function openAdd(){
-		$('#wu-form-2').form('clear');
-		$('#wu-dialog-2').dialog({
+		$('#leave-form-2').form('clear');
+		$('#leave-dialog-2').dialog({
 			closed: false,
 			modal:true,
             title: "添加信息",
@@ -152,7 +192,7 @@
                 text: '取消',
                 iconCls: 'icon-cancel',
                 handler: function () {
-                    $('#wu-dialog-2').dialog('close');                    
+                    $('#leave-dialog-2').dialog('close');                    
                 }
             }]
         });
@@ -162,23 +202,23 @@
 	* Name 打开修改窗口
 	*/
 	function openEdit(){
-		$('#wu-form-2').form('clear');
-		var item = $('#wu-datagrid-2').datagrid('getSelected');
+		$('#leave-form-2').form('clear');
+		var item = $('#leave-datagrid-2').datagrid('getSelected');
 		//alert(item.productid);return;
 		$.ajax({
 			url:'',
 			data:'',
 			success:function(data){
 				if(data){
-					$('#wu-dialog-2').dialog('close');	
+					$('#leave-dialog-2').dialog('close');	
 				}
 				else{
 					//绑定值
-					$('#wu-form-2').form('load', data)
+					$('#leave-form-2').form('load', data)
 				}
 			}	
 		});
-		$('#wu-dialog-2').dialog({
+		$('#leave-dialog-2').dialog({
 			closed: false,
 			modal:true,
             title: "修改信息",
@@ -190,7 +230,7 @@
                 text: '取消',
                 iconCls: 'icon-cancel',
                 handler: function () {
-                    $('#wu-dialog-2').dialog('close');                    
+                    $('#leave-dialog-2').dialog('close');                    
                 }
             }]
         });
@@ -224,6 +264,141 @@
 		var end = start + parseInt(opts.pageSize);        
 		data.rows = (data.originalRows.slice(start, end));         
 		return data;       
+	}
+	
+	function getDataByStu(){
+		$.ajax({
+    		type:"get",
+    		async:false,
+    		url:"./leave/listAllByStudent.action",
+    		dataType:"json",
+    		data:{
+    			sId:loginUser.sId,
+    			schSemester:term
+    		},
+    		success:function(data){
+    			console.log(data);
+    			if(data.status == 'success'){
+   					var rows = [];
+       				rows = data.data;
+       				var trueRow = [];
+       				for(var i = 0 ; i < rows[i] ; i++){
+       					var item = rows[i];
+       					var temp = {
+       						term:term,
+       						cName:item.lDId.dCurrId.currName,
+       						cTime:item.lDId.dTime + item.lDId.dInId.inContent,
+       						tName:item.lDId.dCurrId.currTId.tRealName,
+       						reason:item.lReason,
+       						status:''
+       					}
+       					if(item.lSign == '0'){
+       						temp.status = '未批准';
+       					}else if(item.lSign == '1'){
+       						temp.status = '已批准';
+       					}else{
+       						temp.status = '已驳回';
+       					}
+       					trueRow.push(temp);
+       				}
+       				$('#leave-datagrid-2').datagrid('loadData', trueRow);
+       				$('#leave-datagrid-2').show();
+       				$('#leave-datagrid-3').hide();
+       				$('#leave-datagrid-4').hide();
+    			}else{
+    				//没有数据或服务器错误
+    			}
+    		}
+    	});
+	}
+	
+	function getDataByTea(){
+		$.ajax({
+    		type:"get",
+    		async:false,
+    		url:"./leave/listAllByTeacher.action",
+    		dataType:"json",
+    		data:{
+    			tId:loginUser.tId,
+    			schSemester:term
+    		},
+    		success:function(data){
+    			console.log(data);
+    			if(data.status == 'success'){
+   					var rows = [];
+       				rows = data.data;
+       				var trueRow = [];
+       				for(var i = 0 ; i < rows[i] ; i++){
+       					var item = rows[i];
+       					var temp = {
+       						term:term,
+       						cName:item.lDId.dCurrId.currName,
+       						cTime:item.lDId.dTime + item.lDId.dInId.inContent,
+       						sName:item.lSId.sRealName,
+       						reason:item.lReason,
+       						status:''
+       					}
+       					if(item.lSign == '0'){
+       						temp.status = '未批准';
+       					}else if(item.lSign == '1'){
+       						temp.status = '已批准';
+       					}else{
+       						temp.status = '已驳回';
+       					}
+       					trueRow.push(temp);
+       				}
+       				$('#leave-datagrid-3').datagrid('loadData', trueRow);
+       				$('#leave-datagrid-3').show();
+       				$('#leave-datagrid-2').hide();
+       				$('#leave-datagrid-4').hide();
+    			}else{
+    				//没有数据或服务器错误
+    			}
+    		}
+    	});
+	}
+	function getDataAll(){
+		$.ajax({
+    		type:"get",
+    		async:false,
+    		url:"./leave/listAll.action",
+    		dataType:"json",
+    		data:{},
+    		success:function(data){
+    			console.log(data);
+    			if(data.status == 'success'){
+   					var rows = [];
+       				rows = data.data;
+       				var trueRow = [];
+       				for(var i = 0 ; i < rows[i] ; i++){
+       					var item = rows[i];
+       					var temp = {
+       						term:term,
+       						cName:item.lDId.dCurrId.currName,
+       						cTime:item.lDId.dTime + item.lDId.dInId.inContent,
+       						sName:item.lSId.sRealName,
+       						tName:item.lDId.dCurrId.currTId.tRealName,
+       						reason:item.lReason,
+       						status:''
+       					}
+       					if(item.lSign == '0'){
+       						temp.status = '未批准';
+       					}else if(item.lSign == '1'){
+       						temp.status = '已批准';
+       					}else{
+       						temp.status = '已驳回';
+       					}
+       					trueRow.push(temp);
+       				}
+       				$('#leave-datagrid-4').datagrid('loadData', trueRow);
+       				$('#leave-datagrid-4').show();
+       				$('#leave-datagrid-2').hide();
+       				$('#leave-datagrid-3').hide();
+    			}else{
+    				//没有数据或服务器错误
+    			}
+    		}
+    	});
 	}
 	
 </script>
