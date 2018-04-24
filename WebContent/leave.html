@@ -1,7 +1,16 @@
-<div class="easyui-layout" data-options="fit:true">
+<div class="easyui-layout" id="stu" data-options="fit:true" style="display:none;">
+    <table id="leave-datagrid-2" class="easyui-datagrid"></table>
+</div>
+<div class="easyui-layout" id="tea" data-options="fit:true" style="display:none;">
     <!-- Begin of toolbar -->
+   	<div id="gradeToolbar">
+        <div class="wu-toolbar-button">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="accept()" plain="true">批准</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="reject()" plain="true">销假</a>
+        </div>
+    </div>
     <div class="leave-toolbar-search" id="topbar" style="display:none;">
-        <select class="" panelHeight="auto">
+        <select class="" panelHeight="auto" id="request-choose">
             <option value="0">未批准</option>
             <option value="1">已批准</option>
             <option value="2">已销假</option>
@@ -9,9 +18,10 @@
         <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
-    <div class="easyui-panel" id="stutable" data-options="fit:true"><table id="leave-datagrid-2" class="easyui-datagrid""></table></div>
-    <div class="easyui-panel" id="teatable" data-options="fit:true"><table id="leave-datagrid-3" class="easyui-datagrid" toolbar="#leave-toolbar-search"></table></div>
-    <div class="easyui-panel" id="alltable" data-options="fit:true"><table id="leave-datagrid-4" class="easyui-datagrid"></table></div>
+    <table id="leave-datagrid-3" class="easyui-datagrid" toolbar="#leave-toolbar-search"></table>
+</div>
+<div class="easyui-layout" id="all" data-options="fit:true" style="display:none;">
+    <table id="leave-datagrid-4" class="easyui-datagrid"></table>
 </div>
 <!-- Begin of easyui-dialog -->
 <div id="leave-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
@@ -56,12 +66,12 @@
             fit:true,
             height:485,
             columns:[[
-                { field:'term',title:'学期',width:100,sortable:true},
-                { field:'cName',title:'课程名',width:100},
-                { field:'cTime',title:'时间',width:100},
-                { field:'tName',title:'授课老师',width:100},
-                { field:'reason',title:'请假事由',width:180},
-                { field:'status',title:'状态',width:100}
+                { field:'term',title:'学期',sortable:true},
+                { field:'cName',title:'课程名'},
+                { field:'cTime',title:'时间'},
+                { field:'tName',title:'授课老师'},
+                { field:'reason',title:'请假事由'},
+                { field:'status',title:'状态'}
             ]]
         });
         $('#leave-datagrid-3').datagrid({
@@ -71,16 +81,17 @@
             pageSize:20,
             pagination:true,
             multiSort:true,
-            fitColumns:true,
+            fitColumns:false,
             fit:true,
             height:485,
             columns:[[
-                { field:'term',title:'学期',width:100,sortable:true},
-                { field:'cName',title:'课程名',width:100},
-                { field:'cTime',title:'时间',width:100},
-                { field:'sName',title:'请假学生',width:100},
-                { field:'reason',title:'请假事由',width:180},
-                { field:'status',title:'状态',width:100}
+                { field:'ck',checkbox:true,width:5},
+                { field:'term',title:'学期',sortable:true},
+                { field:'cName',title:'课程名'},
+                { field:'cTime',title:'时间'},
+                { field:'sName',title:'请假学生'},
+                { field:'reason',title:'请假事由'},
+                { field:'status',title:'状态'}
             ]]
         });
         $('#leave-datagrid-4').datagrid({
@@ -282,9 +293,6 @@
     		success:function(data){
     			console.log(data);
     			if(data.status == 'success'){
-    				$('#leave-datagrid-2').datagrid('getPanel').panel('close');
-    		    	$('#leave-datagrid-3').datagrid('getPanel').panel('close');
-    		    	$('#leave-datagrid-4').datagrid('getPanel').panel('close');
    					var rows = [];
        				rows = data.data;
        				var trueRow = [];
@@ -308,10 +316,10 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-2').datagrid('loadData', trueRow);
-       				$('#leave-datagrid-2').datagrid('getPanel').panel('open');
+       				$('#stu').show();
        				$('#topbar').hide();
-       				$('#leave-datagrid-3').datagrid('getPanel').panel('close');
-       				$('#leave-datagrid-4').datagrid('getPanel').panel('close');
+       				$('#tea').hide();
+       				$('#all').hide();
     			}else{
     				//没有数据或服务器错误
     			}
@@ -332,9 +340,6 @@
     		success:function(data){
     			console.log(data);
     			if(data.status == 'success'){
-    				$('#leave-datagrid-2').datagrid('getPanel').panel('close');
-    		    	$('#leave-datagrid-3').datagrid('getPanel').panel('close');
-    		    	$('#leave-datagrid-4').datagrid('getPanel').panel('close');
    					var rows = [];
        				rows = data.data;
        				var trueRow = [];
@@ -358,11 +363,10 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-3').datagrid('loadData', trueRow);
-       				console.log($('#leave-datagrid-3').datagrid('getPanel'))
-       				$('#leave-datagrid-3').datagrid('getPanel').panel('open');
+       				$('#tea').show();
        				$('#topbar').show();
-       				$('#leave-datagrid-2').datagrid('getPanel').panel('close');
-       				$('#leave-datagrid-4').datagrid('getPanel').panel('close');
+       				$('#stu').hide();
+       				$('#all').hide();
     			}else{
     				//没有数据或服务器错误
     			}
@@ -379,9 +383,6 @@
     		success:function(data){
     			console.log(data);
     			if(data.status == 'success'){
-    				$('#leave-datagrid-2').datagrid('getPanel').panel('close');
-    		    	$('#leave-datagrid-3').datagrid('getPanel').panel('close');
-    		    	$('#leave-datagrid-4').datagrid('getPanel').panel('close');
    					var rows = [];
        				rows = data.data;
        				var trueRow = [];
@@ -406,15 +407,60 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-4').datagrid('loadData', trueRow);
-       				$('#leave-datagrid-4').datagrid('getPanel').panel('open');
+       				$('#all').show();
        				$('#topbar').hide();
-       				$('#leave-datagrid-2').datagrid('getPanel').panel('close');
-       				$('#leave-datagrid-3').datagrid('getPanel').panel('close');
+       				$('#stu').hide();
+       				$('#tea').hide();
     			}else{
     				//没有数据或服务器错误
     			}
     		}
     	});
 	}
-	
+	function accept(){
+		//返回选中多行  
+        var selRow = $('#leave-datagrid-3').datagrid('getSelections');
+      //判断是否选中行  
+        if (selRow.length==0) {  
+            $.messager.alert("提示", "请选择记录！", "info");  
+            return;  
+        }else{   
+        var temID="";  
+        //批量获取选中行的评估模板ID  
+        for (i = 0; i < selRow.length;i++) {  
+            if (temID =="") {  
+                temID = selRow[i].sId;  
+            } else {  
+                temID = selRow[i].sId + "," + temID;  
+            }                 
+        }  
+                    
+        $.messager.confirm('提示', '是否批准选中学生请假?', function (r) {  
+
+            if (!r) {  
+                return;  
+            }  
+            //提交  
+            $.ajax({  
+                type: "POST",  
+                async: false,  
+                url: "./leave/updateToSign.action",  
+                data: {
+                	lSign:'1',
+                	lId:temID
+                },  
+                success: function (result) {
+                	result = JSON.parse(result);
+                    if (result.status == 'success') {  
+                        $('#leave-datagrid-3').datagrid('clearSelections');  
+                        $.messager.alert("提示", "操作成功", "info");  
+                        $('#leave-datagrid-3').datagrid('reload');  
+                    } else {  
+                        $.messager.alert("提示", "操作失败", "info");  
+                        return;  
+                    }  
+                }  
+            });  
+        });
+	}
 </script>
