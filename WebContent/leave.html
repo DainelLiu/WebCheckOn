@@ -305,10 +305,10 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-2').datagrid('loadData', trueRow);
-       				$('#stutable').panel('open'); 
+       				$('#leave-datagrid-2').datagrid('getPanel').panel('open');
        				$('#topbar').hide();
-       				$('#teatable').panel('close');
-       				$('#alltable').panel('close');
+       				$('#leave-datagrid-3').datagrid('getPanel').panel('close');
+       				$('#leave-datagrid-4').datagrid('getPanel').panel('close');
     			}else{
     				//没有数据或服务器错误
     			}
@@ -398,10 +398,10 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-4').datagrid('loadData', trueRow);
-       				$('#alltable').panel('open');
+       				$('#leave-datagrid-4').datagrid('getPanel').panel('open');
        				$('#topbar').hide();
-       				$('#stutable').panel('close');
-       				$('#teatable').panel('close');
+       				$('#leave-datagrid-2').datagrid('getPanel').panel('close');
+       				$('#leave-datagrid-3').datagrid('getPanel').panel('close');
     			}else{
     				//没有数据或服务器错误
     			}
