@@ -101,10 +101,22 @@
             ]]
         });
         if(role == '0'){
+        	$('#leave-datagrid-2').show();
+        	$('#leave-datagrid-3').hide();
+        	$('#topbar').hide();
+        	$('#leave-datagrid-4').hide();
         	getDataByStu();
         }else if(role == '1'){
+        	$('#leave-datagrid-2').hide();
+        	$('#leave-datagrid-3').show();
+        	$('#topbar').show();
+        	$('#leave-datagrid-4').hide();
         	getDataByTea();
         }else{
+        	$('#leave-datagrid-2').hide();
+        	$('#leave-datagrid-3').hide();
+        	$('#topbar').hide();
+        	$('#leave-datagrid-4').show();
         	getDataAll();
         }
     })
@@ -285,7 +297,7 @@
        				for(var i = 0 ; i < rows.length ; i++){
        					var item = rows[i];
        					var temp = {
-       						term:term,
+       						term:decodeURI(term),
        						cName:item.lDId.dCurrId.currName,
        						cTime:item.lDId.dTime + item.lDId.dInId.inContent,
        						tName:item.lDId.dCurrId.currTId.tRealName,
@@ -332,7 +344,7 @@
        				for(var i = 0 ; i < rows.length ; i++){
        					var item = rows[i];
        					var temp = {
-       						term:term,
+       						term:decodeURI(term),
        						cName:item.lDId.dCurrId.currName,
        						cTime:item.lDId.dTime + item.lDId.dInId.inContent,
        						sName:item.lSId.sRealName,
