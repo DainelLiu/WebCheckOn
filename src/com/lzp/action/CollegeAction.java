@@ -93,9 +93,14 @@ public class CollegeAction {
 	public String update() throws IOException{
 		
 		String collId = ServletActionContext.getRequest().getParameter("collId");
+		String collName = ServletActionContext.getRequest().getParameter("collName");
 		
 		College college = collegeDao.getById(collId);
+		
 		JSONObject jobj = new JSONObject();
+		if(collName != null && !"".equals(collName)){
+			college.setcollName(collName);
+		}
 		
 		if(collegeDao.update(college)) {
 			jobj.put("mes", "更新成功!");

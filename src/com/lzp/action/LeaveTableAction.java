@@ -255,5 +255,63 @@ public class LeaveTableAction {
 		ServletActionContext.getResponse().getWriter().write(jobj.toString());
 		return null;
 	}
+	
+	@Action(value = "listAllByStudent")
+	public String listAllByStudent() throws IOException {
+		
+		String schSemester = URLDecoder.decode(ServletActionContext.getRequest().getParameter("schSemester"), "utf-8");
+		String sId = ServletActionContext.getRequest().getParameter("sId");
+		String hql;
+		/*SELECT *FROM LeaveTable where 1=1 and lsId ='4028470662f265820162f27fc0df0029' and lDId In
+		(SELECT dId FROM scheduledetails WHERE dSchId IN(SELECT schId FROM schedule where schSemester = '2017-2018第一学期'))*/
+		hql ="from LeaveTable where 1=1 and lsId ='"+sId+
+				"' and lDId In(SELECT dId FROM ScheduleDetails WHERE dSchId IN(SELECT schId FROM Schedule where schSemester = '"
+				+schSemester+"'))";
+
+		List<Object> leavesTypelist = leavesDao.getAllByConds(hql);
+		JSONObject jobj = new JSONObject();
+		if (leavesTypelist.size() > 0) {
+			// save success
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("data", JsonUtil.toJsonByListObj(leavesTypelist));
+		} else {
+			// save failed
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+	}
+
+	
+	@Action(value = "listAllByTeacher")
+	public String listAllByTeacher() throws IOException {
+		
+		String schSemester = URLDecoder.decode(ServletActionContext.getRequest().getParameter("schSemester"), "utf-8");
+		String tId = ServletActionContext.getRequest().getParameter("tId");
+		String hql;
+		/*SELECT *FROM leavetable where 1=1 and lDId In(SELECT dId FROM scheduledetails where dCurrId in(SELECT currId FROM curriculum where currTId = '123456789321456
+		 * ') and dSchId in (SELECT schId FROM schedule where schSemester = '2017-2018第一学期'))*/
+		hql ="from  LeaveTable  where 1=1 and lDId In(SELECT dId FROM ScheduleDetails where dCurrId in(SELECT currId FROM Curriculum where currTId = '"+tId+
+				"') and dSchId in (SELECT schId FROM Schedule where schSemester = '"+schSemester+"'))";
+
+		List<Object> leavesTypelist = leavesDao.getAllByConds(hql);
+		JSONObject jobj = new JSONObject();
+		if (leavesTypelist.size() > 0) {
+			// save success
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("data", JsonUtil.toJsonByListObj(leavesTypelist));
+		} else {
+			// save failed
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+	}
 
 }
