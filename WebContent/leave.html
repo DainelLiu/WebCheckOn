@@ -9,9 +9,9 @@
         <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
-    <div id="stutable" style="display:none;"><table id="leave-datagrid-2" class="easyui-datagrid"></table></div>
-    <div id="teatable" style="display:none;"><table id="leave-datagrid-3" class="easyui-datagrid" toolbar="#leave-toolbar-search"></table></div>
-    <div id="alltable" style="display:none;"><table id="leave-datagrid-4" class="easyui-datagrid"></table></div>
+    <table id="leave-datagrid-2" class="easyui-datagrid" style="display:none;"></table>
+    <table id="leave-datagrid-3" class="easyui-datagrid" toolbar="#leave-toolbar-search" style="display:none;"></table>
+    <table id="leave-datagrid-4" class="easyui-datagrid" style="display:none;"></table>
 </div>
 <!-- Begin of easyui-dialog -->
 <div id="leave-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
@@ -314,10 +314,11 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-2').datagrid('loadData', trueRow);
-       				$('#stutable').show();
+       				$('#leave-datagrid-2').show();
+       				$('#leave-datagrid-2').datagrid('resize');
        				$('#topbar').hide();
-       				$('#teatable').hide();
-       				$('#alltable').hide();
+       				$('#leave-datagrid-3').hide();
+       				$('#leave-datagrid-4').hide();
     			}else{
     				//没有数据或服务器错误
     			}
@@ -361,10 +362,11 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-3').datagrid('loadData', trueRow);
-       				$('#teatable').show();
+       				$('#leave-datagrid-3').show();
+       				$('#leave-datagrid-3').datagrid('resize');
        				$('#topbar').show();
-       				$('#stutable').hide();
-       				$('#alltable').hide();
+       				$('#leave-datagrid-2').hide();
+       				$('#leave-datagrid-4').hide();
     			}else{
     				//没有数据或服务器错误
     			}
@@ -405,10 +407,11 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-4').datagrid('loadData', trueRow);
-       				$('#alltable').show();
+       				$('#leave-datagrid-4').show();
+       				$('#leave-datagrid-4').datagrid('resize');
        				$('#topbar').hide();
-       				$('#stutable').hide();
-       				$('#teatable').hide();
+       				$('#leave-datagrid-2').hide();
+       				$('#leave-datagrid-3').hide();
     			}else{
     				//没有数据或服务器错误
     			}
