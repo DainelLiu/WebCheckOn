@@ -314,4 +314,35 @@ public class LeaveTableAction {
 		return null;
 	}
 
+	
+	@Action(value = "updateToSign")
+	public String updateToSign() throws IOException {
+
+		JSONObject jobj = new JSONObject();
+		boolean sign = false;
+		String lId = ServletActionContext.getRequest().getParameter("lId");
+		String lSign = ServletActionContext.getRequest().getParameter("lSign");
+		String date[]=lId.split(","); 
+		
+		for (int i = 0; i < date.length; i++) {
+			LeaveTable leaves = leavesDao.getById(date[i]);
+			leaves.setlSign(lSign);
+			if(leavesDao.update(leaves)){
+				sign = true;
+			}else{
+				sign = false;
+			}
+		}
+		if (sign) {
+			jobj.put("mes", "更新成功!");
+			jobj.put("status", "success");
+		} else {
+			// save failed
+			jobj.put("mes", "更新失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+	}
 }
