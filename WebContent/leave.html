@@ -81,18 +81,18 @@
             pageSize:20,
             pagination:true,
             multiSort:true,
-            fitColumns:false,
-            fit:true,
+            fitColumns:true,
+            fit:false,
             height:485,
             columns:[[
                 { field:'ck',checkbox:true,width:5},
                 { field:'lId',title:'',hidden:true},
-                { field:'term',title:'学期',sortable:true},
-                { field:'cName',title:'课程名'},
-                { field:'cTime',title:'时间'},
-                { field:'sName',title:'请假学生'},
-                { field:'reason',title:'请假事由'},
-                { field:'status',title:'状态'}
+                { field:'term',title:'学期',width:100,sortable:true},
+                { field:'cName',title:'课程名',width:100},
+                { field:'cTime',title:'时间',width:100},
+                { field:'sName',title:'请假学生',width:100},
+                { field:'reason',title:'请假事由',width:100},
+                { field:'status',title:'状态',width:100}
             ]]
         });
         $('#leave-datagrid-4').datagrid({
@@ -430,9 +430,9 @@
 	        //批量获取选中行的评估模板ID  
 	        for (i = 0; i < selRow.length;i++) {  
 	            if (temID =="") {  
-	                temID = selRow[i].sId;  
+	                temID = selRow[i].lId;  
 	            } else {  
-	                temID = selRow[i].sId + "," + temID;  
+	                temID = selRow[i].lId + "," + temID;  
 	            }                 
 	        }  
 	                    
