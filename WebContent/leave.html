@@ -9,9 +9,9 @@
         <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
-    <div class="easyui-panel" id="stutable" data-options="closed:true"><table id="leave-datagrid-2" class="easyui-datagrid""></table></div>
-    <div class="easyui-panel" id="teatable" data-options="closed:true"><table id="leave-datagrid-3" class="easyui-datagrid" toolbar="#leave-toolbar-search"></table></div>
-    <div class="easyui-panel" id="alltable" data-options="closed:true"><table id="leave-datagrid-4" class="easyui-datagrid"></table></div>
+    <div class="easyui-panel" id="stutable" data-options="fit:true"><table id="leave-datagrid-2" class="easyui-datagrid""></table></div>
+    <div class="easyui-panel" id="teatable" data-options="fit:true"><table id="leave-datagrid-3" class="easyui-datagrid" toolbar="#leave-toolbar-search"></table></div>
+    <div class="easyui-panel" id="alltable" data-options="fit:true"><table id="leave-datagrid-4" class="easyui-datagrid"></table></div>
 </div>
 <!-- Begin of easyui-dialog -->
 <div id="leave-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
@@ -54,6 +54,7 @@
             multiSort:true,
             fitColumns:true,
             fit:true,
+            height:485,
             columns:[[
                 { field:'term',title:'学期',width:100,sortable:true},
                 { field:'cName',title:'课程名',width:100},
@@ -72,6 +73,7 @@
             multiSort:true,
             fitColumns:true,
             fit:true,
+            height:485,
             columns:[[
                 { field:'term',title:'学期',width:100,sortable:true},
                 { field:'cName',title:'课程名',width:100},
@@ -90,6 +92,7 @@
             multiSort:true,
             fitColumns:true,
             fit:true,
+            height:485,
             columns:[[
                 { field:'term',title:'学期',width:100,sortable:true},
                 { field:'cName',title:'课程名',width:100},
@@ -107,9 +110,6 @@
         }else{
         	getDataAll();
         }
-        $('#stutable').panel('close'); 
-        $('#teatable').panel('close');
-        $('#alltable').panel('close');
     })
 	/**
 	* Name 添加记录
@@ -282,6 +282,9 @@
     		success:function(data){
     			console.log(data);
     			if(data.status == 'success'){
+    				$('#leave-datagrid-2').datagrid('getPanel').panel('close');
+    		    	$('#leave-datagrid-3').datagrid('getPanel').panel('close');
+    		    	$('#leave-datagrid-4').datagrid('getPanel').panel('close');
    					var rows = [];
        				rows = data.data;
        				var trueRow = [];
@@ -329,6 +332,9 @@
     		success:function(data){
     			console.log(data);
     			if(data.status == 'success'){
+    				$('#leave-datagrid-2').datagrid('getPanel').panel('close');
+    		    	$('#leave-datagrid-3').datagrid('getPanel').panel('close');
+    		    	$('#leave-datagrid-4').datagrid('getPanel').panel('close');
    					var rows = [];
        				rows = data.data;
        				var trueRow = [];
@@ -351,7 +357,6 @@
        					}
        					trueRow.push(temp);
        				}
-       				debugger;
        				$('#leave-datagrid-3').datagrid('loadData', trueRow);
        				console.log($('#leave-datagrid-3').datagrid('getPanel'))
        				$('#leave-datagrid-3').datagrid('getPanel').panel('open');
@@ -374,6 +379,9 @@
     		success:function(data){
     			console.log(data);
     			if(data.status == 'success'){
+    				$('#leave-datagrid-2').datagrid('getPanel').panel('close');
+    		    	$('#leave-datagrid-3').datagrid('getPanel').panel('close');
+    		    	$('#leave-datagrid-4').datagrid('getPanel').panel('close');
    					var rows = [];
        				rows = data.data;
        				var trueRow = [];
