@@ -9,9 +9,9 @@
         <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
-    <table id="leave-datagrid-2" class="easyui-datagrid"></table>
-    <table id="leave-datagrid-3" class="easyui-datagrid" toolbar="#leave-toolbar-search"></table>
-    <table id="leave-datagrid-4" class="easyui-datagrid"></table>
+    <div id="stutable" style="display:none;"><table id="leave-datagrid-2" class="easyui-datagrid"></table></div>
+    <div id="teatable" style="display:none;"><table id="leave-datagrid-3" class="easyui-datagrid" toolbar="#leave-toolbar-search"></table></div>
+    <div id="alltable" style="display:none;"><table id="leave-datagrid-4" class="easyui-datagrid"></table></div>
 </div>
 <!-- Begin of easyui-dialog -->
 <div id="leave-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
@@ -314,10 +314,10 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-2').datagrid('loadData', trueRow);
-       				$('#leave-datagrid-2').show();
+       				$('#stutable').show();
        				$('#topbar').hide();
-       				$('#leave-datagrid-3').hide();
-       				$('#leave-datagrid-4').hide();
+       				$('#teatable').hide();
+       				$('#alltable').hide();
     			}else{
     				//没有数据或服务器错误
     			}
@@ -361,10 +361,10 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-3').datagrid('loadData', trueRow);
-       				$('#leave-datagrid-3').show();
+       				$('#teatable').show();
        				$('#topbar').show();
-       				$('#leave-datagrid-2').hide();
-       				$('#leave-datagrid-4').hide();
+       				$('#stutable').hide();
+       				$('#alltable').hide();
     			}else{
     				//没有数据或服务器错误
     			}
@@ -405,10 +405,10 @@
        					trueRow.push(temp);
        				}
        				$('#leave-datagrid-4').datagrid('loadData', trueRow);
-       				$('#leave-datagrid-4').show();
+       				$('#alltable').show();
        				$('#topbar').hide();
-       				$('#leave-datagrid-2').hide();
-       				$('#leave-datagrid-3').hide();
+       				$('#stutable').hide();
+       				$('#teatable').hide();
     			}else{
     				//没有数据或服务器错误
     			}
