@@ -425,42 +425,43 @@
             $.messager.alert("提示", "请选择记录！", "info");  
             return;  
         }else{   
-        var temID="";  
-        //批量获取选中行的评估模板ID  
-        for (i = 0; i < selRow.length;i++) {  
-            if (temID =="") {  
-                temID = selRow[i].sId;  
-            } else {  
-                temID = selRow[i].sId + "," + temID;  
-            }                 
-        }  
-                    
-        $.messager.confirm('提示', '是否批准选中学生请假?', function (r) {  
-
-            if (!r) {  
-                return;  
-            }  
-            //提交  
-            $.ajax({  
-                type: "POST",  
-                async: false,  
-                url: "./leave/updateToSign.action",  
-                data: {
-                	lSign:'1',
-                	lId:temID
-                },  
-                success: function (result) {
-                	result = JSON.parse(result);
-                    if (result.status == 'success') {  
-                        $('#leave-datagrid-3').datagrid('clearSelections');  
-                        $.messager.alert("提示", "操作成功", "info");  
-                        $('#leave-datagrid-3').datagrid('reload');  
-                    } else {  
-                        $.messager.alert("提示", "操作失败", "info");  
-                        return;  
-                    }  
-                }  
-            });  
-        });
+	        var temID="";  
+	        //批量获取选中行的评估模板ID  
+	        for (i = 0; i < selRow.length;i++) {  
+	            if (temID =="") {  
+	                temID = selRow[i].sId;  
+	            } else {  
+	                temID = selRow[i].sId + "," + temID;  
+	            }                 
+	        }  
+	                    
+	        $.messager.confirm('提示', '是否批准选中学生请假?', function (r) {  
+	
+	            if (!r) {  
+	                return;  
+	            }  
+	            //提交  
+	            $.ajax({  
+	                type: "POST",  
+	                async: false,  
+	                url: "./leave/updateToSign.action",  
+	                data: {
+	                	lSign:'1',
+	                	lId:temID
+	                },  
+	                success: function (result) {
+	                	result = JSON.parse(result);
+	                    if (result.status == 'success') {  
+	                        $('#leave-datagrid-3').datagrid('clearSelections');  
+	                        $.messager.alert("提示", "操作成功", "info");  
+	                        $('#leave-datagrid-3').datagrid('reload');  
+	                    } else {  
+	                        $.messager.alert("提示", "操作失败", "info");  
+	                        return;  
+	                    }  
+	                }  
+	            });  
+	        });
+		}
 	}
 </script>
