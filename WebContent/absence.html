@@ -1,36 +1,56 @@
-<div class="easyui-layout" data-options="fit:true">
+<div class="easyui-layout" data-options="fit:true" id="stuTable" style="display:none;">
     <!-- Begin of toolbar -->
-    <div id="wu-toolbar-2">
-        <div class="wu-toolbar-button">
-            <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openAdd()" plain="true">添加</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openEdit()" plain="true">修改</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="remove()" plain="true">删除</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel()" plain="true">取消</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="reload()" plain="true">保存</a>
-        </div>
-    </div>
-    <div class="wu-toolbar-search">
-        <label>所属院系：</label>
-        <select class="easyui-combobox" panelHeight="auto" id="yuanxi">
-            <option value="0">计算机与信息工程</option>
-            <option value="1">生命科学</option>
-            <option value="2">资源与环境科学</option>
-            <option value="3">化学工程与工艺</option>
+    <div class="wu-toolbar-search" id="abssearchbox">
+        <label>查询学期：</label>
+        <select class="" panelHeight="auto" id="abs-term-combobox">
+        	<option value="2017-2018第一学期">2017-2018第一学期</option>
+        	<option value="2017-2018第二学期">2017-2018第二学期</option>
+        	<option value="2016-2017第一学期">2016-2017第一学期</option>
+        	<option value="2016-2017第二学期">2016-2017第二学期</option>
+        	<option value="2015-2016第一学期">2015-2016第一学期</option>
+        	<option value="2015-2016第二学期">2015-2016第二学期</option>
+        	<option value="2014-2015第一学期">2014-2015第一学期</option>
+        	<option value="2014-2015第二学期">2014-2015第二学期</option>
+        	<option value="2013-2014第一学期">2013-2014第一学期</option>
+        	<option value="2013-2014第二学期">2013-2014第二学期</option>
         </select>
-        <label>所属班级：</label>
-        <select class="easyui-combobox" panelHeight="auto" id="banji">
-            <option value="0">计科一班</option>
-            <option value="1">计科二班</option>
-        </select>
-        <label>学生姓名：</label><input class="wu-text" style="width:100px">
         <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
-    <table id="wu-datagrid-2" class="easyui-datagrid" toolbar="#wu-toolbar-2"></table>
+    <table id="abs-datagrid-2" class="easyui-datagrid" toolbar="#abssearchbox"></table>
+    <div style="clear: both;">
+    	<p style="float: left;">该学期缺勤次数:<strong id="qqnum">5</strong></p>
+    	<p style="float: left;">该学期请假次数:<strong id="qjnum">3</strong></p>
+    </div>
+</div>
+<div class="easyui-layout" data-options="fit:true" id="teaAndAdmin" style="display:none;">
+    <!-- Begin of toolbar -->
+    <div class="wu-toolbar-search" id="abssearchbox1">
+        <label>查询学期：</label>
+        <select class="" panelHeight="auto" id="abs-term-combobox1">
+        	<option value="2017-2018第一学期">2017-2018第一学期</option>
+        	<option value="2017-2018第二学期">2017-2018第二学期</option>
+        	<option value="2016-2017第一学期">2016-2017第一学期</option>
+        	<option value="2016-2017第二学期">2016-2017第二学期</option>
+        	<option value="2015-2016第一学期">2015-2016第一学期</option>
+        	<option value="2015-2016第二学期">2015-2016第二学期</option>
+        	<option value="2014-2015第一学期">2014-2015第一学期</option>
+        	<option value="2014-2015第二学期">2014-2015第二学期</option>
+        	<option value="2013-2014第一学期">2013-2014第一学期</option>
+        	<option value="2013-2014第二学期">2013-2014第二学期</option>
+        </select>
+        <label>所属院系：</label>
+        <select class="" panelHeight="auto" id="abs-depart-combobox1" ></select>
+        <label>所属班级：</label>
+        <select class="" panelHeight="auto" id="abs-grade-combobox1"></select>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+    </div>
+    <!-- End of toolbar -->
+    <table id="abs-datagrid-3" class="easyui-datagrid" toolbar="#abssearchbox1"></table>
 </div>
 <!-- Begin of easyui-dialog -->
-<div id="wu-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
-	<form id="wu-form-2" method="post">
+<div id="abs-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+	<form id="abs-form-2" method="post">
         <table>
             <tr>
                 <td width="60" align="right">姓 名:</td>
@@ -53,12 +73,30 @@
 </div>
 <!-- End of easyui-dialog -->
 <script type="text/javascript">
+	var loginUser = JSON.parse(Util.getLocalStorage("loginUser"));
+	var role = Util.getLocalStorage("role");
+	var term = encodeURI(Util.getLocalStorage("term"));
     $(function(){
         /**
          * Name 载入数据
          */
-        $('#wu-datagrid-2').datagrid({
-            url:'temp/datagrid.json',
+        $('#abs-datagrid-2').datagrid({
+            loadFilter:pagerFilter,
+            rownumbers:true,
+            singleSelect:false,
+            pageSize:20,
+            pagination:true,
+            multiSort:true,
+            fitColumns:false,
+            fit:true,
+            width:'100%',
+            columns:[[
+                { field:'cName',title:'课程名',width:100,sortable:true},
+                { field:'tName',title:'授课老师',width:180,sortable:true},
+                { field:'lType',title:'类型',width:100},
+            ]]
+        });
+        $('#abs-datagrid-3').datagrid({
             loadFilter:pagerFilter,
             rownumbers:true,
             singleSelect:false,
@@ -68,27 +106,35 @@
             fitColumns:true,
             fit:true,
             columns:[[
-                { checkbox:true},
-                { field:'productid',title:'productid',width:100,sortable:true},
-                { field:'productname',title:'productname',width:180,sortable:true},
-                { field:'unitcost',title:'unitcost',width:100},
-                { field:'listprice',title:'listprice',width:100},
-                { field:'attr1',title:'attr1',width:100},
-                { field:'itemid',title:'itemid',width:100},
-                { field:'status',title:'status',width:100}
+                { field:'sNumber',title:'学号',width:100,sortable:true},
+                { field:'sName',title:'姓名',width:180,sortable:true},
+                { field:'sSex',title:'性别',width:100},
+                { field:'qjNum',title:'请假次数',width:100},
+                { field:'qqNum',title:'缺勤次数',width:100},
             ]]
         });
+        $(document).on('change','#abs-depart-combobox',function(){
+            getClasses($(this).find("option:selected").val());
+        });
+        getDepart();
+        if(role == '0'){
+        	getDataForStu();
+        }else if(role == '1'){
+        	getDataForTea();
+        }else{
+        	getDataAll();
+        }
     })
 	/**
 	* Name 添加记录
 	*/
 	function add(){
-		$('#wu-form-2').form('submit', {
+		$('#abs-form-2').form('submit', {
 			url:'',
 			success:function(data){
 				if(data){
 					$.messager.alert('信息提示','提交成功！','info');
-					$('#wu-dialog-2').dialog('close');
+					$('#abs-dialog-2').dialog('close');
 				}
 				else
 				{
@@ -102,12 +148,12 @@
 	* Name 修改记录
 	*/
 	function edit(){
-		$('#wu-form-2').form('submit', {
+		$('#abs-form-2').form('submit', {
 			url:'',
 			success:function(data){
 				if(data){
 					$.messager.alert('信息提示','提交成功！','info');
-					$('#wu-dialog-2').dialog('close');
+					$('#abs-dialog-2').dialog('close');
 				}
 				else
 				{
@@ -123,7 +169,7 @@
 	function remove(){
 		$.messager.confirm('信息提示','确定要删除该记录？', function(result){
 			if(result){
-				var items = $('#wu-datagrid-2').datagrid('getSelections');
+				var items = $('#abs-datagrid-2').datagrid('getSelections');
 				var ids = [];
 				$(items).each(function(){
 					ids.push(this.productid);	
@@ -150,8 +196,8 @@
 	* Name 打开添加窗口
 	*/
 	function openAdd(){
-		$('#wu-form-2').form('clear');
-		$('#wu-dialog-2').dialog({
+		$('#abs-form-2').form('clear');
+		$('#abs-dialog-2').dialog({
 			closed: false,
 			modal:true,
             title: "添加信息",
@@ -163,7 +209,7 @@
                 text: '取消',
                 iconCls: 'icon-cancel',
                 handler: function () {
-                    $('#wu-dialog-2').dialog('close');                    
+                    $('#abs-dialog-2').dialog('close');                    
                 }
             }]
         });
@@ -173,23 +219,23 @@
 	* Name 打开修改窗口
 	*/
 	function openEdit(){
-		$('#wu-form-2').form('clear');
-		var item = $('#wu-datagrid-2').datagrid('getSelected');
+		$('#abs-form-2').form('clear');
+		var item = $('#abs-datagrid-2').datagrid('getSelected');
 		//alert(item.productid);return;
 		$.ajax({
 			url:'',
 			data:'',
 			success:function(data){
 				if(data){
-					$('#wu-dialog-2').dialog('close');	
+					$('#abs-dialog-2').dialog('close');	
 				}
 				else{
 					//绑定值
-					$('#wu-form-2').form('load', data)
+					$('#abs-form-2').form('load', data)
 				}
 			}	
 		});
-		$('#wu-dialog-2').dialog({
+		$('#abs-dialog-2').dialog({
 			closed: false,
 			modal:true,
             title: "修改信息",
@@ -201,7 +247,7 @@
                 text: '取消',
                 iconCls: 'icon-cancel',
                 handler: function () {
-                    $('#wu-dialog-2').dialog('close');                    
+                    $('#abs-dialog-2').dialog('close');                    
                 }
             }]
         });
@@ -235,6 +281,191 @@
 		var end = start + parseInt(opts.pageSize);        
 		data.rows = (data.originalRows.slice(start, end));         
 		return data;       
+	}
+	
+	function getDataForStu(){
+		$.ajax({
+    		type:"get",
+    		async:false,
+    		url:"./statisticalData/statisticalDataByStudent.action",
+    		dataType:"json",
+    		data:{
+    			sId:loginUser.sId,
+    			schSemester:term
+    		},
+    		success:function(data){
+    			console.log(data);
+    			if(data.status == 'success'){
+   					var rows = [];
+   					var rows2 = [];
+       				rows = data.data;
+       				row2 = data.dataTwo;
+       				var trueRow = [];
+       				for(var i = 0 ; i < rows.length ; i++){
+       					var item = rows[i];
+       					var temp = {
+  							cName:item.lDId.dCurrId.currName,
+  							tName:item.lDId.dCurrId.currTId.tRealName,
+  							lType:'请假'
+       					}
+       					trueRow.push(temp);
+       				}
+       				for(var j = 0 ; j < rows2.length ; j++){
+       					var item = rows2[j];
+       					var temp = {
+   							cName:item.lDId.dCurrId.currName,
+   							tName:item.lDId.dCurrId.currTId,
+   							lType:'缺勤'
+       					}
+       					trueRow.push(temp);
+       				}
+       				$('#abs-datagrid-2').datagrid('loadData', trueRow);
+       				$('#qqnum').text(rows2.length);
+       				if(rows2.length > Util.getLocalStorage("qqNum")){
+       					$('#qqnum').css('color','red');
+       				}else{
+       					$('#qqnum').css('color','');
+       				}
+       				$('#qjnum').text(rows.length);
+       				if(rows.length > Util.getLocalStorage("qjNum")){
+       					$('#qjnum').css('color','red');
+       				}else{
+       					$('#qjnum').css('color','');
+       				}
+       				$('#stuTable').show();
+       				$('#teaAndAdmin').hide();
+					
+    			}else{
+    				//没有数据或服务器错误
+    			}
+    		}
+    	});
+	}
+	
+	function getDataForTea(){
+		$.ajax({
+    		type:"get",
+    		async:false,
+    		url:"./statisticalData/statisticalDataByTeacher.action",
+    		dataType:"json",
+    		data:{
+    			tId:loginUser.tId,
+    			schSemester:term
+    		},
+    		success:function(data){
+    			console.log(data);
+    			if(data.status == 'success'){
+   					var rows = [];
+   					var rows2 = [];
+       				rows = data.data;
+       				row2 = data.dataTwo;
+       				$('#abs-datagrid-3').datagrid('loadData', trueRow);
+       				$('#stuTable').hide();
+       				$('#teaAndAdmin').show();
+       				/* var trueRow = [];
+       				for(var i = 0 ; i < rows.length ; i++){
+       					var item = rows[i];
+       					var temp = {
+   							sNumber:item.lSId.sNumber,
+   							sName:item.lSId.sRealName,
+   							sSex:item.lSId.sSex = '0' ? '男' : '女',
+   							qjNum:,
+   							qqNum:
+       					}
+       					trueRow.push(temp);
+       				}
+       				for(var j = 0 ; j < rows2.length ; j++){
+       					var item = rows2[j];
+       					var temp = {
+   							cName:item.lDId.dCurrId.currName,
+   							tName:item.lDId.dCurrId.currTId,
+   							lType:'缺勤'
+       					}
+       					trueRow.push(temp);
+       				}
+       				$('#abs-datagrid-2').datagrid('loadData', trueRow);
+       				$('#qqnum').text(rows2.length);
+       				if(rows2.length > Util.getLocalStorage("qqNum")){
+       					$('#qqnum').css('color','red');
+       				}else{
+       					$('#qqnum').css('color','');
+       				}
+       				$('#qjnum').text(rows.length);
+       				if(rows.length > Util.getLocalStorage("qjNum")){
+       					$('#qjnum').css('color','red');
+       				}else{
+       					$('#qjnum').css('color','');
+       				}
+       				$('#stuTable').show();
+       				$('#teaAndAdmin').hide(); */
+					
+    			}else{
+    				//没有数据或服务器错误
+    			}
+    		}
+    	});
+	}
+	
+	function getDataAll(){
+		
+	}
+	
+	function getDepart(){
+        $.ajax({
+            type:"get",
+            async:false,
+            url:"./college/listAll.action",
+            dataType:"json",
+            data:{},
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.data;
+                    var html = '';
+                    for(var i = 0 ; i < rows.length; i++){
+                        if(i == 0){
+                            html += '<option value="'+rows[i].collId+'" selected>'+rows[i].collName+'</option>';
+                            getClasses(rows[i].collId);
+                        }else{
+                            html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
+                        }
+                    }
+                    $('#schedule-depart-combobox1').empty().append(html);
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
+    }
+	function getClasses(yxid){
+        $.ajax({
+            type:"get",
+            async:false,
+            url:"./classes/getByClaCollId.action",
+            dataType:"json",
+            data:{
+            	claCollId:yxid
+            },
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.studentListByCollId;
+                    var html = '';
+                    for(var i = 0 ; i < rows.length; i++){
+                        if(i == 0){
+                            html += '<option value="'+rows[i].claId+'" selected>'+rows[i].claName+'</option>';
+                        }else{
+                            html += '<option value="'+rows[i].claId+'">'+rows[i].claName+'</option>';
+                        }
+                    }
+                    $('#abs-grade-combobox1').empty().append(html);
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
 	}
 	
 </script>

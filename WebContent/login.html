@@ -48,6 +48,7 @@
                     type: "POST",   //post提交方式默认是get
                     url: "./users/loginUsers.action",
                     data: $("#loginForm").serialize(),   //序列化
+                    async:false,
                     error: function (request) {      // 设置表单提交出错
                         $("#showMsg").html(request);  //登录错误提示信息
                     },
@@ -59,7 +60,26 @@
                     	Util.setLocalStorage('loginUser',JSON.stringify(json));
                     	Util.setLocalStorage('role',data.role);
                     	Util.setLocalStorage('term',data.term);
-                        window.location.href = 'index.html';
+                    	$.ajax({
+                            type:"get",
+                            async:false,
+                            url:"./parameter/listAll.action",
+                            dataType:"json",
+                            data:{},
+                            success:function(data){
+                                console.log(data);
+                                if(data.status == 'success'){
+                                    var rows = [];
+                                    rows = data.data;
+                                    Util.setLocalStorage('qqNum',rows[0].pAbsenceNum);
+                                    Util.setLocalStorage('qjNum',rows[0].pLeaveTableNum);
+                                    window.location.href = 'index.html';
+                                }else{
+                                    //没有数据或服务器错误
+                                	$.messager.alert('信息提示','用户名或密码错误','error');
+                                }
+                            }
+                        });
                     }
                 });
             }
