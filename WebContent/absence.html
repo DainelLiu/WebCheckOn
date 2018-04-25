@@ -23,7 +23,32 @@
     	<p style="float: left;">该学期请假次数:<strong id="qjnum">3</strong></p>
     </div>
 </div>
-<div class="easyui-layout" data-options="fit:true" id="teaAndAdmin" style="display:none;">
+<div class="easyui-layout" data-options="fit:true" id="tea" style="display:none;">
+    <!-- Begin of toolbar -->
+    <div class="wu-toolbar-search" id="abssearchbox2">
+        <label>查询学期：</label>
+        <select class="" panelHeight="auto" id="abs-term-combobox2">
+        	<option value="2017-2018第一学期">2017-2018第一学期</option>
+        	<option value="2017-2018第二学期">2017-2018第二学期</option>
+        	<option value="2016-2017第一学期">2016-2017第一学期</option>
+        	<option value="2016-2017第二学期">2016-2017第二学期</option>
+        	<option value="2015-2016第一学期">2015-2016第一学期</option>
+        	<option value="2015-2016第二学期">2015-2016第二学期</option>
+        	<option value="2014-2015第一学期">2014-2015第一学期</option>
+        	<option value="2014-2015第二学期">2014-2015第二学期</option>
+        	<option value="2013-2014第一学期">2013-2014第一学期</option>
+        	<option value="2013-2014第二学期">2013-2014第二学期</option>
+        </select>
+        <label>课程：</label>
+        <select class="" panelHeight="auto" id="abs-depart-combobox2" ></select>
+        <label>班级：</label>
+        <select class="" panelHeight="auto" id="abs-grade-combobox2"></select>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+    </div>
+    <!-- End of toolbar -->
+    <table id="abs-datagrid-3" class="easyui-datagrid" toolbar="#abssearchbox2"></table>
+</div>
+<div class="easyui-layout" data-options="fit:true" id="all" style="display:none;">
     <!-- Begin of toolbar -->
     <div class="wu-toolbar-search" id="abssearchbox1">
         <label>查询学期：</label>
@@ -116,7 +141,13 @@
         $(document).on('change','#abs-depart-combobox',function(){
             getClasses($(this).find("option:selected").val());
         });
+        $(document).on('change','#abs-depart-combobox2',function(){
+            getGrade($(this).find("option:selected").val());
+        });
         getDepart();
+        getCurrByTId();
+        $('#abs-term-combobox1').val(term);
+        $('#abs-term-combobox2').val(term);        
         if(role == '0'){
         	getDataForStu();
         }else if(role == '1'){
@@ -333,7 +364,8 @@
        					$('#qjnum').css('color','');
        				}
        				$('#stuTable').show();
-       				$('#teaAndAdmin').hide();
+       				$('#tea').hide();
+       				$('#all').hide();
 					
     			}else{
     				//没有数据或服务器错误
@@ -397,7 +429,7 @@
        					$('#qjnum').css('color','');
        				}
        				$('#stuTable').show();
-       				$('#teaAndAdmin').hide(); */
+       				$('#tea').hide(); */
 					
     			}else{
     				//没有数据或服务器错误
@@ -407,7 +439,53 @@
 	}
 	
 	function getDataAll(){
-		
+		$.ajax({
+    		type:"get",
+    		async:false,
+    		url:"./statisticalData/statisticalDataByTeacher.action",
+    		dataType:"json",
+    		data:{
+    			schSemester:$('abs-term-combobox1').val(),
+    			claId:$('abs-grade-combobox1').val()
+    		},
+    		success:function(data){
+    			console.log(data);
+    			if(data.status == 'success'){
+   					var rows = [];
+   					var rows2 = [];
+       				rows = data.data;
+       				row2 = data.dataTwo;
+       				var trueRow = [];
+       				for(var i = 0 ; i < rows.length ; i++){
+       					var item = rows[i];
+       					var temp = {
+   							sNumber:item.lSId.sNumber,
+   							sName:item.lSId.sRealName,
+   							sSex:item.lSId.sSex = '0' ? '男' : '女',
+   							qjNum:'3',
+   							qqNum:'3'
+       					}
+       					trueRow.push(temp);
+       				}
+       				for(var j = 0 ; j < rows2.length ; j++){
+       					var item = rows2[j];
+       					var temp = {
+   							cName:item.lDId.dCurrId.currName,
+   							tName:item.lDId.dCurrId.currTId,
+   							lType:'缺勤'
+       					}
+       					trueRow.push(temp);
+       				}
+       				$('#abs-datagrid-3').datagrid('loadData', trueRow);
+       				$('#stuTable').hide();
+       				$('#tea').hide();
+       				$('#all').hide();
+					
+    			}else{
+    				//没有数据或服务器错误
+    			}
+    		}
+    	});
 	}
 	
 	function getDepart(){
@@ -431,7 +509,7 @@
                             html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
                         }
                     }
-                    $('#schedule-depart-combobox1').empty().append(html);
+                    $('#abs-depart-combobox1').empty().append(html);
                 }else{
                     //没有数据或服务器错误
                 }
@@ -461,6 +539,67 @@
                         }
                     }
                     $('#abs-grade-combobox1').empty().append(html);
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
+	}
+	function getCurrByTId(){
+		$.ajax({
+            type:"get",
+            async:false,
+            url:"./listAllByTId/curriculum.action",
+            dataType:"json",
+            data:{
+            	tId:loginUser.tId,
+    			schSemester:term
+            },
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.currListByTId;
+                    var html = '';
+                    for(var i = 0 ; i < rows.length; i++){
+                        if(i == 0){
+                            html += '<option value="'+rows[i].claId+'" selected>'+rows[i].claName+'</option>';
+                        	getGrade(rows[i].claId);
+                        }else{
+                            html += '<option value="'+rows[i].claId+'">'+rows[i].claName+'</option>';
+                        }
+                    }
+                    $('#abs-depart-combobox2').empty().append(html);
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
+	}
+	function getGrade(bjid){
+		$.ajax({
+            type:"get",
+            async:false,
+            url:"./listAllByTId/curriculum.action",
+            dataType:"json",
+            data:{
+            	claId:bjid
+            },
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.currListByTId;
+                    var html = '';
+                    for(var i = 0 ; i < rows.length; i++){
+                        if(i == 0){
+                            html += '<option value="'+rows[i].claId+'" selected>'+rows[i].claName+'</option>';
+                        	getGrade(rows[i].claId);
+                        }else{
+                            html += '<option value="'+rows[i].claId+'">'+rows[i].claName+'</option>';
+                        }
+                    }
+                    $('#abs-grade-combobox2').empty().append(html);
                 }else{
                     //没有数据或服务器错误
                 }
