@@ -258,14 +258,14 @@ public class ClassesAction {
 	
 	@Action(value = "getByCurrId")
 	public String getByCurrId() throws IOException {
-		String CurrId = ServletActionContext.getRequest().getParameter("CurrId");
+		String currId = ServletActionContext.getRequest().getParameter("currId");
 		/*
 		 SELECT * from classes where 1=1 and claId IN(
 		SELECT schClaId from schedule where 1=1 and schId In(
 		SELECT dSchId from scheduledetails where dCurrId = '4028470662e65a170162e65a811c0000'))
 		 */
 		String hql="from Classes where 1=1 and claId IN(SELECT schClaId from Schedule where 1=1 and schId In(SELECT dSchId from ScheduleDetails where dCurrId = '"
-				+CurrId+"'))" ;
+				+currId+"'))" ;
 		List<Object> studentListByCollId = classesDao.getAllByConds(hql);// 获取所有类型数据，不带分页
 		JSONObject jobj = new JSONObject();
 		if (studentListByCollId.size() > 0) {
