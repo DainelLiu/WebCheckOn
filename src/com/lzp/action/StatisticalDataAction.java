@@ -57,6 +57,8 @@ public class StatisticalDataAction {
 		
 		String schSemester = URLDecoder.decode(ServletActionContext.getRequest().getParameter("schSemester"), "utf-8");
 		String tId = ServletActionContext.getRequest().getParameter("tId");
+		String currId = ServletActionContext.getRequest().getParameter("currId");//课程id
+		String claId = ServletActionContext.getRequest().getParameter("claId");//班级id
 		String hql;
 		String hqlTwo;
 		/*SELECT *FROM leavetable where 1=1 and lDId In(SELECT dId FROM scheduledetails where dCurrId in(SELECT currId FROM curriculum where currTId = '123456789321456
