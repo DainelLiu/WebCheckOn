@@ -173,8 +173,8 @@
         if(role == '0'){
         	getDataForStu();
         }else if(role == '1'){
-        	//getDataForTea();
-        	$('#tea').show();
+        	getDataForTea();
+        	// $('#tea').show();
         }else{
         	//getDataAll();
         	$('#all').show();
@@ -576,17 +576,17 @@
 		$.ajax({
             type:"get",
             async:false,
-            url:"./curriculum/listAllByTId.action",
+            url:"./curriculum/listAllBySemester.action",
             dataType:"json",
             data:{
-            	tId:loginUser.tId,
-    			schSemester:term,
+                currTId:loginUser.tId,
+    			schSemester:$('#abs-term-combobox1').val(),
             },
             success:function(data){
                 console.log(data);
                 if(data.status == 'success'){
                     var rows = [];
-                    rows = data.currListByTId;
+                    rows = data.data;
                     var html = '';
                     for(var i = 0 ; i < rows.length; i++){
                         if(i == 0){
@@ -603,20 +603,20 @@
             }
         });
 	}
-	function getGrade(bjid){
+	function getGrade(kcid){
 		$.ajax({
             type:"get",
             async:false,
-            url:"./listAllByTId/curriculum.action",
+            url:"./classes/getByCurrId.action",
             dataType:"json",
             data:{
-            	claId:bjid
+                currId:kcid
             },
             success:function(data){
                 console.log(data);
                 if(data.status == 'success'){
                     var rows = [];
-                    rows = data.currListByTId;
+                    rows = data.studentListByCollId;
                     var html = '';
                     for(var i = 0 ; i < rows.length; i++){
                         if(i == 0){
