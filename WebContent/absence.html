@@ -620,7 +620,7 @@
                     var html = '';
                     for(var i = 0 ; i < rows.length; i++){
                         if(i == 0){
-                            html += '<option value="'+rows[i].claId+'" selected>'+rows[i].claName+'</option>';
+                            html += '<option value="'+rows[i].claId+'" selected>'+rows[i].claCollId.collName+rows[i].claName+'</option>';
                         	getGrade(rows[i].claId);
                         }else{
                             html += '<option value="'+rows[i].claId+'">'+rows[i].claCollId.collName+rows[i].claName+'</option>';
