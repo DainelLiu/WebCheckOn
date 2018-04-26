@@ -115,8 +115,9 @@ public class ClassesAction {
 	public String update() throws IOException {
 
 		String claId = ServletActionContext.getRequest().getParameter("claId");
-
+		String claName = ServletActionContext.getRequest().getParameter("claName");
 		Classes classes = classesDao.getById(claId);
+		classes.setclaName(claName);
 		JSONObject jobj = new JSONObject();
 
 		if (classesDao.update(classes)) {
@@ -254,6 +255,34 @@ public class ClassesAction {
 		ServletActionContext.getResponse().getWriter().write(jobj.toString());
 		return null;
 	}
+	
+	@Action(value = "getByCurrId")
+	public String getByCurrId() throws IOException {
+		String currId = ServletActionContext.getRequest().getParameter("currId");
+		/*
+		 SELECT * from classes where 1=1 and claId IN(
+		SELECT schClaId from schedule where 1=1 and schId In(
+		SELECT dSchId from scheduledetails where dCurrId = '4028470662e65a170162e65a811c0000'))
+		 */
+		String hql="from Classes where 1=1 and claId IN(SELECT schClaId from Schedule where 1=1 and schId In(SELECT dSchId from ScheduleDetails where dCurrId = '"
+				+currId+"'))" ;
+		List<Object> studentListByCollId = classesDao.getAllByConds(hql);// 获取所有类型数据，不带分页
+		JSONObject jobj = new JSONObject();
+		if (studentListByCollId.size() > 0) {
+			// save success
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("studentListByCollId", JsonUtil.toJsonByListObj(studentListByCollId));
+		} else {
+			// save failed
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+	}
+
 
 
 }

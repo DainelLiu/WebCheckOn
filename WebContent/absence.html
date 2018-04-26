@@ -173,8 +173,8 @@
         if(role == '0'){
         	getDataForStu();
         }else if(role == '1'){
-        	//getDataForTea();
-        	$('#tea').show();
+        	getDataForTea();
+        	// $('#tea').show();
         }else{
         	//getDataAll();
         	$('#all').show();
@@ -576,24 +576,24 @@
 		$.ajax({
             type:"get",
             async:false,
-            url:"./curriculum/listAllByTId.action",
+            url:"./curriculum/listAllBySemester.action",
             dataType:"json",
             data:{
-            	tId:loginUser.tId,
-    			schSemester:term,
+                currTId:loginUser.tId,
+    			schSemester:encodeURI($('#abs-term-combobox1').val()),
             },
             success:function(data){
                 console.log(data);
                 if(data.status == 'success'){
                     var rows = [];
-                    rows = data.currListByTId;
+                    rows = data.data;
                     var html = '';
                     for(var i = 0 ; i < rows.length; i++){
                         if(i == 0){
-                            html += '<option value="'+rows[i].claId+'" selected>'+rows[i].claName+'</option>';
-                        	getGrade(rows[i].claId);
+                            html += '<option value="'+rows[i].currId+'" selected>'+rows[i].currName+'</option>';
+                        	getGrade(rows[i].currId);
                         }else{
-                            html += '<option value="'+rows[i].claId+'">'+rows[i].claName+'</option>';
+                            html += '<option value="'+rows[i].currId+'">'+rows[i].currName+'</option>';
                         }
                     }
                     $('#abs-depart-combobox2').empty().append(html);
@@ -603,24 +603,24 @@
             }
         });
 	}
-	function getGrade(bjid){
+	function getGrade(kcid){
 		$.ajax({
             type:"get",
             async:false,
-            url:"./listAllByTId/curriculum.action",
+            url:"./classes/getByCurrId.action",
             dataType:"json",
             data:{
-            	claId:bjid
+                currId:kcid
             },
             success:function(data){
                 console.log(data);
                 if(data.status == 'success'){
                     var rows = [];
-                    rows = data.currListByTId;
+                    rows = data.studentListByCollId;
                     var html = '';
                     for(var i = 0 ; i < rows.length; i++){
                         if(i == 0){
-                            html += '<option value="'+rows[i].claId+'" selected>'+rows[i].claName+'</option>';
+                            html += '<option value="'+rows[i].claId+'" selected>'+rows[i].claCollId.collName+rows[i].claName+'</option>';
                         	getGrade(rows[i].claId);
                         }else{
                             html += '<option value="'+rows[i].claId+'">'+rows[i].claCollId.collName+rows[i].claName+'</option>';
