@@ -238,17 +238,23 @@ public class UsersAction {
 			//学生登录
 			hql = "from Student where sNumber='"+username+"' and sPassword='"+password+"'";
 			List<Object> studentList = studentDao.getAllByConds(hql);
-			student= (Student) studentList.get(0);
+			if(studentList.size() > 0){
+				student= (Student) studentList.get(0);
+			}
 		}else if("1".equals(role)){
 			//教师登录
 			hql = "from Teacher where tNumber='"+username+"' and tPassword='"+password+"'";
 			List<Object>  teacherList= teacherDao.getAllByConds(hql);
-			teacher = (Teacher) teacherList.get(0);
+			if(teacherList.size() > 0){
+				teacher = (Teacher) teacherList.get(0);
+			}
 		}else{
 			//管理员登录
 			hql = "from Users where uName='"+username+"' and uPassword='"+password+"'";
 			List<Object> usersList = usersDao.getAllByConds(hql);
-			users = (Users) usersList.get(0);
+			if(usersList.size() > 0){
+				users = (Users) usersList.get(0);
+			}
 		}
 		
 		String term = ((Parameter) parameterDao.list().get(0)).getpNewTerm();

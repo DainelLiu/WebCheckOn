@@ -67,11 +67,14 @@
         <label>所属院系：</label>
         <select class="" panelHeight="auto" id="abs-depart-combobox1" ></select>
         <label>所属班级：</label>
-        <select class="" panelHeight="auto" id="abs-grade-combobox1"></select>
+        <select class="" panelHeight="auto" id="abs-grade-combobox1">
+        	<option vaule='1' selected>数学3班</option>
+        	<option vaule='2' selected>计科3班</option>
+        </select>
         <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
-    <table id="abs-datagrid-3" class="easyui-datagrid" toolbar="#abssearchbox1"></table>
+    <table id="abs-datagrid-4" class="easyui-datagrid" toolbar="#abssearchbox1"></table>
 </div>
 <!-- Begin of easyui-dialog -->
 <div id="abs-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
@@ -122,6 +125,7 @@
             ]]
         });
         $('#abs-datagrid-3').datagrid({
+        	url:'temp/datagrid.json',
             loadFilter:pagerFilter,
             rownumbers:true,
             singleSelect:false,
@@ -138,6 +142,24 @@
                 { field:'qqNum',title:'缺勤次数',width:100},
             ]]
         });
+        $('#abs-datagrid-4').datagrid({
+        	url:'temp/datagrid.json',
+            loadFilter:pagerFilter,
+            rownumbers:true,
+            singleSelect:false,
+            pageSize:20,
+            pagination:true,
+            multiSort:true,
+            fitColumns:true,
+            fit:true,
+            columns:[[
+                { field:'sNumber',title:'学号',width:100,sortable:true},
+                { field:'sName',title:'姓名',width:180},
+                { field:'sSex',title:'性别',width:100},
+                { field:'qjNum',title:'请假次数',width:100,sortable:true},
+                { field:'qqNum',title:'缺勤次数',width:100,sortable:true},
+            ]]
+        });
         $(document).on('change','#abs-depart-combobox',function(){
             getClasses($(this).find("option:selected").val());
         });
@@ -151,9 +173,11 @@
         if(role == '0'){
         	getDataForStu();
         }else if(role == '1'){
-        	getDataForTea();
+        	//getDataForTea();
+        	$('#tea').show();
         }else{
-        	getDataAll();
+        	//getDataAll();
+        	$('#all').show();
         }
     })
 	/**
@@ -382,7 +406,9 @@
     		dataType:"json",
     		data:{
     			tId:loginUser.tId,
-    			schSemester:term
+    			schSemester:term,
+    			currId:$('#abs-depart-combobox2').val(),
+    			claId:$('#abs-grade-combobox2').val()
     		},
     		success:function(data){
     			console.log(data);
@@ -393,7 +419,8 @@
        				row2 = data.dataTwo;
        				$('#abs-datagrid-3').datagrid('loadData', trueRow);
        				$('#stuTable').hide();
-       				$('#teaAndAdmin').show();
+       				$('#tea').show();
+       				$('#all').hide();
        				/* var trueRow = [];
        				for(var i = 0 ; i < rows.length ; i++){
        					var item = rows[i];
@@ -476,10 +503,10 @@
        					}
        					trueRow.push(temp);
        				}
-       				$('#abs-datagrid-3').datagrid('loadData', trueRow);
+       				$('#abs-datagrid-4').datagrid('loadData', trueRow);
        				$('#stuTable').hide();
        				$('#tea').hide();
-       				$('#all').hide();
+       				$('#all').show();
 					
     			}else{
     				//没有数据或服务器错误
@@ -549,11 +576,11 @@
 		$.ajax({
             type:"get",
             async:false,
-            url:"./listAllByTId/curriculum.action",
+            url:"./curriculum/listAllByTId.action",
             dataType:"json",
             data:{
             	tId:loginUser.tId,
-    			schSemester:term
+    			schSemester:term,
             },
             success:function(data){
                 console.log(data);
@@ -596,7 +623,7 @@
                             html += '<option value="'+rows[i].claId+'" selected>'+rows[i].claName+'</option>';
                         	getGrade(rows[i].claId);
                         }else{
-                            html += '<option value="'+rows[i].claId+'">'+rows[i].claName+'</option>';
+                            html += '<option value="'+rows[i].claId+'">'+rows[i].claCollId.collName+rows[i].claName+'</option>';
                         }
                     }
                     $('#abs-grade-combobox2').empty().append(html);

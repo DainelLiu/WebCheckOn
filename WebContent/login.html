@@ -55,31 +55,34 @@
                     success: function (data) {
                     	data = JSON.parse(data);
                     	console.log(data);
-                    	var json = data.data;
-                    	console.log(json);
-                    	Util.setLocalStorage('loginUser',JSON.stringify(json));
-                    	Util.setLocalStorage('role',data.role);
-                    	Util.setLocalStorage('term',data.term);
-                    	$.ajax({
-                            type:"get",
-                            async:false,
-                            url:"./parameter/listAll.action",
-                            dataType:"json",
-                            data:{},
-                            success:function(data){
-                                console.log(data);
-                                if(data.status == 'success'){
-                                    var rows = [];
-                                    rows = data.data;
-                                    Util.setLocalStorage('qqNum',rows[0].pAbsenceNum);
-                                    Util.setLocalStorage('qjNum',rows[0].pLeaveTableNum);
-                                    window.location.href = 'index.html';
-                                }else{
-                                    //没有数据或服务器错误
-                                	$.messager.alert('信息提示','用户名或密码错误','error');
+                    	if(data.status == 'success'){
+                    		var json = data.data;
+                        	console.log(json);
+                        	Util.setLocalStorage('loginUser',JSON.stringify(json));
+                        	Util.setLocalStorage('role',data.role);
+                        	Util.setLocalStorage('term',data.term);
+                        	$.ajax({
+                                type:"get",
+                                async:false,
+                                url:"./parameter/listAll.action",
+                                dataType:"json",
+                                data:{},
+                                success:function(data){
+                                	console.log(data.status);
+                                    if(data.status == 'success'){
+                                        var rows = [];
+                                        rows = data.data;
+                                        Util.setLocalStorage('qqNum',rows[0].pAbsenceNum);
+                                        Util.setLocalStorage('qjNum',rows[0].pLeaveTableNum);
+                                        window.location.href = 'index.html';
+                                    }else{
+                                        //没有数据或服务器错误
+                                    }
                                 }
-                            }
-                        });
+                            });
+                    	}else{
+                    		$.messager.alert('信息提示','用户名或密码错误','error');
+                    	}
                     }
                 });
             }
