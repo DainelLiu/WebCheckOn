@@ -1,6 +1,7 @@
 package com.lzp.action;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +88,6 @@ public class ClassesAction {
 	 */
 	@Action(value = "delete")
 	public String delete() throws IOException {
-
 		String claId = ServletActionContext.getRequest().getParameter("claId");
 		Classes classes = classesDao.getById(claId);
 		JSONObject jobj = new JSONObject();
@@ -148,6 +148,7 @@ public class ClassesAction {
 			// save success
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
+			jobj.put("data", classes);
 		} else {
 			// save failed
 			jobj.put("mes", "获取失败!");
@@ -282,7 +283,40 @@ public class ClassesAction {
 		ServletActionContext.getResponse().getWriter().write(jobj.toString());
 		return null;
 	}
-
-
+	
+	@Action(value = "searchAll")
+	public String searchAll() throws IOException {
+		String claCollId = ServletActionContext.getRequest().getParameter("claCollId");
+		String claName = URLDecoder.decode(ServletActionContext.getRequest().getParameter("claName"),"utf-8");
+		String hql="from Classes where 1=1 and claCollId = '" + claCollId + "'";
+		if(!"".equals(claName)){
+			hql += " and claName like '%" + claName + "%'";
+		}
+		System.out.println(hql);
+		List<Object> classesTypelist = classesDao.getAllByConds(hql);// 获取所有类型数据，不带分页
+		JSONObject jobj = new JSONObject();
+		JSONArray list = new JSONArray();
+		if (classesTypelist.size() > 0) {
+			for (int i = 0; i < classesTypelist.size(); i++) {
+				Classes classes = (Classes) classesTypelist.get(i);
+				String collegeName = classes.getclaCollId().getcollName();
+				String classesName = classes.getclaName();
+				String claId = classes.getclaId();
+				jobj.put("claId",claId);
+				jobj.put("collegeName", collegeName);
+				jobj.put("claName", classesName);
+				list.add(jobj);
+			}
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("data", JsonUtil.toJsonByListObj(list));
+		} else {
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+	}
 
 }
