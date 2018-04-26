@@ -61,7 +61,7 @@ public class StatisticalDataAction {
 		String hqlTwo;
 		/*SELECT *FROM leavetable where 1=1 and lDId In(SELECT dId FROM scheduledetails where dCurrId in(SELECT currId FROM curriculum where currTId = '123456789321456
 		 * ') and dSchId in (SELECT schId FROM schedule where schSemester = '2017-2018第一学期'))*/
-		hql ="from  LeaveTable  where 1=1 and lDId In(SELECT dId FROM ScheduleDetails where dCurrId in(SELECT currId FROM Curriculum where currTId = '"+tId+
+		hql ="from  LeaveTable  where 1=1 and lDId In (SELECT dId FROM ScheduleDetails where dCurrId in(SELECT currId FROM Curriculum where currTId = '"+tId+
 				"') and dSchId in (SELECT schId FROM Schedule where schSemester = '"+schSemester+"'))";
 
 		hqlTwo ="from  Absence  where 1=1 and lDId In(SELECT dId FROM ScheduleDetails where dCurrId in(SELECT currId FROM Curriculum where currTId = '"+tId+
