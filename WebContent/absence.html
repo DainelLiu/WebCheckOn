@@ -173,8 +173,8 @@
         if(role == '0'){
         	getDataForStu();
         }else if(role == '1'){
-        	getDataForTea();
-        	// $('#tea').show();
+        	// getDataForTea();
+        	$('#tea').show();
         }else{
         	//getDataAll();
         	$('#all').show();
@@ -590,10 +590,10 @@
                     var html = '';
                     for(var i = 0 ; i < rows.length; i++){
                         if(i == 0){
-                            html += '<option value="'+rows[i].claId+'" selected>'+rows[i].claName+'</option>';
-                        	getGrade(rows[i].claId);
+                            html += '<option value="'+rows[i].currId+'" selected>'+rows[i].currName+'</option>';
+                        	getGrade(rows[i].currId);
                         }else{
-                            html += '<option value="'+rows[i].claId+'">'+rows[i].claName+'</option>';
+                            html += '<option value="'+rows[i].currId+'">'+rows[i].currName+'</option>';
                         }
                     }
                     $('#abs-depart-combobox2').empty().append(html);
