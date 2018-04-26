@@ -580,7 +580,7 @@
             dataType:"json",
             data:{
                 currTId:loginUser.tId,
-    			schSemester:$('#abs-term-combobox1').val(),
+    			schSemester:encodeURI($('#abs-term-combobox1').val()),
             },
             success:function(data){
                 console.log(data);
