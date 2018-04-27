@@ -97,14 +97,14 @@ public class StatisticalDataAction {
 			for(int j=0;j<absenceTypelist.size();j++){
 				Student student = (Student) studentlist.get(i);
 				Absence absence = (Absence) absenceTypelist.get(j);
-				if(student.getsId().equals(absence.getaSId())){
+				if(student.getsId().equals(absence.getaSId().getsId())){
 					qqNum++;
 				}
 			}
 			for(int h=0;h<leavesTypelist.size();h++){
 				Student student = (Student) studentlist.get(i);
 				LeaveTable absence = (LeaveTable) leavesTypelist.get(h);
-				if(student.getsId().equals(absence.getlSId())){
+				if(student.getsId().equals(absence.getlSId().getsId())){
 					qjNum++;
 				}
 			}
