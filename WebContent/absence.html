@@ -125,21 +125,21 @@
             ]]
         });
         $('#abs-datagrid-3').datagrid({
-        	url:'temp/datagrid.json',
+        	//url:'temp/datagrid.json',
             loadFilter:pagerFilter,
             rownumbers:true,
             singleSelect:false,
             pageSize:20,
             pagination:true,
             multiSort:true,
-            fitColumns:true,
-            fit:true,
+            fitColumns:false,
+            height:485,
             columns:[[
-                { field:'sNumber',title:'学号',width:100,sortable:true},
-                { field:'sName',title:'姓名',width:180,sortable:true},
+                { field:'sNumber',title:'学号',width:300,sortable:true},
+                { field:'sName',title:'姓名',width:300,sortable:true},
                 { field:'sSex',title:'性别',width:100},
-                { field:'qjNum',title:'请假次数',width:100},
-                { field:'qqNum',title:'缺勤次数',width:100},
+                { field:'qjNum',title:'请假次数',width:300},
+                { field:'qqNum',title:'缺勤次数',width:300},
             ]]
         });
         $('#abs-datagrid-4').datagrid({
@@ -173,8 +173,8 @@
         if(role == '0'){
         	getDataForStu();
         }else if(role == '1'){
-        	//getDataForTea();
-        	$('#tea').show();
+        	getDataForTea();
+        	//$('#tea').show();
         }else{
         	//getDataAll();
         	$('#all').show();
@@ -415,48 +415,24 @@
     			if(data.status == 'success'){
    					var rows = [];
    					var rows2 = [];
-       				rows = data.data;
-       				row2 = data.dataTwo;
+       				rows = data.studentlist;
+       				row2 = data.nums;
+       				var trueRow = [];
+       				for(var i = 0 ; i < rows.length ; i++){
+       					var item = rows[i];
+       					var temp = {
+   							sNumber:item.sNumber,
+   							sName:item.sRealName,
+   							sSex:item.sSex = '0' ? '男' : '女',
+   							qjNum:row2[i].qjNum,
+   							qqNum:row2[i].qqNum
+       					}
+       					trueRow.push(temp);
+       				}
        				$('#abs-datagrid-3').datagrid('loadData', trueRow);
        				$('#stuTable').hide();
        				$('#tea').show();
        				$('#all').hide();
-       				/* var trueRow = [];
-       				for(var i = 0 ; i < rows.length ; i++){
-       					var item = rows[i];
-       					var temp = {
-   							sNumber:item.lSId.sNumber,
-   							sName:item.lSId.sRealName,
-   							sSex:item.lSId.sSex = '0' ? '男' : '女',
-   							qjNum:,
-   							qqNum:
-       					}
-       					trueRow.push(temp);
-       				}
-       				for(var j = 0 ; j < rows2.length ; j++){
-       					var item = rows2[j];
-       					var temp = {
-   							cName:item.lDId.dCurrId.currName,
-   							tName:item.lDId.dCurrId.currTId,
-   							lType:'缺勤'
-       					}
-       					trueRow.push(temp);
-       				}
-       				$('#abs-datagrid-2').datagrid('loadData', trueRow);
-       				$('#qqnum').text(rows2.length);
-       				if(rows2.length > Util.getLocalStorage("qqNum")){
-       					$('#qqnum').css('color','red');
-       				}else{
-       					$('#qqnum').css('color','');
-       				}
-       				$('#qjnum').text(rows.length);
-       				if(rows.length > Util.getLocalStorage("qjNum")){
-       					$('#qjnum').css('color','red');
-       				}else{
-       					$('#qjnum').css('color','');
-       				}
-       				$('#stuTable').show();
-       				$('#tea').hide(); */
 					
     			}else{
     				//没有数据或服务器错误

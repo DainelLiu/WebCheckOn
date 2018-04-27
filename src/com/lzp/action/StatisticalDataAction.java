@@ -85,7 +85,7 @@ public class StatisticalDataAction {
 		hqlTwo ="from LeaveTable where 1=1 and lDId In (SELECT dId From ScheduleDetails where 1=1 and dCurrId ='"
 				+ currId + "' and dSchId IN ( SELECT schId From Schedule where 1=1 and schClaId = '" 
 				+ claId + "'and schSemester = '"+schSemester+"' ))";
-		List<Object> absenceTypelist = absenceDao.getAllByConds(hql);//缺勤的l	ist
+		List<Object> absenceTypelist = absenceDao.getAllByConds(hql);//缺勤的list
 		List<Object> studentlist = studentDao.getAllByConds(hqlByCla);//学生的list
 		List<Object> leavesTypelist= leavesDao.getAllByConds(hqlTwo);
 		
