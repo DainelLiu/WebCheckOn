@@ -43,7 +43,7 @@
         <select class="" panelHeight="auto" id="abs-depart-combobox2" ></select>
         <label>班级：</label>
         <select class="" panelHeight="auto" id="abs-grade-combobox2"></select>
-        <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+        <a href="javascript:getDataForTea()" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
     <table id="abs-datagrid-3" class="easyui-datagrid" toolbar="#abssearchbox2"></table>
@@ -173,8 +173,8 @@
         if(role == '0'){
         	getDataForStu();
         }else if(role == '1'){
-        	getDataForTea();
-        	// $('#tea').show();
+        	//getDataForTea();
+        	$('#tea').show();
         }else{
         	//getDataAll();
         	$('#all').show();
