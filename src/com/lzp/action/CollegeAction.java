@@ -1,6 +1,7 @@
 package com.lzp.action;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,6 +130,7 @@ public class CollegeAction {
 			//save success
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
+			jobj.put("data", college);
 		}else{
 			//save failed
 			jobj.put("mes", "获取失败!");
@@ -180,6 +182,28 @@ public class CollegeAction {
 	public String listAll() throws IOException{
 
 		List<Object> collegeTypelist = collegeDao.list();//获取所有类型数据，不带分页
+		JSONObject jobj = new JSONObject();
+		if(collegeTypelist.size() > 0){
+			//save success
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("data", JsonUtil.toJsonByListObj(collegeTypelist));
+		}else{
+			//save failed
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+	}
+	
+	@Action(value="searchAll")
+	public String searchAll() throws IOException{
+
+		String conds = URLDecoder.decode(ServletActionContext.getRequest().getParameter("conds"), "utf-8");
+		String hql = "from College where collName LIKE '%"+conds+"%'";
+		List<Object> collegeTypelist = collegeDao.getAllByConds(hql);//获取所有类型数据，不带分页
 		JSONObject jobj = new JSONObject();
 		if(collegeTypelist.size() > 0){
 			//save success

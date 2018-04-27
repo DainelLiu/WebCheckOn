@@ -4,7 +4,7 @@
         <div class="wu-toolbar-button">
             <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openAdd2()" plain="true">添加</a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openEdit2()" plain="true">修改</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-remove2" onclick="remove2()" plain="true">删除</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="remove2()" plain="true">删除</a>
         </div>
     </div>
     <div class="wu-toolbar-search">
@@ -15,8 +15,9 @@
             <option value="2">资源与环境科学</option>
             <option value="3">化学工程与工艺</option>-->
         </select>
-        <label>关键词：</label><input class="wu-text" style="width:100px">
-        <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+        <label>关键词：</label><input class="wu-text" style="width:100px" id="gradeWord">
+        <a href="javascript:searchGrade()" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+        <a href="javascript:getData()" class="easyui-linkbutton" iconCls="icon-redo">重置</a>
     </div>
     <!-- End of toolbar -->
     <table id="gradeTable" class="easyui-datagrid" toolbar="#gradeToolbar"></table>
@@ -40,6 +41,28 @@
         </table>
     </form>
 </div>
+<div id="grade-dialog-3" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+	<form id="grade-form-3" method="post" action="classes/update.action">
+        <table>
+        	<tr>
+                <td align="right">班级编号:</td>
+                <td><input type="text" name="claId" class="wu-text" id="classId1" readonly/></td>
+            </tr>
+            <tr>
+                <td width="60" align="right">所属院系:</td>
+                <td>
+                    <select name="claCollId" id="depart-choose1" style="width:268px;" disabled="disabled">
+
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">班级名称:</td>
+                <td><input type="text" name="claName" class="wu-text" id="className1"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
 <!-- End of easyui-dialog -->
 <script type="text/javascript">
     $(function(){
@@ -49,18 +72,17 @@
         $('#gradeTable').datagrid({
         	loadFilter:pagerFilter,
             rownumbers:true,
-            singleSelect:false,
+            singleSelect:true,
             pageSize:10,
             pagination:true,
             multiSort:true,
-            fitColumns:true,
-            fit:true,
+            fitColumns:false,
             height:485,
             columns:[[
                 { checkbox:true},
                 { field:'claId',title:'班级编号',width:420,sortable:true},
                 { field:'claName',title:'班级名称',width:400,sortable:true},
-                { field:'collegeName',title:'所属院系',width:300,sortable:true},
+                { field:'collegeName',title:'所属院系',width:400,sortable:true},
             ]]
         });
     })
@@ -88,12 +110,13 @@
 	* Name 修改记录
 	*/
 	function edit(){
-		$('#grade-form-2').form('submit', {
+		$('#grade-form-3').form('submit', {
 			url:'',
 			success:function(data){
-				if(data){
+				data = JSON.parse(data);
+				if(data.status == 'success'){
 					$.messager.alert('信息提示','提交成功！','info');
-					$('#grade-dialog-2').dialog('close');
+					$('#grade-dialog-3').dialog('close');
                     getData();
 				}
 				else
@@ -110,17 +133,21 @@
 	function remove2(){
 		$.messager.confirm('信息提示','确定要删除该记录？', function(result){
 			if(result){
-				var items = $('#gradeTable').datagrid('getSelections');
+				var item = $('#gradeTable').datagrid('getSelected');
+				/* var items = $('#gradeTable').datagrid('getSelections');
 				var ids = [];
 				$(items).each(function(){
 					ids.push(this.productid);	
-				});
+				}); */
 				//alert(ids);return;
 				$.ajax({
-					url:'',
-					data:'',
+					url:'./classes/delete.action',
+					data:{
+						claId:item.claId
+					},
 					success:function(data){
-						if(data){
+						data = JSON.parse(data);
+						if(data.status == 'success'){
 							$.messager.alert('信息提示','删除成功！','info');
                             getData();
 						}
@@ -150,7 +177,7 @@
                 handler: add
             }, {
                 text: '取消',
-                iconCls: 'icon-cancel2',
+                iconCls: 'icon-cancel',
                 handler: function () {
                     $('#grade-dialog-2').dialog('close');                    
                 }
@@ -162,40 +189,44 @@
 	* Name 打开修改窗口
 	*/
 	function openEdit2(){
-		$('#grade-form-2').form('clear');
 		var item = $('#gradeTable').datagrid('getSelected');
 		//alert(item.productid);return;
 		$.ajax({
-			url:'',
-			data:'',
+			url:'./classes/getById.action',
+			data:{
+				claId:item.claId
+			},
 			success:function(data){
-				if(data){
-					$('#grade-dialog-2').dialog('close');	
+				data = JSON.parse(data);
+				if(data.status == 'success'){
+					$('#depart-choose1').val(data.data.claCollId.collId);
+					$('#classId1').val(data.data.claId);
+					$('#className1').val(data.data.claName);
+					$('#grade-dialog-3').dialog({
+						closed: false,
+						modal:true,
+			            title: "修改信息",
+			            buttons: [{
+			                text: '确定',
+			                iconCls: 'icon-ok',
+			                handler: edit
+			            }, {
+			                text: '取消',
+			                iconCls: 'icon-cancel',
+			                handler: function () {
+			                    $('#grade-dialog-3').dialog('close');                    
+			                }
+			            }]
+			        });
 				}
 				else{
-					//绑定值
-					$('#grade-form-2').form('load', data)
+					
 				}
 			}	
 		});
-		$('#grade-dialog-2').dialog({
-			closed: false,
-			modal:true,
-            title: "修改信息",
-            buttons: [{
-                text: '确定',
-                iconCls: 'icon-ok',
-                handler: edit
-            }, {
-                text: '取消',
-                iconCls: 'icon-cancel2',
-                handler: function () {
-                    $('#grade-dialog-2').dialog('close');                    
-                }
-            }]
-        });
 	}	
 	function getData(){
+		$('#gradeWord').val('');
     	//获取用户列表
         $.ajax({
     		type:"get",
@@ -270,6 +301,7 @@
                         }
                     }
                     $('#depart-choose').empty().append(html);
+                    $('#depart-choose1').empty().append(html);
                     $('#grade-combobox').empty().append(html);
                 }else{
                     //没有数据或服务器错误
@@ -277,5 +309,28 @@
             }
         });
     }
+	
+	function searchGrade(){
+		$.ajax({
+    		type:"get",
+    		async:true,
+    		url:"./classes/searchAll.action",
+    		dataType:"json",
+    		data:{
+    			claCollId:$('#grade-combobox').val(),
+    			claName:encodeURI($('#gradeWord').val())
+    		},
+    		success:function(data){
+    			console.log(data);
+    			if(data.status == 'success'){
+   					var rows = [];
+       				rows = data.data;
+       				$('#gradeTable').datagrid('loadData', rows);
+    			}else{
+    				//没有数据或服务器错误
+    			}
+    		}
+    	});
+	}
 	
 </script>

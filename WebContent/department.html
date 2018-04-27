@@ -8,8 +8,8 @@
         </div>
     </div>
     <div class="wu-toolbar-search">
-        <label>关键词：</label><input class="wu-text" style="width:100px">
-        <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+        <label>关键词：</label><input class="wu-text" style="width:100px" id="searchWord">
+        <a href="javascript:searchDepart()" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
     <table id="depart-datagrid-2" class="easyui-datagrid" toolbar="#depart-toolbar-2"></table>
@@ -25,6 +25,20 @@
         </table>
     </form>
 </div>
+<div id="depart-dialog-3" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+    <form id="depart-form-3" method="post" action="college/update.action">
+	    <table>
+	    	<tr>
+	            <td width="60" align="right">院系编号:</td>
+	            <td><input type="text" name="collId" id="collId" class="wu-text" readonly/></td>
+	        </tr>
+	        <tr>
+	            <td width="60" align="right">院系名称:</td>
+	            <td><input type="text" name="collName" id="collName" class="wu-text" /></td>
+	        </tr>
+	    </table>
+    </form>
+</div>
 <!-- End of easyui-dialog -->
 <script type="text/javascript">
     $(function(){
@@ -34,7 +48,7 @@
         $('#depart-datagrid-2').datagrid({
             loadFilter:pagerFilter,
             rownumbers:true,
-            singleSelect:false,
+            singleSelect:true,
             pageSize:10,
             pagination:true,
             multiSort:true,
@@ -43,7 +57,7 @@
             columns:[[
                 { checkbox:true},
                 { field:'collId',title:'院系编号',width:100,sortable:true},
-                { field:'collName',title:'院系名称',width:180,sortable:true},
+                { field:'collName',title:'院系名称',width:180,sortable:true,editor:'text'},
             ]]
         });
     })
@@ -55,7 +69,8 @@
 		$('#depart-form-2').form('submit', {
 			url:'',
 			success:function(data){
-				if(data){
+				data = JSON.parse(data);
+				if(data.status == 'success'){
 					$.messager.alert('信息提示','提交成功！','info');
 					$('#depart-dialog-2').dialog('close');
 					getData();
@@ -72,12 +87,13 @@
 	* Name 修改记录
 	*/
 	function edit(){
-		$('#depart-form-2').form('submit', {
+		$('#depart-form-3').form('submit', {
 			url:'',
 			success:function(data){
-				if(data){
+				data = JSON.parse(data);
+				if(data.status == 'success'){
 					$.messager.alert('信息提示','提交成功！','info');
-					$('#depart-dialog-2').dialog('close');
+					$('#depart-dialog-3').dialog('close');
 					getData();
 				}
 				else
@@ -94,17 +110,21 @@
 	function remove1(){
 		$.messager.confirm('信息提示','确定要删除该记录？', function(result){
 			if(result){
-				var items = $('#depart-datagrid-2').datagrid('getSelections');
-				var ids = [];
+				var item = $('#depart-datagrid-2').datagrid('getSelected');
+				//var items = $('#depart-datagrid-2').datagrid('getSelections');
+				/* var ids = [];
 				$(items).each(function(){
-					ids.push(this.productid);
-				});
+					ids.push(this.collId);
+				}); */
 				//alert(ids);return;
 				$.ajax({
-					url:'',
-					data:'',
+					url:'./college/delete.action',
+					data:{
+						collId:item.collId
+					},
 					success:function(data){
-						if(data){
+						data = JSON.parse(data);
+						if(data.status == 'success'){
 							$.messager.alert('信息提示','删除成功！','info');
 							getData();
 						}
@@ -145,38 +165,62 @@
 	* Name 打开修改窗口
 	*/
 	function openEdit1(){
-		$('#depart-form-2').form('clear');
+		//$('#depart-form-2').form('clear');
 		var item = $('#depart-datagrid-2').datagrid('getSelected');
 		//alert(item.productid);return;
 		$.ajax({
-			url:'',
-			data:'',
+			url:'./college/getById.action',
+			data:{
+				collId:item.collId
+			},
 			success:function(data){
-				if(data){
-					$('#depart-dialog-2').dialog('close');
+				data = JSON.parse(data);
+				if(data.status == 'success'){
+					$('#collId').val(data.data.collId);
+					$('#collName').val(data.data.collName);
+					$('#depart-dialog-3').dialog({
+						closed: false,
+						modal:true,
+			            title: "修改信息",
+			            buttons: [{
+			                text: '确定',
+			                iconCls: 'icon-ok',
+			                handler: edit
+			            }, {
+			                text: '取消',
+			                iconCls: 'icon-cancel',
+			                handler: function () {
+			                    $('#depart-dialog-3').dialog('close');
+			                }
+			            }]
+			        });
 				}
 				else{
-					//绑定值
-					$('#depart-form-2').form('load', data)
+					
 				}
 			}
 		});
-		$('#depart-dialog-2').dialog({
-			closed: false,
-			modal:true,
-            title: "修改信息",
-            buttons: [{
-                text: '确定',
-                iconCls: 'icon-ok',
-                handler: edit
-            }, {
-                text: '取消',
-                iconCls: 'icon-cancel',
-                handler: function () {
-                    $('#depart-dialog-2').dialog('close');
-                }
-            }]
-        });
+	}
+	function searchDepart(){
+		$.ajax({
+    		type:"get",
+    		async:true,
+    		url:"./college/searchAll.action",
+    		dataType:"json",
+    		data:{
+    			conds:encodeURI($('#searchWord').val())
+    		},
+    		success:function(data){
+    			console.log(data);
+    			if(data.status == 'success'){
+   					var rows = [];
+       				rows = data.data;
+       				$('#depart-datagrid-2').datagrid('loadData', rows);
+    			}else{
+    				//没有数据或服务器错误
+    			}
+    		}
+    	});
 	}
 
 	function getData(){
