@@ -301,10 +301,11 @@ public class StudentAction {
 	
 	@Action(value = "searchAll")
 	public String searchAll() throws IOException {
-		String sRealName = URLDecoder.decode(ServletActionContext.getRequest().getParameter("sRealName"),"utf-8");
+		String sRealName = ServletActionContext.getRequest().getParameter("sRealName");
 		String sClaId = ServletActionContext.getRequest().getParameter("sClaId");
 		String hql="from Student where 1=1 and sClaId = '" + sClaId + "'";
-		if(!"".equals(sRealName)){
+		if("" != sRealName || !"".equals(sRealName)){
+			sRealName = URLDecoder.decode(sRealName,"utf-8");
 			hql += " and sRealName like '%" + sRealName + "%'";
 		}
 		List<Object> studemtTypelist = studentDao.getAllByConds(hql);// 获取所有类型数据，不带分页

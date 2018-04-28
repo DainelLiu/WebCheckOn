@@ -16,7 +16,7 @@
                 <option value="1">已批准</option>
                 <option value="2">已销假</option>
             </select>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+            <a href="javascript:searchReqTable()" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
         </div>
     <!-- End of toolbar -->
     <table id="leave-datagrid-3" class="easyui-datagrid" toolbar="#leaveToolbar"></table>
@@ -319,7 +319,7 @@
        					}else if(item.lSign == '1'){
        						temp.status = '已批准';
        					}else{
-       						temp.status = '已驳回';
+       						temp.status = '已销假';
        					}
        					trueRow.push(temp);
        				}
@@ -350,6 +350,7 @@
    					var rows = [];
        				rows = data.data;
        				var trueRow = [];
+       				debugger;
        				for(var i = 0 ; i < rows.length ; i++){
        					var item = rows[i];
        					var temp = {
@@ -366,10 +367,11 @@
        					}else if(item.lSign == '1'){
        						temp.status = '已批准';
        					}else{
-       						temp.status = '已驳回';
+       						temp.status = '已销假';
        					}
        					trueRow.push(temp);
        				}
+       				debugger;
        				$('#leave-datagrid-3').datagrid('loadData', trueRow);
        				$('#tea').show();
        				$('#stu').hide();
@@ -409,7 +411,7 @@
        					}else if(item.lSign == '1'){
        						temp.status = '已批准';
        					}else{
-       						temp.status = '已驳回';
+       						temp.status = '已销假';
        					}
        					trueRow.push(temp);
        				}
@@ -516,5 +518,50 @@
                 });
             });
         }
+    }
+    function searchReqTable(){
+        $.ajax({
+            type:"get",
+            async:true,
+            url:"./curriculum/searchAll.action",
+            dataType:"json",
+            data:{
+                lStatus:$('#request-choose').val()
+            },
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.data;
+                    var trueRow = [];
+                    for(var i = 0 ; i < rows.length ; i++){
+                        var item = rows[i];
+                        var temp = {
+                            term:decodeURI(term),
+                            lId:item.lId,
+                            cName:item.lDId.dCurrId.currName,
+                            cTime:item.lDId.dTime+'第' + item.lDId.dInId.inContent +'节',
+                            sName:item.lSId.sRealName,
+                            reason:item.lReason,
+                            status:''
+                        }
+                        if(item.lSign == '0'){
+                            temp.status = '未批准';
+                        }else if(item.lSign == '1'){
+                            temp.status = '已批准';
+                        }else{
+                            temp.status = '已销假';
+                        }
+                        trueRow.push(temp);
+                    }
+                    $('#leave-datagrid-3').datagrid('loadData', trueRow);
+                    $('#tea').show();
+                    $('#stu').hide();
+                    $('#all').hide();
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
     }
 </script>

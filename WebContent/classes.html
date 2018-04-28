@@ -13,17 +13,16 @@
             <!--<option value="0">张三</option>
             <option value="1">李四</option>-->
         </select>
-        <label>关键词：</label><input class="wu-text" style="width:100px">
-        <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+        <label>关键词：</label><input class="wu-text" id="classWord" style="width:100px">
+        <a href="javascript:searchClass()" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+        <a href="javascript:getData()" class="easyui-linkbutton" iconCls="icon-redo">重置</a>
     </div>
     <!-- End of toolbar -->
-	<div region="center" border="false" border="false">
-    	<table id="classes-datagrid-2" class="easyui-datagrid" toolbar="#classes-toolbar-2"></table>
-    </div>
+    <table id="classes-datagrid-2" class="easyui-datagrid" toolbar="#classes-toolbar-2"></table>
 </div>
 <!-- Begin of easyui-dialog -->
 <div id="classes-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
-	<form id="classes-form-2" method="post" action="curriculum/save.action">
+    <form id="classes-form-2" method="post" action="curriculum/save.action">
         <table>
             <tr>
                 <td width="60" align="right">课程名称:</td>
@@ -40,6 +39,27 @@
         </table>
     </form>
 </div>
+<div id="classes-dialog-3" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+    <form id="classes-form-3" method="post" action="curriculum/update.action">
+        <table>
+            <tr>
+                <td width="60" align="right">课程名称:</td>
+                <td>
+                    <input type="text" name="currName" class="wu-text" id="editcurrName"/>
+                    <input type="hidden" name="currId" class="wu-text" id="curreditId"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">授课教师:</td>
+                <td>
+                    <select name="currTId" id="classes-choose1" style="width:268px;">
+
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
 <!-- End of easyui-dialog -->
 <script type="text/javascript">
     $(function(){
@@ -49,7 +69,7 @@
         $('#classes-datagrid-2').datagrid({
             loadFilter:pagerFilter,
             rownumbers:true,
-            singleSelect:false,
+            singleSelect:true,
             pageSize:20,
             pagination:true,
             multiSort:true,
@@ -88,12 +108,14 @@
 	* Name 修改记录
 	*/
 	function edit(){
-		$('#classes-form-2').form('submit', {
+		$('#classes-form-3').form('submit', {
 			url:'',
 			success:function(data){
-				if(data){
+                data = JSON.parse(data);
+                if(data.status == 'success'){
 					$.messager.alert('信息提示','提交成功！','info');
-					$('#classes-dialog-2').dialog('close');
+					$('#classes-dialog-3').dialog('close');
+					getData();
 				}
 				else
 				{
@@ -109,18 +131,23 @@
 	function remove4(){
 		$.messager.confirm('信息提示','确定要删除该记录？', function(result){
 			if(result){
-				var items = $('#classes-datagrid-2').datagrid('getSelections');
-				var ids = [];
-				$(items).each(function(){
-					ids.push(this.productid);	
-				});
+                var item = $('#classes-datagrid-2').datagrid('getSelected');
+				// var items = $('#classes-datagrid-2').datagrid('getSelections');
+				// var ids = [];
+				// $(items).each(function(){
+				// 	ids.push(this.productid);
+				// });
 				//alert(ids);return;
 				$.ajax({
-					url:'',
-					data:'',
+					url:'./curriculum/delete.action',
+					data:{
+					    currId:item.currId
+                    },
 					success:function(data){
-						if(data){
-							$.messager.alert('信息提示','删除成功！','info');		
+                        data = JSON.parse(data);
+                        if(data.status == 'success'){
+							$.messager.alert('信息提示','删除成功！','info');
+							getData();
 						}
 						else
 						{
@@ -159,39 +186,43 @@
 	* Name 打开修改窗口
 	*/
 	function openEdit4(){
-		$('#classes-form-2').form('clear');
+		// $('#classes-form-2').form('clear');
 		var item = $('#classes-datagrid-2').datagrid('getSelected');
 		//alert(item.productid);return;
 		$.ajax({
-			url:'',
-			data:'',
+			url:'./curriculum/getById.action',
+			data:{
+                currId:item.currId
+            },
 			success:function(data){
-				if(data){
-					$('#classes-dialog-2').dialog('close');	
+                data = JSON.parse(data);
+                if(data.status == 'success'){
+                    var obj = data.date;
+                    $('#curreditId').val(obj.currId);
+                    $('#editcurrName').val(obj.currName);
+                    $('#classes-choose1').val(obj.currTId.tId);
+                    $('#classes-dialog-3').dialog({
+                        closed: false,
+                        modal:true,
+                        title: "修改信息",
+                        buttons: [{
+                            text: '确定',
+                            iconCls: 'icon-ok',
+                            handler: edit
+                        }, {
+                            text: '取消',
+                            iconCls: 'icon-cancel',
+                            handler: function () {
+                                $('#classes-dialog-3').dialog('close');
+                            }
+                        }]
+                    });
 				}
 				else{
-					//绑定值
-					$('#classes-form-2').form('load', data)
 				}
 			}	
 		});
-		$('#classes-dialog-2').dialog({
-			closed: false,
-			modal:true,
-            title: "修改信息",
-            buttons: [{
-                text: '确定',
-                iconCls: 'icon-ok',
-                handler: edit
-            }, {
-                text: '取消',
-                iconCls: 'icon-cancel',
-                handler: function () {
-                    $('#classes-dialog-2').dialog('close');                    
-                }
-            }]
-        });
-	}	
+	}
 	
 	/**
 	* Name 分页过滤器
@@ -224,6 +255,7 @@
 	}
 
     function getData(){
+	    $('#classWord').val('');
         //获取教师列表
         $.ajax({
             type:"get",
@@ -271,6 +303,32 @@
                     }
                     $('#cla-classes').empty().append(html);
                     $('#classes-choose').empty().append(html);
+                    $('#classes-choose1').empty().append(html);
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
+    }
+    function searchClass(){
+        $.ajax({
+            type:"get",
+            async:true,
+            url:"./curriculum/searchAll.action",
+            dataType:"json",
+            data:{
+                currName:encodeURI($('#classWord').val()),
+                currTId:$('#cla-classes').val()
+            },
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.data;
+                    for(var i=0;i<rows.length;i++){
+                        rows[i].currTId = rows[i].currTId.tRealName;
+                    }
+                    $('#classes-datagrid-2').datagrid('loadData', rows);
                 }else{
                     //没有数据或服务器错误
                 }

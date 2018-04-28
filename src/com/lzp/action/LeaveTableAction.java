@@ -345,4 +345,26 @@ public class LeaveTableAction {
 		ServletActionContext.getResponse().getWriter().write(jobj.toString());
 		return null;
 	}
+
+	@Action(value="searchAll")
+	public String searchAll() throws IOException{
+		String lSign = ServletActionContext.getRequest().getParameter("lStatus");
+		String hql = "from LeaveTable where lSign ='"+lSign+"'";
+		List<Object> leaveTablelist = leavesDao.getAllByConds(hql);//获取所有类型数据，不带分页
+		JSONObject jobj = new JSONObject();
+		if(leaveTablelist.size() > 0){
+			//save success
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("data", JsonUtil.toJsonByListObj(leaveTablelist));
+		}else{
+			//save failed
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+	}
+
 }

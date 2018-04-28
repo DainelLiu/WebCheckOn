@@ -173,7 +173,7 @@ public class CurriculumAction {
 			//save success
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
-			jobj.put("date", "curriculum");
+			jobj.put("date", curriculum);
 		}else{
 			//save failed
 			jobj.put("mes", "获取失败!");
@@ -327,9 +327,13 @@ public class CurriculumAction {
 	
 	@Action(value="searchAll")
 	public String searchAll() throws IOException{
-
-		String currName = URLDecoder.decode(ServletActionContext.getRequest().getParameter("currName"), "utf-8");
-		String hql = "from College where currName LIKE '%"+currName+"%'";
+		String currTId = ServletActionContext.getRequest().getParameter("currTId");
+		String currName = ServletActionContext.getRequest().getParameter("currName");
+		String hql = "from Curriculum where currTId ='"+currTId+"'";
+		if("" != currName || !"".equals(currName)){
+			currName = URLDecoder.decode(currName, "utf-8");
+			hql += " and currName LIKE '%"+currName+"%'";
+		}
 		List<Object> curriculumTypelist = curriculumDao.getAllByConds(hql);//获取所有类型数据，不带分页
 		JSONObject jobj = new JSONObject();
 		if(curriculumTypelist.size() > 0){
