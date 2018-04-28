@@ -186,22 +186,58 @@ public class ScheduleAction {
 	@Action(value = "update")
 	public String update() throws IOException {
 
-		String schId = ServletActionContext.getRequest().getParameter("schId");
 
-		Schedule schedule = scheduleDao.getById(schId);
+		
+		String tableConds = ServletActionContext.getRequest().getParameter("tableConds");
+		JSONObject jsonTemp = JSONObject.fromObject(tableConds);
+		JSONObject json = new JSONObject();
+		// json.get(key)
+		JSONArray jsonArray = new JSONArray();
+		json = (JSONObject) jsonTemp.get("info");// 课表对象属性
+		jsonArray = (JSONArray) jsonTemp.get("details");
+		Schedule schedule = scheduleDao.getById(json.getString("schId"));
+		Classes classes = classesDao.getById(json.getString("schClaId"));
+		schedule.setschClaId(classes);
+		schedule.setschSemester(json.getString("schSemester"));
+		
 		JSONObject jobj = new JSONObject();
-
-		if (scheduleDao.update(schedule)) {
-			jobj.put("mes", "更新成功!");
-			jobj.put("status", "success");
+		boolean sch = scheduleDao.update(schedule);
+		boolean sign = false;
+		if (sch) {
+			for (int i = 0; i < jsonArray.size(); i++) {
+				ScheduleDetails scheduleDetails = new ScheduleDetails();
+				JSONObject job = jsonArray.getJSONObject(i);
+				if (!"0".equals(job.get("dCurrId"))) {
+					scheduleDetails.setdSchId(schedule);
+					scheduleDetails.setdTime(job.getString("dTime"));
+					Curriculum curriculum = curriculumDao.getById(job.getString("dCurrId"));
+					scheduleDetails.setdCurrId(curriculum);
+					Intervals interval = intervalDao.getById(job.getString("dInId"));
+					scheduleDetails.setdInId(interval);
+					if (scheduleDetailsDao.save(scheduleDetails)) {
+						sign = true;
+					} else {
+						sign = false;
+					}
+				}
+			}
+			if (sign) {
+				jobj.put("mes", "保存成功!");
+				jobj.put("status", "success");
+			} else {
+				jobj.put("mes", "获取失败!");
+				jobj.put("status", "error");
+			}
 		} else {
-			// save failed
-			jobj.put("mes", "更新失败!");
+			jobj.put("mes", "获取失败!");
 			jobj.put("status", "error");
 		}
 		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
 		ServletActionContext.getResponse().getWriter().write(jobj.toString());
 		return null;
+
+	
+	
 	}
 
 	/**
@@ -219,6 +255,8 @@ public class ScheduleAction {
 			// save success
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
+			jobj.put("date", "schedule");
+			
 		} else {
 			// save failed
 			jobj.put("mes", "获取失败!");

@@ -137,10 +137,15 @@ public class CurriculumAction {
 	public String update() throws IOException{
 		
 		String currId = ServletActionContext.getRequest().getParameter("currId");
+		String currName = ServletActionContext.getRequest().getParameter("currName");
+		String currTId = ServletActionContext.getRequest().getParameter("currTId");
 		
 		Curriculum curriculum = curriculumDao.getById(currId);
 		JSONObject jobj = new JSONObject();
 		
+		Teacher teacher = teacherDao.getById(currTId);
+		curriculum.setcurrName(currName);
+		curriculum.setcurrTId(teacher);
 		if(curriculumDao.update(curriculum)) {
 			jobj.put("mes", "更新成功!");
 			jobj.put("status", "success");
@@ -168,6 +173,7 @@ public class CurriculumAction {
 			//save success
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
+			jobj.put("date", "curriculum");
 		}else{
 			//save failed
 			jobj.put("mes", "获取失败!");
@@ -309,6 +315,28 @@ public class CurriculumAction {
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
 			jobj.put("data", JsonUtil.toJsonByListObj(collegeTypelist));
+		}else{
+			//save failed
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+	}
+	
+	@Action(value="searchAll")
+	public String searchAll() throws IOException{
+
+		String currName = URLDecoder.decode(ServletActionContext.getRequest().getParameter("currName"), "utf-8");
+		String hql = "from College where currName LIKE '%"+currName+"%'";
+		List<Object> curriculumTypelist = curriculumDao.getAllByConds(hql);//获取所有类型数据，不带分页
+		JSONObject jobj = new JSONObject();
+		if(curriculumTypelist.size() > 0){
+			//save success
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("data", JsonUtil.toJsonByListObj(curriculumTypelist));
 		}else{
 			//save failed
 			jobj.put("mes", "获取失败!");
