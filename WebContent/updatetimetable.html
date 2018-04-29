@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Creating a School Timetable - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="easyui/1.3.4/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="css/icon.css" />
+	<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="js/util.js"></script>
+	<script type="text/javascript" src="easyui/1.3.4/jquery.easyui.min.js"></script>
+	<style type="text/css">
+		.left{
+			width:25%;
+			float:left;
+		}
+		.left table{
+			background:#E0ECFF;
+		}
+		.left td{
+			background:#eee;
+		}
+		.right{
+			float:right;
+			width:70%;
+		}
+		.right table{
+			background:#E0ECFF;
+			width:100%;
+		}
+		.right td{
+			background:#fafafa;
+			color:#444;
+			text-align:center;
+			padding:2px;
+		}
+		.right td{
+			background:#E0ECFF;
+		}
+		.right td.drop{
+			background:#fafafa;
+			width:80px;
+		}
+		.right td.over{
+			background:#FBEC88;
+		}
+		.item{
+			text-align:center;
+			border:1px solid #499B33;
+			background:#fafafa;
+			color:#444;
+			width:80px;
+		}
+		.assigned{
+			border:1px solid #BC2A4D;
+		}
+		.trash{
+			background-color:red;
+		}
+		
+	</style>
+</head>
+<body>
+	<h3>修改课表</h3>
+	<div class="demo-info" style="margin-bottom:10px">
+		<div>请拖动左侧课程移入课表</div>
+	</div>
+
+	<div>
+		<div class="left">
+			<div>
+				<label>所属院系:</label>
+				<select id="table-depart-choose" style="width:90%;">
+					<!-- <option value="1" selected>teacher1</option>
+					<option value="2">teacher2</option> -->
+				</select>
+			</div>
+			<div>
+			<label>授课教师:</label>
+				<select id="table-teacher-choose" style="width:90%;">
+					<option value="1" selected>teacher1</option>
+					<option value="2">teacher2</option>
+				</select>
+			</div>
+			<div>
+				<label>可选课程:</label>
+				<table id="table-classes-choose">
+					
+				</table>
+			</div>
+		</div>
+		<div class="right">
+			<table id="table-content-classes">
+				<tr>
+					<td class="blank"></td>
+					<td class="title">星期一</td>
+					<td class="title">星期二</td>
+					<td class="title">星期三</td>
+					<td class="title">星期四</td>
+					<td class="title">星期五</td>
+					<td class="title">星期六</td>
+					<td class="title">星期日</td>
+				</tr>
+				<tr>
+					<td class="time">1</td>
+					<td class="drop" id="mon1"></td>
+					<td class="drop" id="tus1"></td>
+					<td class="drop" id="wes1"></td>
+					<td class="drop" id="thr1"></td>
+					<td class="drop" id="fri1"></td>
+					<td class="drop" id="sta1"></td>
+					<td class="drop" id="sun1"></td>
+				</tr>
+				<tr>
+					<td class="time">2</td>
+					<td class="drop" id="mon2"></td>
+					<td class="drop" id="tus2"></td>
+					<td class="drop" id="wes2"></td>
+					<td class="drop" id="thr2"></td>
+					<td class="drop" id="fri2"></td>
+					<td class="drop" id="sta2"></td>
+					<td class="drop" id="sun2"></td>
+				</tr>
+				<tr>
+					<td class="time">3</td>
+					<td class="drop" id="mon3"></td>
+					<td class="drop" id="tus3"></td>
+					<td class="drop" id="wes3"></td>
+					<td class="drop" id="thr3"></td>
+					<td class="drop" id="fri3"></td>
+					<td class="drop" id="sta3"></td>
+					<td class="drop" id="sun3"></td>
+				</tr>
+				<tr>
+					<td class="time">4</td>
+					<td class="drop" id="mon4"></td>
+					<td class="drop" id="tus4"></td>
+					<td class="drop" id="wes4"></td>
+					<td class="drop" id="thr4"></td>
+					<td class="drop" id="fri4"></td>
+					<td class="drop" id="sta4"></td>
+					<td class="drop" id="sun4"></td>
+				</tr>
+				<tr>
+					<td class="time">5</td>
+					<td class="drop" id="mon5"></td>
+					<td class="drop" id="tus5"></td>
+					<td class="drop" id="wes5"></td>
+					<td class="drop" id="thr5"></td>
+					<td class="drop" id="fri5"></td>
+					<td class="drop" id="sta5"></td>
+					<td class="drop" id="sun5"></td>
+				</tr>
+				<tr>
+					<td class="time">6</td>
+					<td class="drop" id="mon6"></td>
+					<td class="drop" id="tus6"></td>
+					<td class="drop" id="wes6"></td>
+					<td class="drop" id="thr6"></td>
+					<td class="drop" id="fri6"></td>
+					<td class="drop" id="sta6"></td>
+					<td class="drop" id="sun6"></td>
+				</tr>
+				<tr>
+					<td class="time">7</td>
+					<td class="drop" id="mon7"></td>
+					<td class="drop" id="tus7"></td>
+					<td class="drop" id="wes7"></td>
+					<td class="drop" id="thr7"></td>
+					<td class="drop" id="fri7"></td>
+					<td class="drop" id="sta7"></td>
+					<td class="drop" id="sun7"></td>
+				</tr>
+				<tr>
+					<td class="time">8</td>
+					<td class="drop" id="mon8"></td>
+					<td class="drop" id="tus8"></td>
+					<td class="drop" id="wes8"></td>
+					<td class="drop" id="thr8"></td>
+					<td class="drop" id="fri8"></td>
+					<td class="drop" id="sta8"></td>
+					<td class="drop" id="sun8"></td>
+				</tr>
+				<tr>
+					<td class="time">9</td>
+					<td class="drop" id="mon9"></td>
+					<td class="drop" id="tus9"></td>
+					<td class="drop" id="wes9"></td>
+					<td class="drop" id="thr9"></td>
+					<td class="drop" id="fri9"></td>
+					<td class="drop" id="sta9"></td>
+					<td class="drop" id="sun9"></td>
+				</tr>
+				<tr>
+					<td class="time">10</td>
+					<td class="drop" id="mon10"></td>
+					<td class="drop" id="tus10"></td>
+					<td class="drop" id="wes10"></td>
+					<td class="drop" id="thr10"></td>
+					<td class="drop" id="fri10"></td>
+					<td class="drop" id="sta10"></td>
+					<td class="drop" id="sun10"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div style="margin-top:35%;text-align: center;">
+		<div>
+			<label>所属院系:</label>
+			<select id="table1-depart-choose" style="width:40%;">
+				<!-- <option value="1" selected>teacher1</option>
+				<option value="2">teacher2</option> -->
+			</select>
+		</div>
+		<div>
+			<label>所属班级:</label>
+			<select id="table-grade-choose" style="width:40%;">
+				<option value="1" selected>teacher1</option>
+				<option value="2">teacher2</option>
+			</select>
+		</div>
+		<div>
+			<label>所属学期:</label><!-- 系统参数学期获取 -->
+			<select id="xueqi-choose" style="width:20%;">
+				<option value="2013-2014" selected>2013-2014</option>
+				<option value="2014-2015">2014-2015</option>
+				<option value="2015-2016">2015-2016</option>
+				<option value="2016-2017">2016-2017</option>
+				<option value="2017-2018">2017-2018</option>
+			</select>
+			<select id="xueqi-time-choose" style="width:20%;">
+				<option value="第一学期" selected>第一学期</option>
+				<option value="第二学期">第二学期</option>
+			</select>
+		</div>
+		
+	</div>
+	
+	<script>
+		$(function(){
+            console.log('update----------');
+		    console.log(Util.queryString('rows'));
+		    var dataRow = Util.queryString('rows');
+			getDeparts();
+			$(document).on('change','#table-depart-choose',function(){
+				getTeacher($(this).find("option:selected").val());
+			});
+			$(document).on('change','#table1-depart-choose',function(){
+				getGrade($(this).find("option:selected").val());
+			});
+			$(document).on('change','#table-teacher-choose',function(){
+				getClasses($(this).find("option:selected").val());
+			});
+		});
+		//获取院系
+		function getDeparts(){
+			$.ajax({
+	    		type:"get",
+	    		async:true,
+	    		url:"./college/listAll.action",
+	    		dataType:"json",
+	    		data:{},
+	    		success:function(data){
+	    			console.log(data);
+	    			if(data.status == 'success'){
+	   					var rows = [];
+	       				rows = data.data;
+	       				var html = '';
+	                    for(var i = 0 ; i < rows.length; i++){
+	                        if(i == 0){
+	                            html += '<option value="'+rows[i].collId+'" selected>'+rows[i].collName+'</option>';
+	                            getTeacher(rows[i].collId);
+	                            getGrade(rows[i].collId);
+	                        }else{
+	                            html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
+	                        }
+	                    }
+	                    $('#table-depart-choose').empty().append(html);
+	                    $('#table1-depart-choose').empty().append(html);
+	    			}else{
+	    				//没有数据或服务器错误
+	    			}
+	    		}
+	    	});
+		}
+		//获取老师
+		function getTeacher(yxid){
+			$.ajax({
+	            type:"get",
+	            async:false,
+	            url:"./teacher/listAllByCollId.action",
+	            dataType:"json",
+	            data:{
+	            	claCollId:yxid
+	            },
+	            success:function(data){
+	                console.log(data);
+	                if(data.status == 'success'){
+	                    var rows = [];
+	                    rows = data.tescherListByCollId;
+	                    var html = '';
+	                    for(var i = 0 ; i < rows.length; i++){
+	                        if(i == 0){
+	                            html += '<option value="'+rows[i].tId+'" selected>'+rows[i].tRealName+'</option>';
+	                            getClasses(rows[i].tId);
+	                        }else{
+	                            html += '<option value="'+rows[i].tId+'">'+rows[i].tRealName+'</option>';
+	                        }
+	                    }
+	                    $('#table-teacher-choose').empty().append(html);
+	                }else{
+	                    //没有数据或服务器错误
+	                    $('#table-teacher-choose').empty();
+	                }
+	            }
+	        });
+		}
+		function getClasses(tid){
+			$.ajax({
+	            type:"get",
+	            async:false,
+	            url:"./curriculum/listAllByTId.action",
+	            dataType:"json",
+	            data:{
+	            	currTId:tid
+	            },
+	            success:function(data){
+	                console.log(data);
+	                if(data.status == 'success'){
+	                    var rows = [];
+	                    rows = data.currListByTId;
+	                    var html = '';
+	                    for(var i = 0 ; i < rows.length; i++){
+	                    	html += '<tr>';
+	                    	html += '<td><div class="item" id="'+rows[i].currId+'">'+rows[i].currName+'</div></td>';
+	                    	html += '</tr>';
+	                    }
+	                    $('#table-classes-choose').empty().append(html);
+	                }else{
+	                    //没有数据或服务器错误
+	                    $('#table-classes-choose').empty();
+	                }
+	                $('.left .item').draggable({
+	    				revert:true,
+	    				proxy:'clone'
+	    			});
+	    			$('.right td.drop').droppable({
+	    				onDragEnter:function(){
+	    					$(this).addClass('over');
+	    				},
+	    				onDragLeave:function(){
+	    					$(this).removeClass('over');
+	    				},
+	    				onDrop:function(e,source){
+	    					$(this).removeClass('over');
+	    					if ($(source).hasClass('assigned')){
+	    						$(this).append(source);
+	    					} else {
+	    						var c = $(source).clone().addClass('assigned');
+	    						$(this).empty().append(c);
+	    						c.draggable({
+	    							revert:true
+	    						});
+	    					}
+	    				}
+	    			});
+	    			$('.left').droppable({
+	    				accept:'.assigned',
+	    				onDragEnter:function(e,source){
+	    					$(source).addClass('trash');
+	    				},
+	    				onDragLeave:function(e,source){
+	    					$(source).removeClass('trash');
+	    				},
+	    				onDrop:function(e,source){
+	    					$(source).remove();
+	    				}
+	    			});
+	            }
+	        });
+		}
+		function getGrade(yxid){
+	        $.ajax({
+	            type:"get",
+	            async:false,
+	            url:"./classes/getByClaCollId.action",
+	            dataType:"json",
+	            data:{
+	            	claCollId:yxid
+	            },
+	            success:function(data){
+	                console.log(data);
+	                if(data.status == 'success'){
+	                    var rows = [];
+	                    rows = data.studentListByCollId;
+	                    var html = '';
+	                    for(var i = 0 ; i < rows.length; i++){
+	                        if(i == 0){
+	                            html += '<option value="'+rows[i].claId+'" selected>'+rows[i].claName+'</option>';
+	                        }else{
+	                            html += '<option value="'+rows[i].claId+'">'+rows[i].claName+'</option>';
+	                        }
+	                    }
+	                    $('#table-grade-choose').empty().append(html);
+	                }else{
+	                    //没有数据或服务器错误
+	                }
+	            }
+	        });
+	    }
+	</script>
+</body>
+</html>

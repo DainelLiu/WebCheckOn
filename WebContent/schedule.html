@@ -4,7 +4,7 @@
         <div class="wu-toolbar-button">
             <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openAdd()" plain="true">添加</a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openEdit()" plain="true">修改</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="remove()" plain="true">删除</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="remove2()" plain="true">删除</a>
         </div>
     </div>
     <div class="wu-toolbar-search" id="searchbox" style="display: none;">
@@ -27,7 +27,7 @@
         <select class="" panelHeight="auto" id="schedule-grade-combobox"></select>
         <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
-    <table id="schedule-datagrid-2" class="easyui-datagrid" toolbar="#schedule-toolbar-2"></table>
+    <table id="schedule-datagrid-2" class="easyui-datagrid"></table>
 </div>
 <!-- Begin of easyui-dialog -->
 <div id="schedule-dialog-2" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
@@ -63,6 +63,8 @@
 <div id="schedule-dialog-4" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
 	<table id="schedule-datagrid-4" class="easyui-datagrid"></table>
 </div>
+<div id="schedule-dialog-5" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+</div>
 <!-- End of easyui-dialog -->
 <script type="text/javascript">
 	var role = Util.getLocalStorage("role");
@@ -70,8 +72,10 @@
     $(function(){
     	if(role == '2'){
     		$('#searchbox').show();
+            // $('#schedule-datagrid-2').attr('toolbar','#schedule-toolbar-2');
     	}else{
     		$('#searchbox').hide();
+            // $('#schedule-datagrid-2').attr('toolbar','');
     	}
     	$('#schedule-term-combobox option').each(function(){
     		if($(this).val() == Util.getLocalStorage("term")){
@@ -91,7 +95,7 @@
             pageSize:20,
             pagination:true,
             multiSort:false,
-            fitColumns:true,
+            fitColumns:false,
             fit:true,
             height:300,
             columns:[[
@@ -114,7 +118,7 @@
             pageSize:20,
             pagination:false,
             multiSort:false,
-            fitColumns:true,
+            fitColumns:false,
             fit:true,
             height:485,
             columns:[[
@@ -126,7 +130,7 @@
                 { field:'daysix',title:'星期六',width:165},
                 { field:'dayseven',title:'星期日',width:170}
             ]],
-            onClickCell:function(rowIndex, field, value){
+            onDblClickCell:function(rowIndex, field, value){
             	console.log(rowIndex +','+field+','+value);
         		var time;
         		if(field == 'dayone'){
@@ -441,26 +445,14 @@
 	* Name 打开修改窗口
 	*/
 	function openEdit(){
-		$('#wu-form-2').form('clear');
-		var item = $('#schedule-datagrid-2').datagrid('getSelected');
-		//alert(item.productid);return;
-		$.ajax({
-			url:'',
-			data:'',
-			success:function(data){
-				if(data){
-					$('#schedule-dialog-2').dialog('close');	
-				}
-				else{
-					//绑定值
-					$('#wu-form-2').form('load', data)
-				}
-			}	
-		});
-		$('#schedule-dialog-2').dialog({
-			closed: false,
-			modal:true,
-            title: "修改信息",
+        var rows = $("#schedule-datagrid-2").datagrid("getRows");
+        $('#schedule-dialog-5').dialog({
+            closed: false,
+            modal:true,
+            title: "修改课表",
+            width:1000,
+            height:600,
+            content:"<iframe id='table-iframe' scrolling='auto' frameborder='0' src='updatetimetable.html?rows="+rows+"' style='width:100%; height:100%; display:block;'></iframe>",
             buttons: [{
                 text: '确定',
                 iconCls: 'icon-ok',
@@ -469,11 +461,11 @@
                 text: '取消',
                 iconCls: 'icon-cancel',
                 handler: function () {
-                    $('#schedule-dialog-2').dialog('close');                    
+                    $('#schedule-dialog-5').dialog('close');
                 }
             }]
         });
-	}	
+	}
 	
 	/**
 	* Name 分页过滤器
@@ -545,14 +537,15 @@
            	       					}
            						for(var h = 0 ; h < rows.length ; h++){
            							var tempItem = rows[h];
+           							var tempObj = tempItem.dCurrId.currName +'<br>'+tempItem.dCurrId.currTId.tRealName;
            							if(tempItem.dInId.inContent == (i+1+'')){
-               							if(tempItem.dTime == '星期一'){ temp.dayone = tempItem.dCurrId.currName;}
-               							if(tempItem.dTime == '星期二'){ temp.daytwo = tempItem.dCurrId.currName;}
-               							if(tempItem.dTime == '星期三'){ temp.daythree = tempItem.dCurrId.currName;}
-               							if(tempItem.dTime == '星期四'){ temp.dayfour = tempItem.dCurrId.currName;}
-               							if(tempItem.dTime == '星期五'){ temp.dayfive = tempItem.dCurrId.currName;}
-               							if(tempItem.dTime == '星期六'){ temp.daysix = tempItem.dCurrId.currName;}
-               							if(tempItem.dTime == '星期日'){ temp.dayseven = tempItem.dCurrId.currName;}
+               							if(tempItem.dTime == '星期一'){ temp.dayone = tempObj}
+               							if(tempItem.dTime == '星期二'){ temp.daytwo = tempObj}
+               							if(tempItem.dTime == '星期三'){ temp.daythree = tempObj}
+               							if(tempItem.dTime == '星期四'){ temp.dayfour = tempObj}
+               							if(tempItem.dTime == '星期五'){ temp.dayfive = tempObj}
+               							if(tempItem.dTime == '星期六'){ temp.daysix = tempObj}
+               							if(tempItem.dTime == '星期日'){ temp.dayseven = tempObj}
                    					}
            						}
                					trueRow.push(temp);

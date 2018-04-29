@@ -345,4 +345,28 @@ public class LeaveTableAction {
 		ServletActionContext.getResponse().getWriter().write(jobj.toString());
 		return null;
 	}
+
+	@Action(value="searchAll")
+	public String searchAll() throws IOException{
+		String schSemester = URLDecoder.decode(ServletActionContext.getRequest().getParameter("schSemester"), "utf-8");
+		String tId = ServletActionContext.getRequest().getParameter("tId");
+		String lSign = ServletActionContext.getRequest().getParameter("lSign");
+		String hql ="from  LeaveTable  where 1=1 and lSign = '"+lSign+"' and lDId In(SELECT dId FROM ScheduleDetails where dCurrId in(SELECT currId FROM Curriculum where currTId = '"+tId+
+				"') and dSchId in (SELECT schId FROM Schedule where schSemester = '"+schSemester+"'))";
+		List<Object> leaveTablelist = leavesDao.getAllByConds(hql);//获取所有类型数据，不带分页
+		JSONObject jobj = new JSONObject();
+		if(leaveTablelist.size() > 0){
+			//save success
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("data", JsonUtil.toJsonByListObj(leaveTablelist));
+		}else{
+			//save failed
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+	}
 }

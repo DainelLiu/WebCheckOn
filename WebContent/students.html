@@ -21,7 +21,7 @@
             <option value="1">计科二班</option> -->
         </select>
         <label>关键词：</label><input class="wu-text" style="width:100px">
-        <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+        <a href="javascript:searchStu()" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
     </div>
     <!-- End of toolbar -->
     <table id="stu-datagrid-2" class="easyui-datagrid" toolbar="#stu-toolbar-2"></table>
@@ -65,6 +65,54 @@
                 <td valign="top" align="right">选择班级:</td>
                 <td>
                     <select name="sClaId" id="banji-add" style="width:268px;">
+
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="stu-dialog-3" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+	<form id="stu-form-3" method="post" action="student/update.action">
+        <table>
+            <tr>
+                <td width="60" align="right">学 号:</td>
+                <td>
+                	<input type="hidden" name="sId" id="editsId" class="wu-text" />
+                	<input type="text" name="sNumber" class="wu-text" id="editsNumber" />
+                </td>
+            </tr>
+            <tr>
+                <td width="60" align="right">密 码:</td>
+                <td><input type="text" name="sPassword" class="wu-text" id="editsPassword" /></td>
+            </tr>
+            <tr>
+                <td align="right">姓 名:</td>
+                <td><input type="text" name="sRealName" class="wu-text" id="editsRealName" /></td>
+            </tr>
+            <tr>
+                <td align="right">性 别:</td>
+                <td>
+                    <input type="radio" name="sSex" value="0" id="edit0"/>男
+                    <input type="radio" name="sSex" value="1" id="edit1"/>女
+                </td>
+            </tr>
+            <tr>
+                <td align="right">联系电话:</td>
+                <td><input type="text" name="sPhone" class="wu-text" id="editsPhone" /></td>
+            </tr>
+            <tr>
+                <td valign="top" align="right">所属院系:</td>
+                <td>
+                    <select name="attr" id="yuanxi-add1" style="width:268px;" disabled="disabled">
+
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top" align="right">选择班级:</td>
+                <td>
+                    <select name="sClaId" id="banji-add1" style="width:268px;" disabled="disabled">
 
                     </select>
                 </td>
@@ -133,9 +181,11 @@
 		$('#stu-form-2').form('submit', {
 			url:'',
 			success:function(data){
-				if(data){
+				data = JSON.parse(data);
+				if(data.status == 'success'){
 					$.messager.alert('信息提示','提交成功！','info');
 					$('#stu-dialog-2').dialog('close');
+					getData();
 				}
 				else
 				{
@@ -151,18 +201,23 @@
 	function remove(){
 		$.messager.confirm('信息提示','确定要删除该记录？', function(result){
 			if(result){
-				var items = $('#stu-datagrid-2').datagrid('getSelections');
+				var item = $('#stu-datagrid-2').datagrid('getSelected');
+				/* var items = $('#stu-datagrid-2').datagrid('getSelections');
 				var ids = [];
 				$(items).each(function(){
 					ids.push(this.productid);	
-				});
+				}); */
 				//alert(ids);return;
 				$.ajax({
-					url:'',
-					data:'',
+					url:'./student/delete.action',
+					data:{
+						sId:item.sId
+					},
 					success:function(data){
-						if(data){
-							$.messager.alert('信息提示','删除成功！','info');		
+						data = JSON.parse(data);
+						if(data.status == 'success'){
+							$.messager.alert('信息提示','删除成功！','info');	
+							getData();
 						}
 						else
 						{
@@ -205,38 +260,51 @@
 	* Name 打开修改窗口
 	*/
 	function openEdit(){
-		$('#stu-form-2').form('clear');
+		//$('#stu-form-2').form('clear');
 		var item = $('#stu-datagrid-2').datagrid('getSelected');
 		//alert(item.productid);return;
 		$.ajax({
-			url:'',
-			data:'',
+			url:'./student/getById.action',
+			data:{
+				sId:item.sId
+			},
 			success:function(data){
-				if(data){
-					$('#stu-dialog-2').dialog('close');	
+				data = JSON.parse(data);
+				if(data.status == 'success'){
+					$('#editsId').val(data.data.claCollId.collId);
+					$('#editsNumber').val(data.data.claId);
+					$('#editsPassword').val(data.data.claName);
+					$('#editsRealName').val(data.data.claName);
+					$('#editsPhone').val(data.data.claName);
+					if(data.data.sSex == '0'){
+						$('#edit0').attr('checked');
+					}else{
+						$('#edit1').attr('checked');
+					}
+					$('#yuanxi-add1').val(data.data.sClaId.claCollId.collId);
+					$('#banji-add1').val(data.data.sClaId.claId);
+					$('#stu-dialog-2').dialog({
+						closed: false,
+						modal:true,
+			            title: "修改信息",
+			            buttons: [{
+			                text: '确定',
+			                iconCls: 'icon-ok',
+			                handler: edit
+			            }, {
+			                text: '取消',
+			                iconCls: 'icon-cancel',
+			                handler: function () {
+			                    $('#stu-dialog-2').dialog('close');                    
+			                }
+			            }]
+			        });
 				}
 				else{
-					//绑定值
-					$('#stu-form-2').form('load', data)
+					
 				}
 			}	
 		});
-		$('#stu-dialog-2').dialog({
-			closed: false,
-			modal:true,
-            title: "修改信息",
-            buttons: [{
-                text: '确定',
-                iconCls: 'icon-ok',
-                handler: edit
-            }, {
-                text: '取消',
-                iconCls: 'icon-cancel',
-                handler: function () {
-                    $('#stu-dialog-2').dialog('close');                    
-                }
-            }]
-        });
 	}	
 	
 	/**
@@ -318,12 +386,14 @@
                             html += '<option value="'+rows[i].collId+'" selected>'+rows[i].collName+'</option>';
                             getClasses(rows[i].collId,'#banji');
                             getClasses(rows[i].collId,'#banji-add');
+                            getClasses(rows[i].collId,'#banji-add1');
                         }else{
                             html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
                         }
                     }
                     $('#yuanxi').empty().append(html);
                     $('#yuanxi-add').empty().append(html);
+                    $('#yuanxi-add1').empty().append(html);
                 }else{
                     //没有数据或服务器错误
                 }
@@ -359,6 +429,28 @@
                 }
             }
         });
+    }
+    function searchStu(){
+    	$.ajax({
+    		type:"get",
+    		async:true,
+    		url:"./student/searchAll.action",
+    		dataType:"json",
+    		data:{
+    			sNumber:$('#grade-combobox').val(),
+    			sRealName:encodeURI($('#gradeWord').val())
+    		},
+    		success:function(data){
+    			console.log(data);
+    			if(data.status == 'success'){
+   					var rows = [];
+       				rows = data.data;
+       				$('#stu-datagrid-2').datagrid('loadData', rows);
+    			}else{
+    				//没有数据或服务器错误
+    			}
+    		}
+    	});
     }
 
 </script>

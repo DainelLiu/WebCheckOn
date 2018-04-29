@@ -219,6 +219,7 @@ public class ScheduleAction {
 			// save success
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
+			jobj.put("data",schedule);
 		} else {
 			// save failed
 			jobj.put("mes", "获取失败!");
