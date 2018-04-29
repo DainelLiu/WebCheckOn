@@ -1,6 +1,7 @@
 package com.lzp.action;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import com.lzp.model.Teacher;
 import com.lzp.util.JsonUtil;
 import com.lzp.util.PageBean;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Scope("prototype")
@@ -120,8 +122,16 @@ public class TeacherAction {
 	public String update() throws IOException{
 		
 		String tId = ServletActionContext.getRequest().getParameter("tId");
+		String tPassword = ServletActionContext.getRequest().getParameter("tPassword");
+		String tRealName = ServletActionContext.getRequest().getParameter("tRealName");
+		String tPhone = ServletActionContext.getRequest().getParameter("tPhone");
+		String tSex = ServletActionContext.getRequest().getParameter("tSex");
 		
 		Teacher teacher = teacherDao.getById(tId);
+		teacher.settPassword(tPassword);
+		teacher.settRealName(tRealName);
+		teacher.settPhone(tPhone);
+		teacher.settSex(tSex);
 		JSONObject jobj = new JSONObject();
 		
 		if(teacherDao.update(teacher)) {
@@ -151,6 +161,7 @@ public class TeacherAction {
 			//save success
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
+			jobj.put("date", teacher);
 		}else{
 			//save failed
 			jobj.put("mes", "获取失败!");
@@ -232,6 +243,31 @@ public class TeacherAction {
 			jobj.put("tescherListByCollId", JsonUtil.toJsonByListObj(tescherListByCollId));
 		}else{
 			//save failed
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
+	}
+	
+	@Action(value = "searchAll")
+	public String searchAll() throws IOException {
+		String tCollId = ServletActionContext.getRequest().getParameter("tCollId");
+		String tRealName = URLDecoder.decode(ServletActionContext.getRequest().getParameter("tRealName"),"utf-8");
+		String hql="from Teacher where 1=1 and tCollId = '" + tCollId + "'";
+		if(!"".equals(tRealName)){
+			hql += " and tRealName like '%" + tRealName + "%'";
+		}
+		List<Object> teacherTypelist = teacherDao.getAllByConds(hql);// 获取所有类型数据，不带分页
+		JSONObject jobj = new JSONObject();
+		JSONArray list = new JSONArray();
+		if (teacherTypelist.size() > 0) {
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("data", JsonUtil.toJsonByListObj(teacherTypelist));
+		
+		} else {
 			jobj.put("mes", "获取失败!");
 			jobj.put("status", "error");
 		}

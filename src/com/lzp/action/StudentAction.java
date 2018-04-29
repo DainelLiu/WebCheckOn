@@ -25,6 +25,7 @@ import com.lzp.model.Student;
 import com.lzp.util.JsonUtil;
 import com.lzp.util.PageBean;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Scope("prototype")
@@ -152,11 +153,19 @@ public class StudentAction {
 	public String update() throws IOException {
 
 		String sId = ServletActionContext.getRequest().getParameter("sId");
+		String sPassword = ServletActionContext.getRequest().getParameter("sPassword");
+		String sRealName = ServletActionContext.getRequest().getParameter("sRealName");
+		String sPhone = ServletActionContext.getRequest().getParameter("sPhone");
+		String sSex = ServletActionContext.getRequest().getParameter("sSex");
 
-		Student Student = studentDao.getById(sId);
+		Student student = studentDao.getById(sId);
+		
 		JSONObject jobj = new JSONObject();
-
-		if (studentDao.update(Student)) {
+		student.setsPassword(sPassword);
+		student.setsRealName(sRealName);
+		student.setsPhone(sPhone);
+		student.setsSex(sSex);
+		if (studentDao.update(student)) {
 			jobj.put("mes", "更新成功!");
 			jobj.put("status", "success");
 		} else {
@@ -184,6 +193,7 @@ public class StudentAction {
 			// save success
 			jobj.put("mes", "获取成功!");
 			jobj.put("status", "success");
+			jobj.put("date", student);
 		} else {
 			// save failed
 			jobj.put("mes", "获取失败!");
@@ -286,6 +296,32 @@ public class StudentAction {
 		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
 		ServletActionContext.getResponse().getWriter().write(jobj.toString());
 		return null;
+	}
+	
+	
+	@Action(value = "searchAll")
+	public String searchAll() throws IOException {
+		String sRealName = ServletActionContext.getRequest().getParameter("sRealName");
+		String sClaId = ServletActionContext.getRequest().getParameter("sClaId");
+		String hql="from Student where 1=1 and sClaId = '" + sClaId + "'";
+		if("" != sRealName || !"".equals(sRealName)){
+			sRealName = URLDecoder.decode(sRealName,"utf-8");
+			hql += " and sRealName like '%" + sRealName + "%'";
+		}
+		List<Object> studemtTypelist = studentDao.getAllByConds(hql);// 获取所有类型数据，不带分页
+		JSONObject jobj = new JSONObject();
+		JSONArray list = new JSONArray();
+		if (studemtTypelist.size() > 0) {
+			jobj.put("mes", "获取成功!");
+			jobj.put("status", "success");
+			jobj.put("data", JsonUtil.toJsonByListObj(studemtTypelist));
 		
+		} else {
+			jobj.put("mes", "获取失败!");
+			jobj.put("status", "error");
+		}
+		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write(jobj.toString());
+		return null;
 	}
 }

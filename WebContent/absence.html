@@ -18,9 +18,9 @@
     </div>
     <!-- End of toolbar -->
     <table id="abs-datagrid-2" class="easyui-datagrid" toolbar="#abssearchbox"></table>
-    <div style="clear: both;">
-    	<p style="float: left;">该学期缺勤次数:<strong id="qqnum">5</strong></p>
-    	<p style="float: left;">该学期请假次数:<strong id="qjnum">3</strong></p>
+    <div class="easy-panel" style="clear: both;">
+    	<p style="float: left;">该学期缺勤次数:<strong id="qqnum"></strong></p>
+    	<p style="float: left;padding-left: 8px">该学期请假次数:<strong id="qjnum"></strong></p>
     </div>
 </div>
 <div class="easyui-layout" data-options="fit:true" id="tea" style="display:none;">
@@ -116,8 +116,8 @@
             pagination:true,
             multiSort:true,
             fitColumns:false,
-            fit:true,
             width:'100%',
+            height:600,
             columns:[[
                 { field:'cName',title:'课程名',width:100,sortable:true},
                 { field:'tName',title:'授课老师',width:180,sortable:true},
@@ -125,7 +125,6 @@
             ]]
         });
         $('#abs-datagrid-3').datagrid({
-        	//url:'temp/datagrid.json',
             loadFilter:pagerFilter,
             rownumbers:true,
             singleSelect:false,
@@ -143,7 +142,6 @@
             ]]
         });
         $('#abs-datagrid-4').datagrid({
-        	url:'temp/datagrid.json',
             loadFilter:pagerFilter,
             rownumbers:true,
             singleSelect:false,

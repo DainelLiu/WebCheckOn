@@ -15,8 +15,9 @@
             <option value="2">资源与环境科学</option>
             <option value="3">化学工程与工艺</option>-->
         </select>
-        <label>关键词：</label><input class="wu-text" style="width:100px">
-        <a href="#" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+        <label>关键词：</label><input class="wu-text" id="tnameWord" style="width:100px">
+        <a href="javascript:searchTeacher()" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+        <a href="javascript:getData()" class="easyui-linkbutton" iconCls="icon-redo">重置</a>
     </div>
     <!-- End of toolbar -->
     <table id="teacherTable" class="easyui-datagrid" toolbar="#teacherToolbar"></table>
@@ -59,6 +60,46 @@
         </table>
     </form>
 </div>
+<div id="teacher-dialog-4" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+    <form id="teacher-form-4" method="post" action="teacher/update.action">
+        <table>
+            <tr>
+                <td width="60" align="right">教师工号:</td>
+                <td>
+                    <input type="text" name="tNumber" class="wu-text" id="edittNumber"/>
+                    <input type="hidden" name="tId" class="wu-text" id="teditId"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">密 码:</td>
+                <td><input type="text" name="tPassword" class="wu-text" id="edittPassword"/></td>
+            </tr>
+            <tr>
+                <td align="right">姓 名:</td>
+                <td><input type="text" name="tRealName" class="wu-text" id="edittRealName"/></td>
+            </tr>
+            <tr>
+                <td align="right">性 别:</td>
+                <td>
+                    <input type="radio" name="tSex" value="0" id="edittSex0"/>男
+                    <input type="radio" name="tSex" value="1" id="edittSex1"/>女
+                </td>
+            </tr>
+            <tr>
+                <td align="right">联系电话:</td>
+                <td><input type="text" name="tPhone" class="wu-text" id="edittPhone" /></td>
+            </tr>
+            <tr>
+                <td valign="top" align="right">所属院系:</td>
+                <td>
+                    <select name="tCollId" id="tdepart-choose1" style="width:268px;">
+
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
 <!-- End of easyui-dialog -->
 <script type="text/javascript">
     $(function(){
@@ -68,7 +109,7 @@
         $('#teacherTable').datagrid({
             loadFilter:pagerFilter,
             rownumbers:true,
-            singleSelect:false,
+            singleSelect:true,
             pageSize:20,
             pagination:true,
             multiSort:true,
@@ -76,9 +117,9 @@
             fit:true,
             columns:[[
                 { checkbox:true},
-                { field:'tId',title:'教师编号',width:100,sortable:true},
-                { field:'tNumber',title:'教师工号',width:180,sortable:true},
-                { field:'tPassword',title:'密码',width:100},
+                { field:'tId',title:'教师编号',width:180,sortable:true},
+                { field:'tNumber',title:'教师工号',width:120,sortable:true},
+                { field:'tPassword',title:'密码',width:100,formatter:pwdformatter},
                 { field:'tRealName',title:'姓名',width:100},
                 { field:'tSex',title:'性别',width:100},
                 { field:'tPhone',title:'联系电话',width:100},
@@ -110,12 +151,14 @@
 	* Name 修改记录
 	*/
 	function edit(){
-		$('#teacher-form-3').form('submit', {
+		$('#teacher-form-4').form('submit', {
 			url:'',
 			success:function(data){
-				if(data){
+                data = JSON.parse(data);
+                if(data.status == 'success'){
 					$.messager.alert('信息提示','提交成功！','info');
-					$('#teacher-dialog-3').dialog('close');
+					$('#teacher-dialog-4').dialog('close');
+					getData();
 				}
 				else
 				{
@@ -131,18 +174,23 @@
 	function remove3(){
 		$.messager.confirm('信息提示','确定要删除该记录？', function(result){
 			if(result){
-				var items = $('#teacherTable').datagrid('getSelections');
-				var ids = [];
-				$(items).each(function(){
-					ids.push(this.productid);	
-				});
+                var item = $('#teacherTable').datagrid('getSelected');
+				// var items = $('#teacherTable').datagrid('getSelections');
+				// var ids = [];
+				// $(items).each(function(){
+				// 	ids.push(this.productid);
+				// });
 				//alert(ids);return;
 				$.ajax({
-					url:'',
-					data:'',
+					url:'./teacher/delete.action',
+					data:{
+					    tId:item.tId
+                    },
 					success:function(data){
-						if(data){
-							$.messager.alert('信息提示','删除成功！','info');		
+                        data = JSON.parse(data);
+                        if(data.status == 'success'){
+							$.messager.alert('信息提示','删除成功！','info');
+							getData();
 						}
 						else
 						{
@@ -181,39 +229,52 @@
 	* Name 打开修改窗口
 	*/
 	function openEdit3(){
-		$('#teacher-form-3').form('clear');
+		// $('#teacher-form-3').form('clear');
 		var item = $('#teacherTable').datagrid('getSelected');
 		//alert(item.productid);return;
 		$.ajax({
-			url:'',
-			data:'',
+			url:'./teacher/getById.action',
+			data:{
+			    tId:item.tId
+            },
 			success:function(data){
-				if(data){
-					$('#teacher-dialog-3').dialog('close');	
+                data = JSON.parse(data);
+                if(data.status == 'success'){
+                    var obj = data.date;
+                    $('#teditId').val(obj.tId);
+                    $('#edittNumber').val(obj.tNumber);
+                    $('#edittPassword').val(obj.tPassword);
+                    $('#edittRealName').val(obj.tRealName);
+                    $('#edittPhone').val(obj.tPhone);
+                    $('#tdepart-choose1').val(obj.tCollId.collId);
+                    if(obj.tSex == '0'){
+                        $('#edittSex0').attr("checked","checked");
+                    }else{
+                        $('#edittSex1').attr("checked","checked");
+                    }
+
+                    $('#teacher-dialog-4').dialog({
+                        closed: false,
+                        modal:true,
+                        title: "修改信息",
+                        buttons: [{
+                            text: '确定',
+                            iconCls: 'icon-ok',
+                            handler: edit
+                        }, {
+                            text: '取消',
+                            iconCls: 'icon-cancel',
+                            handler: function () {
+                                $('#teacher-dialog-4').dialog('close');
+                            }
+                        }]
+                    });
 				}
 				else{
-					//绑定值
-					$('#teacher-form-3').form('load', data)
 				}
 			}	
 		});
-		$('#teacher-dialog-3').dialog({
-			closed: false,
-			modal:true,
-            title: "修改信息",
-            buttons: [{
-                text: '确定',
-                iconCls: 'icon-ok',
-                handler: edit
-            }, {
-                text: '取消',
-                iconCls: 'icon-cancel3',
-                handler: function () {
-                    $('#teacher-dialog-3').dialog('close');                    
-                }
-            }]
-        });
-	}	
+	}
 	
 	/**
 	* Name 分页过滤器
@@ -244,8 +305,12 @@
 		data.rows = (data.originalRows.slice(start, end));         
 		return data;       
 	}
+    function pwdformatter(val, row){
+        return '*********'
+    }
 
     function getData(){
+        $('#tnameWord').val('');
         //获取教师列表
         $.ajax({
             type:"get",
@@ -290,13 +355,45 @@
                     var html = '';
                     for(var i = 0 ; i < rows.length; i++){
                         if(i == 0){
-                            html += '<option value="'+rows[i].collId+' selected">'+rows[i].collName+'</option>';
+                            html += '<option value="'+rows[i].collId+'" selected>'+rows[i].collName+'</option>';
                         }else{
                             html += '<option value="'+rows[i].collId+'">'+rows[i].collName+'</option>';
                         }
                     }
                     $('#tdepart-choose').empty().append(html);
+                    $('#tdepart-choose1').empty().append(html);
                     $('#teacher-depart-choose').empty().append(html);
+                }else{
+                    //没有数据或服务器错误
+                }
+            }
+        });
+    }
+
+    function searchTeacher(){
+        $.ajax({
+            type:"get",
+            async:true,
+            url:"./teacher/searchAll.action",
+            dataType:"json",
+            data:{
+                tCollId:$('#teacher-depart-choose').val(),
+                sRealName:encodeURI($('#tnameWord').val())
+            },
+            success:function(data){
+                console.log(data);
+                if(data.status == 'success'){
+                    var rows = [];
+                    rows = data.data;
+                    for(var i=0;i<rows.length;i++){
+                        rows[i].tCollId = rows[i].tCollId.collName;
+                        if(rows[i].tSex == '0'){
+                            rows[i].tSex = '男';
+                        } else{
+                            rows[i].tSex = '女';
+                        }
+                    }
+                    $('#teacherTable').datagrid('loadData', rows);
                 }else{
                     //没有数据或服务器错误
                 }
