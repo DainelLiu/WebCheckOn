@@ -275,6 +275,7 @@
                     
                 }else{
                     //没有数据或服务器错误
+                    $.messager.alert('信息提示','暂无数据！','info');
                 }
                 getTeacher();
             }
@@ -306,6 +307,7 @@
                     $('#classes-choose1').empty().append(html);
                 }else{
                     //没有数据或服务器错误
+                    $.messager.alert('信息提示','暂无数据！','info');
                 }
             }
         });
@@ -331,6 +333,7 @@
                     $('#classes-datagrid-2').datagrid('loadData', rows);
                 }else{
                     //没有数据或服务器错误
+                    $.messager.alert('信息提示','暂无数据！','info');
                 }
             }
         });

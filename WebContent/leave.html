@@ -71,7 +71,7 @@
             columns:[[
                 { field:'term',title:'学期',sortable:true,width:180,align:'center'},
                 { field:'cName',title:'课程名',width:160,align:'center'},
-                { field:'cTime',title:'时间',width:160,align:'center'},
+                { field:'cTime',title:'时间',width:140,align:'center'},
                 { field:'tName',title:'授课老师',width:180,align:'center'},
                 { field:'reason',title:'请假事由',width:350,align:'center'},
                 { field:'status',title:'状态',width:100,align:'center'}
@@ -94,9 +94,9 @@
                 { field:'lId',title:'编号',hidden:true},
                 { field:'term',title:'学期',width:200,sortable:true,align:'center'},
                 { field:'cName',title:'课程名',width:200,align:'center'},
-                { field:'cTime',title:'时间',width:200,align:'center'},
+                { field:'cTime',title:'时间',width:160,align:'center'},
                 { field:'sName',title:'请假学生',width:200,align:'center'},
-                { field:'reason',title:'请假事由',width:350,align:'center'},
+                { field:'reason',title:'请假事由',width:250,align:'center'},
                 { field:'status',title:'状态',width:100,align:'center'}
             ]]
         });
@@ -118,7 +118,7 @@
                 { field:'cTime',title:'时间',width:200,align:'center'},
                 { field:'sName',title:'请假学生',width:200,align:'center'},
                 { field:'tName',title:'授课老师',width:200,align:'center'},
-                { field:'reason',title:'请假事由',width:350,align:'center'},
+                { field:'reason',title:'请假事由',width:250,align:'center'},
                 { field:'status',title:'状态',width:100,align:'center'}
             ]]
         });
@@ -329,6 +329,7 @@
        				$('#lall').hide();
     			}else{
     				//没有数据或服务器错误
+                    $.messager.alert('信息提示','暂无数据！','info');
     			}
     		}
     	});
@@ -376,6 +377,7 @@
        				$('#lall').hide();
     			}else{
     				//没有数据或服务器错误
+                    $.messager.alert('信息提示','暂无数据！','info');
     			}
     		}
     	});
@@ -419,6 +421,7 @@
        				$('#ltea').hide();
     			}else{
     				//没有数据或服务器错误
+                    $.messager.alert('信息提示','暂无数据！','info');
     			}
     		}
     	});
@@ -562,6 +565,7 @@
                 }else{
                     //没有数据或服务器错误
                     $('#leave-datagrid-3').datagrid('loadData', []);
+                    $.messager.alert('信息提示','暂无数据！','info');
                 }
             }
         });

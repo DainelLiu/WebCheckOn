@@ -237,9 +237,7 @@
 	
 	<script>
 		$(function(){
-            console.log('update----------');
-		    console.log(Util.queryString('rows'));
-		    var dataRow = Util.queryString('rows');
+
 			getDeparts();
 			$(document).on('change','#table-depart-choose',function(){
 				getTeacher($(this).find("option:selected").val());
@@ -251,6 +249,104 @@
 				getClasses($(this).find("option:selected").val());
 			});
 		});
+
+		function initPage(){
+            var dataRow = Util.queryString('rows');
+            var params = JSON.parse(decodeURI(dataRow));
+            for(var k = 0 ; k < 10 ; k++){
+                var item = params.details[k];
+                var html = '';
+                if(item.dayone != ""){
+                    var obj = item.dayone;
+                    var cname = obj.substring(0,obj.indexOf('<br>'));
+                    var cId = obj.substring(obj.indexOf('<span style="display: none;">')+29,obj.indexOf('</span>'));
+                    html = '<div class="item assigned" id="'+cId+'" style="position: static; left: 11px; top: 184.438px;cursor: move;">' +cname + '</div>'
+                    $('#mon'+(k+1)).html(html).addClass('over');
+                }
+                if(item.daytwo != ""){
+                    var obj = item.daytwo;
+                    var cname = obj.substring(0,obj.indexOf('<br>'));
+                    var cId = obj.substring(obj.indexOf('<span style="display: none;">')+29,obj.indexOf('</span>'));
+                    html = '<div class="item assigned" id="'+cId+'" style="position: static; left: 11px; top: 184.438px;cursor: move;">' +cname + '</div>'
+                    $('#tus'+(k+1)).html(html).addClass('over');;
+                }
+                if(item.daythree != ""){
+                    var obj = item.daythree;
+                    var cname = obj.substring(0,obj.indexOf('<br>'));
+                    var cId = obj.substring(obj.indexOf('<span style="display: none;">')+29,obj.indexOf('</span>'));
+                    html = '<div class="item assigned" id="'+cId+'" style="position: static; left: 11px; top: 184.438px;cursor: move;">' +cname + '</div>'
+                    $('#wes'+(k+1)).html(html).addClass('over');;
+                }
+                if(item.dayfour != ""){
+                    var obj = item.dayfour;
+                    var cname = obj.substring(0,obj.indexOf('<br>'));
+                    var cId = obj.substring(obj.indexOf('<span style="display: none;">')+29,obj.indexOf('</span>'));
+                    html = '<div class="item assigned" id="'+cId+'" style="position: static; left: 11px; top: 184.438px;cursor: move;">' +cname + '</div>'
+                    $('#thr'+(k+1)).html(html).addClass('over');;
+                }
+                if(item.dayfive != ""){
+                    var obj = item.dayfive;
+                    var cname = obj.substring(0,obj.indexOf('<br>'));
+                    var cId = obj.substring(obj.indexOf('<span style="display: none;">')+29,obj.indexOf('</span>'));
+                    html = '<div class="item assigned" id="'+cId+'" style="position: static; left: 11px; top: 184.438px;cursor: move;">' +cname + '</div>'
+                    $('#fri'+(k+1)).html(html).addClass('over');;
+                }
+                if(item.daysix != ""){
+                    var obj = item.daysix;
+                    var cname = obj.substring(0,obj.indexOf('<br>'));
+                    var cId = obj.substring(obj.indexOf('<span style="display: none;">')+29,obj.indexOf('</span>'));
+                    html = '<div class="item assigned" id="'+cId+'" style="position: static; left: 11px; top: 184.438px;cursor: move;">' +cname + '</div>'
+                    $('#sta'+(k+1)).html(html).addClass('over');;
+                }
+                if(item.dayseven != ""){
+                    var obj = item.dayseven;
+                    var cname = obj.substring(0,obj.indexOf('<br>'));
+                    var cId = obj.substring(obj.indexOf('<span style="display: none;">')+29,obj.indexOf('</span>'));
+                    html = '<div class="item assigned" id="'+cId+'" style="position: static; left: 11px; top: 184.438px;cursor: move;">' +cname + '</div>'
+                    $('#sun'+(k+1)).html(html).addClass('over');;
+                }
+            }
+            $('.left .item').draggable({
+                revert:true,
+                proxy:'clone'
+            });
+            $('.right .item').draggable({
+                revert:true,
+                proxy:'clone'
+            });
+            $('.right td.drop').droppable({
+                onDragEnter:function(){
+                    $(this).addClass('over');
+                },
+                onDragLeave:function(){
+                    $(this).removeClass('over');
+                },
+                onDrop:function(e,source){
+                    $(this).removeClass('over');
+                    if ($(source).hasClass('assigned')){
+                        $(this).append(source);
+                    } else {
+                        var c = $(source).clone().addClass('assigned');
+                        $(this).empty().append(c);
+                        c.draggable({
+                            revert:true
+                        });
+                    }
+                }
+            });
+            $('.left').droppable({
+                accept:'.assigned',
+                onDragEnter:function(e,source){
+                    $(source).addClass('trash');
+                },
+                onDragLeave:function(e,source){
+                    $(source).removeClass('trash');
+                },
+                onDrop:function(e,source){
+                    $(source).remove();
+                }
+            });
+		}
 		//获取院系
 		function getDeparts(){
 			$.ajax({
@@ -339,7 +435,8 @@
 	                    //没有数据或服务器错误
 	                    $('#table-classes-choose').empty();
 	                }
-	                $('.left .item').draggable({
+                    initPage();
+	                /*$('.left .item').draggable({
 	    				revert:true,
 	    				proxy:'clone'
 	    			});
@@ -374,7 +471,7 @@
 	    				onDrop:function(e,source){
 	    					$(source).remove();
 	    				}
-	    			});
+	    			});*/
 	            }
 	        });
 		}

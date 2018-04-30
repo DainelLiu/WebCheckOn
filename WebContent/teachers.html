@@ -334,6 +334,7 @@
                     $('#teacherTable').datagrid('loadData', rows);
                 }else{
                     //没有数据或服务器错误
+                    $.messager.alert('信息提示','暂无数据！','info');
                 }
                 getDepart();
             }
@@ -365,6 +366,7 @@
                     $('#teacher-depart-choose').empty().append(html);
                 }else{
                     //没有数据或服务器错误
+                    $.messager.alert('信息提示','暂无数据！','info');
                 }
             }
         });
@@ -396,6 +398,7 @@
                     $('#teacherTable').datagrid('loadData', rows);
                 }else{
                     //没有数据或服务器错误
+                    $.messager.alert('信息提示','暂无数据！','info');
                 }
             }
         });

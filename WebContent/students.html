@@ -361,6 +361,7 @@
                     $('#stu-datagrid-2').datagrid('loadData', rows);
                 }else{
                     //没有数据或服务器错误
+                    $.messager.alert('信息提示','暂无数据！','info');
                 }
                 getDepart();//获取院系
                 // getClasses();//获取班级
@@ -396,6 +397,7 @@
                     $('#yuanxi-add1').empty().append(html);
                 }else{
                     //没有数据或服务器错误
+                    $.messager.alert('信息提示','暂无数据！','info');
                 }
             }
         });
@@ -426,6 +428,7 @@
                     $(selector).empty().append(html);
                 }else{
                     //没有数据或服务器错误
+                    $.messager.alert('信息提示','暂无数据！','info');
                 }
             }
         });
@@ -448,6 +451,7 @@
        				$('#stu-datagrid-2').datagrid('loadData', rows);
     			}else{
     				//没有数据或服务器错误
+                    $.messager.alert('信息提示','暂无数据！','info');
     			}
     		}
     	});

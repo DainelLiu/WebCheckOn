@@ -12,47 +12,23 @@
 <script type="text/javascript" src="easyui/1.3.4/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="easyui/1.3.4/locale/easyui-lang-zh_CN.js"></script>
 </head>
-<body class="easyui-layout">
-	<!-- begin of header -->
-	<div class="wu-header" data-options="region:'north',border:false,split:true">
-    	<div class="wu-header-left">
-        	<h1>基于Web的学生考勤管理系统</h1>
+<body>
+<div class="easyui-layout" id="stu-layout" style="display: block;" data-options="fit:true">
+    <!-- begin of header -->
+    <div class="wu-header" data-options="region:'north',border:false,split:true">
+        <div class="wu-header-left">
+            <h1>基于Web的学生考勤管理系统</h1>
         </div>
         <div class="wu-header-right">
-        	<p><strong class="easyui-tooltip" id="username"></strong>，欢迎您！&nbsp;&nbsp;<span id="term"></span>&nbsp;&nbsp;<a href="javascript:exit();">安全退出</a></p>
+            <p><strong class="easyui-tooltip" id="username1"></strong>，欢迎您！&nbsp;&nbsp;<span id="term1"></span>&nbsp;&nbsp;<a href="javascript:exit();">安全退出</a></p>
         </div>
     </div>
     <!-- end of header -->
     <!-- begin of sidebar -->
-	<div class="wu-sidebar" data-options="region:'west',split:true,border:true,title:'导航菜单'"> 
-    	<div class="easyui-accordion" data-options="border:false,fit:true"> 
-        	<div title="院系管理" data-options="iconCls:'icon-application-cascade'" style="padding:5px;">
-    			<ul class="easyui-tree wu-side-tree">
-                	<li iconCls="icon-chart-organisation"><a href="javascript:void(0)" data-icon="icon-chart-organisation" data-link="department.html" iframe="0">院系列表</a></li>
-                </ul>
-            </div>
-            <div title="班级管理" data-options="iconCls:'icon-application-form-edit'" style="padding:5px;">
-    			<ul class="easyui-tree wu-side-tree">
-                	<li iconCls="icon-chart-organisation"><a href="javascript:void(0)" data-icon="icon-chart-organisation" data-link="grade.html" iframe="0">班级列表</a></li>
-                </ul>
-            </div>
-            <div title="教师管理" data-options="iconCls:'icon-creditcards'" style="padding:5px;">
-    			<ul class="easyui-tree wu-side-tree">
-                	<li iconCls="icon-users"><a href="javascript:void(0)" data-icon="icon-users" data-link="teachers.html" iframe="0">教师列表</a></li>
-                </ul>
-            </div>
-            <div title="学生管理" data-options="iconCls:'icon-personal'" style="padding:5px;">
-    			<ul class="easyui-tree wu-side-tree">
-                	<li iconCls="icon-chart-organisation"><a href="javascript:void(0)" data-icon="icon-chart-organisation" data-link="students.html" iframe="0">学生列表</a></li>
-                </ul>
-            </div>
-            <div title="课程管理" data-options="iconCls:'icon-bricks'" style="padding:5px;">
-    			<ul class="easyui-tree wu-side-tree">
-                    <li iconCls="icon-book"><a href="javascript:void(0)" data-icon="icon-book" data-link="classes.html" iframe="0">课程列表</a></li>
-                </ul>
-            </div>
+    <div class="wu-sidebar" data-options="region:'west',split:true,border:true,title:'导航菜单'">
+        <div class="easyui-accordion" data-options="border:false,fit:true">
             <div title="课表管理" data-options="iconCls:'icon-application-side-boxes'" style="padding:5px;">
-    			<ul class="easyui-tree wu-side-tree">
+                <ul class="easyui-tree wu-side-tree">
                     <li iconCls="icon-application-osx"><a href="javascript:void(0)" data-icon="icon-application-osx" data-link="schedule.html" iframe="0">课表列表</a></li>
                 </ul>
             </div>
@@ -66,26 +42,145 @@
                     <li iconCls="icon-chart-bar"><a href="javascript:void(0)" data-icon="icon-chart-bar" data-link="absence.html" iframe="0">统计列表</a></li>
                 </ul>
             </div>
-            <div title="系统设置" data-options="iconCls:'icon-wrench'" style="padding:5px;">  	
-    			<ul class="easyui-tree wu-side-tree">
-                    <li iconCls="icon-cog"><a href="javascript:void(0)" data-icon="icon-cog" data-link="setting.html" iframe="0">系统配置</a></li>
-                </ul>
-            </div>
         </div>
-    </div>	
-    <!-- end of sidebar -->    
+    </div>
+    <!-- end of sidebar -->
     <!-- begin of main -->
     <div class="wu-main" data-options="region:'center'">
-        <div id="wu-tabs" class="easyui-tabs" data-options="border:false,fit:true">  
+        <div id="wu-tabs1" class="easyui-tabs" data-options="border:false,fit:true">
             <div title="首页" data-options="href:'main.html',closable:false,iconCls:'icon-tip',cls:'pd3'"></div>
         </div>
     </div>
-    <!-- end of main --> 
+    <!-- end of main -->
     <!-- begin of footer -->
-	<div class="wu-footer" data-options="region:'south',border:true,split:true">
-    	&copy; 2013 Wu All Rights Reserved
+    <div class="wu-footer" data-options="region:'south',border:true,split:true">
+        &copy; 2013 Wu All Rights Reserved
     </div>
-    <!-- end of footer -->  
+</div>
+<div class="easyui-layout" id="tea-layout" style="display: block;" data-options="fit:true">
+    <!-- begin of header -->
+    <div class="wu-header" data-options="region:'north',border:false,split:true">
+        <div class="wu-header-left">
+            <h1>基于Web的学生考勤管理系统</h1>
+        </div>
+        <div class="wu-header-right">
+            <p><strong class="easyui-tooltip" id="username2"></strong>，欢迎您！&nbsp;&nbsp;<span id="term2"></span>&nbsp;&nbsp;<a href="javascript:exit();">安全退出</a></p>
+        </div>
+    </div>
+    <!-- end of header -->
+    <!-- begin of sidebar -->
+    <div class="wu-sidebar" data-options="region:'west',split:true,border:true,title:'导航菜单'">
+        <div class="easyui-accordion" data-options="border:false,fit:true">
+            <div title="学生管理" data-options="iconCls:'icon-personal'" style="padding:5px;">
+                <ul class="easyui-tree wu-side-tree">
+                    <li iconCls="icon-chart-organisation"><a href="javascript:void(0)" data-icon="icon-chart-organisation" data-link="students.html" iframe="0">学生列表</a></li>
+                </ul>
+            </div>
+            <div title="课表管理" data-options="iconCls:'icon-application-side-boxes'" style="padding:5px;">
+                <ul class="easyui-tree wu-side-tree">
+                    <li iconCls="icon-application-osx"><a href="javascript:void(0)" data-icon="icon-application-osx" data-link="schedule.html" iframe="0">课表列表</a></li>
+                </ul>
+            </div>
+            <div title="请假单管理" data-options="iconCls:'icon-page-white-text'" style="padding:5px;">
+                <ul class="easyui-tree wu-side-tree">
+                    <li iconCls="icon-chart-organisation"><a href="javascript:void(0)" data-icon="icon-chart-organisation" data-link="leave.html" iframe="0">请假单列表</a></li>
+                </ul>
+            </div>
+            <div title="缺勤统计" data-options="iconCls:'icon-chart-curve'" style="padding:5px;">
+                <ul class="easyui-tree wu-side-tree">
+                    <li iconCls="icon-chart-bar"><a href="javascript:void(0)" data-icon="icon-chart-bar" data-link="absence.html" iframe="0">统计列表</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- end of sidebar -->
+    <!-- begin of main -->
+    <div class="wu-main" data-options="region:'center'">
+        <div id="wu-tabs2" class="easyui-tabs" data-options="border:false,fit:true">
+            <div title="首页" data-options="href:'main.html',closable:false,iconCls:'icon-tip',cls:'pd3'"></div>
+        </div>
+    </div>
+    <!-- end of main -->
+    <!-- begin of footer -->
+    <div class="wu-footer" data-options="region:'south',border:true,split:true">
+        &copy; 2013 Wu All Rights Reserved
+    </div>
+</div>
+<div class="easyui-layout" id="admin-layout" style="display: block;" data-options="fit:true">
+        <!-- begin of header -->
+        <div class="wu-header" data-options="region:'north',border:false,split:true">
+            <div class="wu-header-left">
+                <h1>基于Web的学生考勤管理系统</h1>
+            </div>
+            <div class="wu-header-right">
+                <p><strong class="easyui-tooltip" id="username"></strong>，欢迎您！&nbsp;&nbsp;<span id="term"></span>&nbsp;&nbsp;<a href="javascript:exit();">安全退出</a></p>
+            </div>
+        </div>
+        <!-- end of header -->
+        <!-- begin of sidebar -->
+        <div class="wu-sidebar" data-options="region:'west',split:true,border:true,title:'导航菜单'">
+            <div class="easyui-accordion" data-options="border:false,fit:true">
+                <div title="院系管理" data-options="iconCls:'icon-application-cascade'" style="padding:5px;">
+                    <ul class="easyui-tree wu-side-tree">
+                        <li iconCls="icon-chart-organisation"><a href="javascript:void(0)" data-icon="icon-chart-organisation" data-link="department.html" iframe="0">院系列表</a></li>
+                    </ul>
+                </div>
+                <div title="班级管理" data-options="iconCls:'icon-application-form-edit'" style="padding:5px;">
+                    <ul class="easyui-tree wu-side-tree">
+                        <li iconCls="icon-chart-organisation"><a href="javascript:void(0)" data-icon="icon-chart-organisation" data-link="grade.html" iframe="0">班级列表</a></li>
+                    </ul>
+                </div>
+                <div title="教师管理" data-options="iconCls:'icon-creditcards'" style="padding:5px;">
+                    <ul class="easyui-tree wu-side-tree">
+                        <li iconCls="icon-users"><a href="javascript:void(0)" data-icon="icon-users" data-link="teachers.html" iframe="0">教师列表</a></li>
+                    </ul>
+                </div>
+                <div title="学生管理" data-options="iconCls:'icon-personal'" style="padding:5px;">
+                    <ul class="easyui-tree wu-side-tree">
+                        <li iconCls="icon-chart-organisation"><a href="javascript:void(0)" data-icon="icon-chart-organisation" data-link="students.html" iframe="0">学生列表</a></li>
+                    </ul>
+                </div>
+                <div title="课程管理" data-options="iconCls:'icon-bricks'" style="padding:5px;">
+                    <ul class="easyui-tree wu-side-tree">
+                        <li iconCls="icon-book"><a href="javascript:void(0)" data-icon="icon-book" data-link="classes.html" iframe="0">课程列表</a></li>
+                    </ul>
+                </div>
+                <div title="课表管理" data-options="iconCls:'icon-application-side-boxes'" style="padding:5px;">
+                    <ul class="easyui-tree wu-side-tree">
+                        <li iconCls="icon-application-osx"><a href="javascript:void(0)" data-icon="icon-application-osx" data-link="schedule.html" iframe="0">课表列表</a></li>
+                    </ul>
+                </div>
+                <div title="请假单管理" data-options="iconCls:'icon-page-white-text'" style="padding:5px;">
+                    <ul class="easyui-tree wu-side-tree">
+                        <li iconCls="icon-chart-organisation"><a href="javascript:void(0)" data-icon="icon-chart-organisation" data-link="leave.html" iframe="0">请假单列表</a></li>
+                    </ul>
+                </div>
+                <div title="缺勤统计" data-options="iconCls:'icon-chart-curve'" style="padding:5px;">
+                    <ul class="easyui-tree wu-side-tree">
+                        <li iconCls="icon-chart-bar"><a href="javascript:void(0)" data-icon="icon-chart-bar" data-link="absence.html" iframe="0">统计列表</a></li>
+                    </ul>
+                </div>
+                <div title="系统设置" data-options="iconCls:'icon-wrench'" style="padding:5px;">
+                    <ul class="easyui-tree wu-side-tree">
+                        <li iconCls="icon-cog"><a href="javascript:void(0)" data-icon="icon-cog" data-link="setting.html" iframe="0">系统配置</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- end of sidebar -->
+        <!-- begin of main -->
+        <div class="wu-main" data-options="region:'center'">
+            <div id="wu-tabs" class="easyui-tabs" data-options="border:false,fit:true">
+                <div title="首页" data-options="href:'main.html',closable:false,iconCls:'icon-tip',cls:'pd3'"></div>
+            </div>
+        </div>
+        <!-- end of main -->
+        <!-- begin of footer -->
+        <div class="wu-footer" data-options="region:'south',border:true,split:true">
+            &copy; 2013 Wu All Rights Reserved
+        </div>
+    </div>
+    <!-- end of footer -->
     <script type="text/javascript">
 		$(function(){
 			var loginUser = JSON.parse(Util.getLocalStorage("loginUser"));
@@ -93,16 +188,36 @@
                 var role = Util.getLocalStorage("role");
                 if(role == '0'){
                     $('#username').text(loginUser.sRealName);
+                    $('#username1').text(loginUser.sRealName);
+                    $('#username2').text(loginUser.sRealName);
                 }else if(role == '1'){
                     $('#username').text(loginUser.tRealName);
+                    $('#username1').text(loginUser.tRealName);
+                    $('#username2').text(loginUser.tRealName);
                 }else{
                     $('#username').text(loginUser.uName);
+                    $('#username1').text(loginUser.uName);
+                    $('#username2').text(loginUser.uName);
                 }
                 $('#term').text(Util.getLocalStorage("term"));
+                $('#term1').text(Util.getLocalStorage("term"));
+                $('#term2').text(Util.getLocalStorage("term"));
             }else{
                 $.messager.alert("操作提示", "请登录!", "error", function() {window.location.href = 'login.html';});
             }
-
+            if(role == '0'){
+                $('#stu-layout').show();
+                $('#tea-layout').hide();
+                $('#admin-layout').hide();
+            }else if(role == '1'){
+                $('#stu-layout').hide();
+                $('#tea-layout').show();
+                $('#admin-layout').hide();
+            }else{
+			    $('#stu-layout').hide();
+			    $('#tea-layout').hide();
+			    $('#admin-layout').show();
+            }
 			$('.wu-side-tree a').bind("click",function(){
 				var title = $(this).text();
 				var url = $(this).attr('data-link');
@@ -116,7 +231,6 @@
 		* Name 载入树形菜单 
 		*/
 		$('#wu-side-tree').tree({
-			url:'temp/menu.php',
 			cache:false,
 			onClick:function(node){
 				var url = node.attributes['url'];

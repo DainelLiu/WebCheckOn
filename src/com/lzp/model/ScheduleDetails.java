@@ -57,7 +57,7 @@ public class ScheduleDetails implements Serializable{
 	public void setdId(String dId) {
 		this.dId = dId;
 	}
-	@ManyToOne(cascade={CascadeType.MERGE})
+	@ManyToOne
 	@JoinColumn(name="dSchId")
 	public Schedule getdSchId() {
 		return dSchId;
@@ -71,7 +71,7 @@ public class ScheduleDetails implements Serializable{
 	public void setdTime(String dTime) {
 		this.dTime = dTime;
 	}
-	@ManyToOne(cascade={CascadeType.MERGE})
+	@ManyToOne
 	@JoinColumn(name="dCurrId")
 	public Curriculum getdCurrId() {
 		return dCurrId;
@@ -79,7 +79,7 @@ public class ScheduleDetails implements Serializable{
 	public void setdCurrId(Curriculum dCurrId) {
 		this.dCurrId = dCurrId;
 	}
-	@OneToOne(cascade={CascadeType.MERGE})
+	@OneToOne
 	@JoinColumn(name="dInId")
 	public Intervals getdInId() {
 		return dInId;

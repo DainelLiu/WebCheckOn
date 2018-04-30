@@ -163,7 +163,18 @@ public class ScheduleAction {
 		String schId = ServletActionContext.getRequest().getParameter("schId");
 		Schedule schedule = scheduleDao.getById(schId);
 		JSONObject jobj = new JSONObject();
-		if (scheduleDao.delete(schedule)) {
+		List<Object> detailList = scheduleDetailsDao.getAllByConds("from ScheduleDetails where dSchId='"+schId+"'");
+		boolean delMark = false;
+		//先循环将课表详情删除
+		for(int i = 0 ; i < detailList.size() ; i++){
+			ScheduleDetails tempObj = (ScheduleDetails)detailList.get(i);
+			if(scheduleDetailsDao.delete(tempObj)){
+				delMark = true;
+			}else{
+				delMark = false;
+			}
+		}
+		if (scheduleDao.delete(schedule) && delMark) {
 			// save success
 			jobj.put("mes", "删除成功!");
 			jobj.put("status", "success");
@@ -185,18 +196,49 @@ public class ScheduleAction {
 	 */
 	@Action(value = "update")
 	public String update() throws IOException {
+		Schedule schedule = new Schedule();
+		String tableConds = ServletActionContext.getRequest().getParameter("tableConds");
+		JSONObject jsonTemp = JSONObject.fromObject(tableConds);
+		JSONObject json = new JSONObject();
+		// json.get(key)
+		JSONArray jsonArray = new JSONArray();
+		json = (JSONObject) jsonTemp.get("info");// 课表对象属性
+		jsonArray = (JSONArray) jsonTemp.get("details");
+		Classes classes = classesDao.getById(json.getString("schClaId"));
+		schedule.setschId(json.getString("schId"));
+		schedule.setschClaId(classes);
+		schedule.setschSemester(json.getString("schSemester"));
 
-		String schId = ServletActionContext.getRequest().getParameter("schId");
-
-		Schedule schedule = scheduleDao.getById(schId);
 		JSONObject jobj = new JSONObject();
-
-		if (scheduleDao.update(schedule)) {
-			jobj.put("mes", "更新成功!");
-			jobj.put("status", "success");
+		Schedule scheduleByDetails = scheduleDao.getById(schedule.getschId());
+		boolean sign = false;
+		if (schedule.getschId() != null) {
+			for (int i = 0; i < jsonArray.size(); i++) {
+				ScheduleDetails scheduleDetails = new ScheduleDetails();
+				JSONObject job = jsonArray.getJSONObject(i);
+				if (!"0".equals(job.get("dCurrId"))) {
+					scheduleDetails.setdSchId(scheduleByDetails);
+					scheduleDetails.setdTime(job.getString("dTime"));
+					Curriculum curriculum = curriculumDao.getById(job.getString("dCurrId"));
+					scheduleDetails.setdCurrId(curriculum);
+					Intervals interval = intervalDao.getById(job.getString("dInId"));
+					scheduleDetails.setdInId(interval);
+					if (scheduleDetailsDao.save(scheduleDetails)) {
+						sign = true;
+					} else {
+						sign = false;
+					}
+				}
+			}
+			if (sign && scheduleDao.update(schedule)) {
+				jobj.put("mes", "保存成功!");
+				jobj.put("status", "success");
+			} else {
+				jobj.put("mes", "获取失败!");
+				jobj.put("status", "error");
+			}
 		} else {
-			// save failed
-			jobj.put("mes", "更新失败!");
+			jobj.put("mes", "获取失败!");
 			jobj.put("status", "error");
 		}
 		ServletActionContext.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
